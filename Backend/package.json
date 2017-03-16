@@ -1,7 +1,7 @@
 {
   "name": "buy-buy",
   "version": "0.0.1",
-  "description": "A CUHK CSCI3100 web applicatino project",
+  "description": "A web applicatino project",
   "main": "index.js",
   "dependencies": {
     "express": "^4.15.2",
