@@ -1,0 +1,33 @@
+{
+  "name": "buy-buy",
+  "version": "0.0.1",
+  "description": "A CUHK CSCI3100 web applicatino project",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-session": "^1.15.1",
+    "mongoose": "^4.9.0",
+    "nodemailer": "^3.1.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "NA"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyle-Kyle/buy-buy.git"
+  },
+  "keywords": [
+    "node.js",
+    "web",
+    "application",
+    "online",
+    "trading"
+  ],
+  "author": "group spade4",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyle-Kyle/buy-buy/issues"
+  },
+  "homepage": "https://github.com/Kyle-Kyle/buy-buy#readme"
+}
