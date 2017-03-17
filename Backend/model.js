@@ -2,10 +2,16 @@ db = require('./db');
 
 // User model
 var User_Schema = db.Schema({
-    username: {type: String, required: true, unique: true, match: /^[A-z0-9_]{3,20}$/},
+    username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_]{3,20}$/},
     password: {type: String, required: true},
     history: {type: Array, default: []},
-    profile: {type: db.Schema.Types.Mixed, default: {}},
+    profile: {
+        phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
+        wechat: {type: String, match: /^[A-Za-z0-9]{3:20}$/, default: ''},
+        email: {type: String, match: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, default: ''},
+        qq: {type: String, match: /^\d{4,12}$/, default: ''},
+        facebook: {type: String, match: /^[A-Za-z0-9_.\s]{3,50}$/, default: ''}
+    },
     email: {type: String, required: true, unique: true, match: /^1155\d{6}@link\.cuhk\.edu\.hk$/},
     msg_buffer: {type: Array, default: []}
 });
@@ -48,7 +54,8 @@ User_Schema.methods.commit = function(cb){
         err_msg = 'Fail to save information';
         if(err){
             if(err.message.indexOf('duplicate') > -1){
-                err_msg = 'This username is taken';
+                err_msg = 'The username is take';
+                if(err.message.indexOf('$email') > -1)err_msg = 'The email is taken';
             }
             if(err.message.indexOf('validation') > -1){
                 err_msg = 'Invalid information';
