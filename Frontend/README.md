@@ -1,7 +1,7 @@
 # Front end :blush:
 Home page: `index.html`  
-    includes `navs.view.html`, `login.view.html`  
-    uses `login.js` for sending login request to server  
+&nbsp;&nbsp;includes `navs.view.html`, `login.view.html`  
+&nbsp;&nbsp;uses `login.js` for sending login request to server  
   
 Post-item page: `post.html` (empty)  
 
