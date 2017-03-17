@@ -1,5 +1,5 @@
 # Front end
-Home page: index.html  
+Home page: [index.html]  
   includes navs.view.html, login.view.html  
   uses login.js for sending login request to server  
   
