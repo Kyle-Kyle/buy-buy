@@ -1,6 +1,7 @@
 // connection
 var db = require('mongoose');
 var app = require('./index');
+db.Promise = global.Promise;
 db.connect('mongodb://'+app.get('db_u')+':'+app.get('db_p')+'@'+app.get('db_domain')+':'+app.get('db_port')+'/'+app.get('db_db'));
 var conn = db.connection;
 
