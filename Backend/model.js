@@ -7,6 +7,7 @@ var User_Schema = db.Schema({
     password: {type: String, required: true},
     history: {type: Array, default: []},
     profile: {
+		nickname: {type: String, match: /^[A-Za-z0-9_]{3,20}$/, default: ''},
         phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
         wechat: {type: String, match: /^[A-Za-z0-9]{3:20}$/, default: ''},
         email: {type: String, match: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, default: ''},
@@ -18,7 +19,7 @@ var User_Schema = db.Schema({
 });
 // User model: search by uid
 User_Schema.statics.get = function(uid, cb){
-    this.model('User').findOne({_id:uid}, function(err, user){
+    this.model('User').findById(uid, function(err, user){
         err_msg = 'Fail to find user.';
         if(err){
             if(err.message.indexOf('Cast') > -1){
@@ -112,7 +113,7 @@ Category_Schema.statics.new_ = function(info, cb){
 }
 // Category model: search by cid
 Category_Schema.statics.get = function(cid, cb){
-	this.model('Category').findOne({_id:cid}, function(err, category){
+	this.model('Category').findById(cid, function(err, category){
 		err_msg = 'Fail to find category.';
 		if(err){
 			if(err.message.indexOf('Cast') > -1){
@@ -202,7 +203,7 @@ Item_Schema.statics.new_ = function(info, cb){
 }
 // Item model: get by item id
 Item_Schema.statics.get = function(iid, cb){
-	this.model('Item').findOne({_id:iid}, function(err, item){
+	this.model('Item').findById(iid, function(err, item){
 		err_msg = 'Fail to find item.';
 		if(err){
 			if(err.message.indexOf('Cast') > -1){
@@ -259,7 +260,7 @@ var Message_Schema = db.Schema({
 });
 // Message model: get message by id
 Message_Schema.statics.get = function(mid, cb){
-	this.model('Message').findOne({_id:mid}, function(err, message){
+	this.model('Message').findById(mid, function(err, message){
 		err_msg = 'Fail to find message';
 		if(err){
 			if(err.message.indexOf('Cast') > -1){
@@ -287,14 +288,15 @@ Message_Schema.statics.new_ = function(info, cb){
 	});
 }
 
-
+// Follow model
 var Follow_Schema = db.Schema({
 	follower_id: {type: db.Schema.ObjectId, required: true},
 	followee_id: {type: db.Schema.ObjectId, required: true},
 	timestamp: {type: Number, required: true}
 });
+// Follow model: search by id
 Follow_Schema.statics.get = function(fid, cb){
-	this.model('Follow').findOne({_id:fid}, function(err, follow){
+	this.model('Follow').findById(fid, function(err, follow){
 		err_msg = 'Fail to find follow instance';
 		if(err){
 			if(err.message.indexOf('Cast') > -1){
@@ -309,8 +311,9 @@ Follow_Schema.statics.get = function(fid, cb){
 		return cb({feedback: 'Success', follow: follow});
 	});
 }
+// Follow model: create new instance
 Follow_Schema.statics.new_ = function(info, cb){
-	var Follow= this.model('Follow');
+	var Follow = this.model('Follow');
 	info.timestamp = +new Date();
 	Follow.create(info, function(err, follow){
 		err_msg = 'Fail to create follow instance';
@@ -320,6 +323,7 @@ Follow_Schema.statics.new_ = function(info, cb){
 		return cb({feedback: 'Success', follow: follow});
 	});
 }
+// Follow model: delete instance
 Follow_Schema.methods.delete_ = function(cb){
 	this.remove(function(err){
 		if(err){
@@ -330,16 +334,65 @@ Follow_Schema.methods.delete_ = function(cb){
 	});
 }
 
+var Transaction_Schema = db.Schema({
+	seller_id: {type: db.Schema.ObjectId, required: true},
+	buyer_id: {type: db.Schema.ObjectId, required: true},
+	iid: {type: db.Schema.ObjectId, required: true},
+	status_code: {type: Number, default: 1, enum: [1, 2, 3, 4, 5]},
+	timestamp: {type: Array, required: true}
+});
+Transaction_Schema.statics.get = function(tid, cb){
+	this.model('Transaction').findById(tid, function(err, trans){
+		err_msg = 'Fail to find transaction';
+		if(err){
+			if(err.message.indexOf('Cast') > -1){
+				err_msg = 'Invalid Transaction ID';
+			}
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!trans){
+			err_msg = 'Invalid Transaction ID';
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', transaction: trans});
+	});
+}
+Transaction_Schema.statics.new_ = function(info, cb){
+	delete info.status_code;
+	var Transaction = this.model('Transaction');
+	info.timestamp = [+new Date(), 0, 0, 0, 0];
+	Transaction.create(info, function(err, trans){
+		err_msg = 'Fail to create transaction';
+		if(err){
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', transaction: trans});
+	});
+}
+Transaction_Schema.methods.update_status_code = function(status_code, cb){
+	this.status_code = status_code;
+	this.timestamp.set(status_code-1, +new Date());
+	this.save(function(err, trans){
+		if(err){
+			err_msg = 'Fail to update information';
+			/*more need to verify: duplication, validation*/
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', transaction: trans});
+	});
+};
 var User = db.model('User', User_Schema);
 var Category = db.model('Category', Category_Schema);
 var Item = db.model('Item', Item_Schema);
 var Message = db.model('Message', Message_Schema);
 var Follow = db.model('Follow', Follow_Schema);
+var Transaction = db.model('Transaction', Transaction_Schema);
 module.exports.User = User;
 module.exports.Category = Category;
 module.exports.Item = Item;
 module.exports.Message = Message;
 module.exports.Follow = Follow;
+module.exports.Transaction = Transaction;
 
 model_ext = require('./model_ext');
 Item = model_ext.Item;
