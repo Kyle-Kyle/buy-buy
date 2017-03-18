@@ -257,6 +257,23 @@ var Message_Schema = db.Schema({
 	uid2: {type: db.Schema.ObjectId, required: true},
 	messages: {type: Array, default: []},
 });
+// Message model: get message by id
+Message_Schema.statics.get = function(mid, cb){
+	this.model('Message').findOne({_id:mid}, function(err, message){
+		err_msg = 'Fail to find message';
+		if(err){
+			if(err.message.indexOf('Cast') > -1){
+				err_msg = 'Invalid Message ID';
+			}
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!message){
+			err_msg = 'Invalid Message ID';
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', message: message});
+	});
+}
 // Message model: create new instance
 Message_Schema.statics.new_ = function(info, cb){
 	delete info.messages;
@@ -270,14 +287,59 @@ Message_Schema.statics.new_ = function(info, cb){
 	});
 }
 
+
+var Follow_Schema = db.Schema({
+	follower_id: {type: db.Schema.ObjectId, required: true},
+	followee_id: {type: db.Schema.ObjectId, required: true},
+	timestamp: {type: Number, required: true}
+});
+Follow_Schema.statics.get = function(fid, cb){
+	this.model('Follow').findOne({_id:fid}, function(err, follow){
+		err_msg = 'Fail to find follow instance';
+		if(err){
+			if(err.message.indexOf('Cast') > -1){
+				err_msg = 'Invalid Follow ID';
+			}
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!follow){
+			err_msg = 'Invalid Follow ID';
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', follow: follow});
+	});
+}
+Follow_Schema.statics.new_ = function(info, cb){
+	var Follow= this.model('Follow');
+	info.timestamp = +new Date();
+	Follow.create(info, function(err, follow){
+		err_msg = 'Fail to create follow instance';
+		if(err){
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', follow: follow});
+	});
+}
+Follow_Schema.methods.delete_ = function(cb){
+	this.remove(function(err){
+		if(err){
+			err_msg = 'Fail to remove follow instance';
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success'});
+	});
+}
+
 var User = db.model('User', User_Schema);
 var Category = db.model('Category', Category_Schema);
 var Item = db.model('Item', Item_Schema);
 var Message = db.model('Message', Message_Schema);
+var Follow = db.model('Follow', Follow_Schema);
 module.exports.User = User;
 module.exports.Category = Category;
 module.exports.Item = Item;
 module.exports.Message = Message;
+module.exports.Follow = Follow;
 
 model_ext = require('./model_ext');
 Item = model_ext.Item;
