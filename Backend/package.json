@@ -4,6 +4,7 @@
   "description": "A web applicatino project",
   "main": "index.js",
   "dependencies": {
+    "escape-html": "^1.0.3",
     "express": "^4.15.2",
     "express-session": "^1.15.1",
     "mongoose": "^4.9.0",
