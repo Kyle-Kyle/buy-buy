@@ -174,7 +174,8 @@ var Item_Schema = db.Schema({
 	quantity: {type: Number, required: true, validate: {validator: pos_val}},
 	price: {type: Number, required: true, validate: {validator: pos_val}},
 	tags: {type: Array, default: [], validate: {validator: tag_val}},
-	comments: {type: Array, default: []},
+	comment_id : {type: db.Schema.ObjectId},
+	pictures: {type: Array, default: []},
 	attributes: {type: db.Schema.Types.Mixed, required:true, validate: {isAsync:true, validator: attribute_val}},
 	open_timestamp: {type: Number, default: 0},
 	close_timestamp: {type: Number, default: 0}
@@ -190,6 +191,12 @@ Item_Schema.statics.new_ = function(info, cb){
 	info.open_timestamp = timestamp;
 	delete info.close_timestamp;
 	delete info.comments;
+	delete info.pictures;
+	delete info.comment_id;
+	if(typeof(info.tags) !== 'undefined' && info.tags){
+		for(var i=0;i<info.tags.length;i++)info.tags[i] = escape_html(info.tags[i]);
+		this.tags = info.tags
+	}
 	Item.create(info, function(err, item){
 		err_msg = 'Fail to create item';
 		if(err){
@@ -198,7 +205,17 @@ Item_Schema.statics.new_ = function(info, cb){
 			}
 			return cb({feedback: 'Failure', err_msg: err_msg});
 		}
-		return cb({feedback: 'Success', item: item});
+		Comment.new_({iid: item._id}, function(result){
+			if(result.feedback != 'Success'){
+				item.remove();
+				return cb({feedback: 'Failure', err_msg: err_msg});
+			}
+			item.comment_id = result.comment._id;
+			item.save(function(err, item){
+				if(err)return cb({feedback: 'Failure', err_msg: err_msg});
+			});
+			return cb({feedback: 'Success', item: item});
+		});
 	});
 }
 // Item model: get by item id
@@ -227,6 +244,7 @@ Item_Schema.methods.update_info = function(info, cb){
 		this.quantity = info.quantity
 	}
 	if(typeof(info.tags) !== 'undefined' && info.tags){
+		for(var i=0;i<info.tags.length;i++)info.tags[i] = escape_html(info.tags[i]);
 		this.tags = info.tags
 	}
 	if(typeof(info.attributes) !== 'undefined' && info.attributes){
@@ -334,6 +352,7 @@ Follow_Schema.methods.delete_ = function(cb){
 	});
 }
 
+// Transaction model
 var Transaction_Schema = db.Schema({
 	seller_id: {type: db.Schema.ObjectId, required: true},
 	buyer_id: {type: db.Schema.ObjectId, required: true},
@@ -341,6 +360,7 @@ var Transaction_Schema = db.Schema({
 	status_code: {type: Number, default: 1, enum: [1, 2, 3, 4, 5]},
 	timestamp: {type: Array, required: true}
 });
+// Transaction model: search by id
 Transaction_Schema.statics.get = function(tid, cb){
 	this.model('Transaction').findById(tid, function(err, trans){
 		err_msg = 'Fail to find transaction';
@@ -357,6 +377,7 @@ Transaction_Schema.statics.get = function(tid, cb){
 		return cb({feedback: 'Success', transaction: trans});
 	});
 }
+// Transaction model: create new instance
 Transaction_Schema.statics.new_ = function(info, cb){
 	delete info.status_code;
 	var Transaction = this.model('Transaction');
@@ -369,6 +390,7 @@ Transaction_Schema.statics.new_ = function(info, cb){
 		return cb({feedback: 'Success', transaction: trans});
 	});
 }
+// Transaction model: update status code
 Transaction_Schema.methods.update_status_code = function(status_code, cb){
 	this.status_code = status_code;
 	this.timestamp.set(status_code-1, +new Date());
@@ -381,20 +403,44 @@ Transaction_Schema.methods.update_status_code = function(status_code, cb){
 		return cb({feedback: 'Success', transaction: trans});
 	});
 };
+
+// Comment model
+var Comment_Schema = db.Schema({
+	iid: {type: db.Schema.ObjectId, required: true},
+	comments: {type: Array, default: []},
+});
+// Comment model: create new instance
+Comment_Schema.statics.new_ = function(info, cb){
+	delete info.comments;
+	var Comment = this.model('Comment');
+	Comment.create(info, function(err, comment){
+		err_msg = 'Fail to create comment';
+		if(err){
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', comment: comment});
+	});
+}
 var User = db.model('User', User_Schema);
 var Category = db.model('Category', Category_Schema);
 var Item = db.model('Item', Item_Schema);
 var Message = db.model('Message', Message_Schema);
 var Follow = db.model('Follow', Follow_Schema);
 var Transaction = db.model('Transaction', Transaction_Schema);
+var Comment = db.model('Comment', Comment_Schema);
 module.exports.User = User;
 module.exports.Category = Category;
 module.exports.Item = Item;
 module.exports.Message = Message;
 module.exports.Follow = Follow;
 module.exports.Transaction = Transaction;
+module.exports.Comment = Comment;
 
 model_ext = require('./model_ext');
 Item = model_ext.Item;
 Category = model_ext.Category;
 User = model_ext.User;
+Item.new_({tags: ['123', '<>', '&$'], uid:'58ccdf88cb72d765c1aab296', cid:'58ccdf88cb72d765c1aab296', quantity:10, price:10.1, attributes:{'title': 'item1', 'description':'testing', 'condition':'10'}}, function(result){
+	console.log(result);
+});
+
