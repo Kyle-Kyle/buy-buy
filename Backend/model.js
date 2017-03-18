@@ -251,12 +251,33 @@ Item_Schema.methods.delete_ = function(cb){
 	});
 }
 
+// Message model
+var Message_Schema = db.Schema({
+	uid1: {type: db.Schema.ObjectId, required: true},
+	uid2: {type: db.Schema.ObjectId, required: true},
+	messages: {type: Array, default: []},
+});
+// Message model: create new instance
+Message_Schema.statics.new_ = function(info, cb){
+	delete info.messages;
+	var message = this.model('Message');
+	Message.create(info, function(err, message){
+		err_msg = 'Fail to create message';
+		if(err){
+			return cb({feedback: 'Failure', err_msg: err_msg});
+		}
+		return cb({feedback: 'Success', message: message});
+	});
+}
+
 var User = db.model('User', User_Schema);
-module.exports.User = User;
 var Category = db.model('Category', Category_Schema);
-module.exports.Category = Category;
 var Item = db.model('Item', Item_Schema);
+var Message = db.model('Message', Message_Schema);
+module.exports.User = User;
+module.exports.Category = Category;
 module.exports.Item = Item;
+module.exports.Message = Message;
 
 model_ext = require('./model_ext');
 Item = model_ext.Item;
