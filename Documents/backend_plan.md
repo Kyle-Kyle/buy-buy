@@ -1,6 +1,6 @@
 [ ] database
 	[x] basic model
-	[ ] model relations
+	[x] model relations
 	[ ] model functions
 [ ] pic_upload
 [ ] create thumbnail
