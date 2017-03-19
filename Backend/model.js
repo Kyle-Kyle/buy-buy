@@ -15,7 +15,7 @@ var User_Schema = db.Schema({
 		facebook: {type: String, match: /^[A-Za-z0-9_.\s]{3,50}$/, default: ''}
 	},
 	email: {type: String, required: true, unique: true, match: /^1155\d{6}@link\.cuhk\.edu\.hk$/},
-	msg_buf: [{type: db.Schema.Types.ObjectId, ref: 'Message', validate: {isAsync: true, validator: message_val}}]
+	msg_buf: [{type: db.Schema.Types.ObjectId, ref: 'User', validate: {isAsync: true, validator: user_val}}]
 });
 // User model: search by uid
 User_Schema.statics.get = function(uid, cb){
