@@ -123,7 +123,22 @@ User.prototype.recv_msg = function(uid, cb){
 		});
 	});
 }
-
+User.prototype.comment = function(info, cb){
+	if(typeof(info.content) == 'undefined' || !info.content)return cb({feedback: 'Failure', err_msg: 'Invalid information'});
+	info.content = escape_html(info.content);
+	var user = this;
+	Item.get(info.iid, function(result){
+		if(result.feedback != 'Success')return cb(result);
+		Comment.findById(result.item.comment_id, function(err, comment){
+			if(err)return cb({feedback: 'Failure', err_msg: 'Fail to add comment'});
+			comment.comments.set(comment.comments.length, [user._id, info.content, +new Date()]);
+			comment.save(function(err, comment){
+				if(err)return cb({feedback: 'Failure', err_msg: 'Fail to add comment'});
+				return cb({feedback: 'Success', comment: comment});
+			});
+		});
+	})
+}
 // Category model extension
 Category.prototype.update_sold = function(cb){
 	this.sold += 1;
