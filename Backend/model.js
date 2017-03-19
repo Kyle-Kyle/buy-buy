@@ -5,7 +5,7 @@ escape_html = require('escape-html');
 var User_Schema = db.Schema({
 	username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_]{3,20}$/},
 	password: {type: String, required: true},
-	history: {type: Array, default: []},
+	history: [{type: db.Schema.Types.ObjectId, ref: 'Transaction'}],
 	profile: {
 		nickname: {type: String, match: /^[A-Za-z0-9_]{3,20}$/, default: ''},
 		phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
@@ -15,7 +15,7 @@ var User_Schema = db.Schema({
 		facebook: {type: String, match: /^[A-Za-z0-9_.\s]{3,50}$/, default: ''}
 	},
 	email: {type: String, required: true, unique: true, match: /^1155\d{6}@link\.cuhk\.edu\.hk$/},
-	msg_buf: {type: Array, default: []}
+	msg_buf: [{type: db.Schema.Types.ObjectId, ref: 'Message'}]
 });
 // User model: search by uid
 User_Schema.statics.get = function(uid, cb){
@@ -56,6 +56,8 @@ User_Schema.methods.update_profile = function(profile, cb){
 // User model: create new instance
 User_Schema.statics.new_ = function(info, cb){
 	var User = this.model('User');
+	info.history = []
+	info.msg_buf = []
 	User.create(info, function(err, user){
 		err_msg = 'Fail to create user';
 		if(err){
@@ -163,8 +165,8 @@ function attribute_val(d, cb){
 }
 // Item model
 var Item_Schema = db.Schema({
-	uid: {type: db.Schema.ObjectId, required: true},
-	cid: {type: db.Schema.ObjectId, required: true},
+	uid: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
+	cid: {type: db.Schema.ObjectId, ref: 'Categroy', required: true, validate: {isAsync: true, validator: category_val}},
 	quantity: {type: Number, required: true, validate: {validator: pos_val}},
 	price: {type: Number, required: true, validate: {validator: pos_val}},
 	tags: [{type: String, match: /[^<>]{1,20}/}],
@@ -266,8 +268,8 @@ Item_Schema.methods.delete_ = function(cb){
 
 // Message model
 var Message_Schema = db.Schema({
-	uid1: {type: db.Schema.ObjectId, required: true},
-	uid2: {type: db.Schema.ObjectId, required: true},
+	uid1: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
+	uid2: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
 	messages: {type: Array, default: []},
 });
 // Message model: get message by id
@@ -302,8 +304,8 @@ Message_Schema.statics.new_ = function(info, cb){
 
 // Follow model
 var Follow_Schema = db.Schema({
-	follower_id: {type: db.Schema.ObjectId, required: true},
-	followee_id: {type: db.Schema.ObjectId, required: true},
+	follower_id: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
+	followee_id: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
 	timestamp: {type: Number, required: true}
 });
 // Follow model: search by id
@@ -348,9 +350,9 @@ Follow_Schema.methods.delete_ = function(cb){
 
 // Transaction model
 var Transaction_Schema = db.Schema({
-	seller_id: {type: db.Schema.ObjectId, required: true},
-	buyer_id: {type: db.Schema.ObjectId, required: true},
-	iid: {type: db.Schema.ObjectId, required: true},
+	seller_id: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: user_val}},
+	buyer_id: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: user_val}},
+	iid: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: item_val}},
 	status_code: {type: Number, default: 1, enum: [1, 2, 3, 4, 5]},
 	timestamp: {type: Array, required: true}
 });
@@ -400,7 +402,7 @@ Transaction_Schema.methods.update_status_code = function(status_code, cb){
 
 // Comment model
 var Comment_Schema = db.Schema({
-	iid: {type: db.Schema.ObjectId, required: true},
+	iid: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: item_val}},
 	comments: {type: Array, default: []},
 });
 // Comment model: create new instance
@@ -414,6 +416,28 @@ Comment_Schema.statics.new_ = function(info, cb){
 		}
 		return cb({feedback: 'Success', comment: comment});
 	});
+}
+
+function user_val(uid, cb){
+	User.findById(uid, function(err, user){
+		if(err)return cb(false);
+		if(!user)return cb(false);
+		return cb(true);
+	})
+}
+function category_val(cid, cb){
+	Category.findById(cid, function(err, category){
+		if(err)return cb(false);
+		if(!category)return cb(false);
+		return cb(true);
+	})
+}
+function item_val(iid, cb){
+	Item.findById(iid, function(err, item){
+		if(err)return cb(false);
+		if(!item)return cb(false);
+		return cb(true);
+	})
 }
 var User = db.model('User', User_Schema);
 var Category = db.model('Category', Category_Schema);
