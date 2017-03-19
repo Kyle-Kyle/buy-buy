@@ -1,4 +1,4 @@
-angular.module('loginApp', [])
+angular.module('indexApp')
 	.controller('loginController', function($scope, $http) {
 		alert('bind success!');
 		$scope.login = function(){$http.post("/users/login")
