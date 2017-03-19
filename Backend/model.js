@@ -155,7 +155,7 @@ Category_Schema.methods.delete_ = function(cb){
 
 // Item validators
 function attribute_val(d, cb){
-	Category.get(this.cid, function(result){
+	this.model('Category').get(this.cid, function(result){
 		if(result.feedback != 'Success')return false;
 		attr1 = result.category.attributes.sort();
 		attr2 = Object.keys(d).sort();
@@ -201,6 +201,7 @@ Item_Schema.statics.new_ = function(info, cb){
 			}
 			return cb({feedback: 'Failure', err_msg: err_msg});
 		}
+		var Comment = db.model('Comment', Comment_Schema);
 		Comment.new_({iid: item._id}, function(result){
 			if(result.feedback != 'Success'){
 				item.remove();
@@ -292,7 +293,7 @@ Message_Schema.statics.get = function(mid, cb){
 // Message model: create new instance
 Message_Schema.statics.new_ = function(info, cb){
 	delete info.messages;
-	var message = this.model('Message');
+	var Message = this.model('Message');
 	Message.create(info, function(err, message){
 		err_msg = 'Fail to create message';
 		if(err){
