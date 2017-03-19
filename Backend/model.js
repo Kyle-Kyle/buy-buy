@@ -5,7 +5,7 @@ escape_html = require('escape-html');
 var User_Schema = db.Schema({
 	username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_]{3,20}$/},
 	password: {type: String, required: true},
-	history: [{type: db.Schema.Types.ObjectId, ref: 'Transaction'}],
+	history: [{type: db.Schema.Types.ObjectId, ref: 'Transaction', validate: {isAsync: true, validator: transaction_val}}],
 	profile: {
 		nickname: {type: String, match: /^[A-Za-z0-9_]{3,20}$/, default: ''},
 		phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
@@ -15,7 +15,7 @@ var User_Schema = db.Schema({
 		facebook: {type: String, match: /^[A-Za-z0-9_.\s]{3,50}$/, default: ''}
 	},
 	email: {type: String, required: true, unique: true, match: /^1155\d{6}@link\.cuhk\.edu\.hk$/},
-	msg_buf: [{type: db.Schema.Types.ObjectId, ref: 'Message'}]
+	msg_buf: [{type: db.Schema.Types.ObjectId, ref: 'Message', validate: {isAsync: true, validator: message_val}}]
 });
 // User model: search by uid
 User_Schema.statics.get = function(uid, cb){
@@ -170,7 +170,7 @@ var Item_Schema = db.Schema({
 	quantity: {type: Number, required: true, validate: {validator: pos_val}},
 	price: {type: Number, required: true, validate: {validator: pos_val}},
 	tags: [{type: String, match: /[^<>]{1,20}/}],
-	comment_id : {type: db.Schema.ObjectId},
+	comment_id : {type: db.Schema.ObjectId, ref: 'Comment', validate: {isAsync: true, validator: comment_val}},
 	pictures: {type: Array, default: []},
 	attributes: {type: db.Schema.Types.Mixed, required:true, validate: {isAsync:true, validator: attribute_val}},
 	open_timestamp: {type: Number, default: 0},
@@ -419,23 +419,44 @@ Comment_Schema.statics.new_ = function(info, cb){
 }
 
 function user_val(uid, cb){
-	User.findById(uid, function(err, user){
+	this.model('User').findById(uid, function(err, user){
 		if(err)return cb(false);
 		if(!user)return cb(false);
 		return cb(true);
 	})
 }
 function category_val(cid, cb){
-	Category.findById(cid, function(err, category){
+	this.model('Category').findById(cid, function(err, category){
 		if(err)return cb(false);
 		if(!category)return cb(false);
 		return cb(true);
 	})
 }
 function item_val(iid, cb){
-	Item.findById(iid, function(err, item){
+	this.model('Item').findById(iid, function(err, item){
 		if(err)return cb(false);
 		if(!item)return cb(false);
+		return cb(true);
+	})
+}
+function message_val(mid, cb){
+	this.model('Message').findById(mid, function(err, message){
+		if(err)return cb(false);
+		if(!message)return cb(false);
+		return cb(true);
+	})
+}
+function transaction_val(tid, cb){
+	this.model('Transaction').findById(tid, function(err, trans){
+		if(err)return cb(false);
+		if(!trans)return cb(false);
+		return cb(true);
+	})
+}
+function comment_val(coid, cb){
+	this.model('Comment').findById(coid, function(err, comment){
+		if(err)return cb(false);
+		if(!comment)return cb(false);
 		return cb(true);
 	})
 }
