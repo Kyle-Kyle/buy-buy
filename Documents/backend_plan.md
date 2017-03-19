@@ -1,5 +1,5 @@
 [ ] database
-	[ ] basic model
+	[x] basic model
 	[ ] model relations
 	[ ] model functions
 [ ] pic_upload

@@ -3,75 +3,75 @@ escape_html = require('escape-html');
 
 // User model
 var User_Schema = db.Schema({
-    username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_]{3,20}$/},
-    password: {type: String, required: true},
-    history: {type: Array, default: []},
-    profile: {
+	username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_]{3,20}$/},
+	password: {type: String, required: true},
+	history: {type: Array, default: []},
+	profile: {
 		nickname: {type: String, match: /^[A-Za-z0-9_]{3,20}$/, default: ''},
-        phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
-        wechat: {type: String, match: /^[A-Za-z0-9]{3:20}$/, default: ''},
-        email: {type: String, match: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, default: ''},
-        qq: {type: String, match: /^\d{4,12}$/, default: ''},
-        facebook: {type: String, match: /^[A-Za-z0-9_.\s]{3,50}$/, default: ''}
-    },
-    email: {type: String, required: true, unique: true, match: /^1155\d{6}@link\.cuhk\.edu\.hk$/},
-    msg_buffer: {type: Array, default: []}
+		phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
+		wechat: {type: String, match: /^[A-Za-z0-9]{3:20}$/, default: ''},
+		email: {type: String, match: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, default: ''},
+		qq: {type: String, match: /^\d{4,12}$/, default: ''},
+		facebook: {type: String, match: /^[A-Za-z0-9_.\s]{3,50}$/, default: ''}
+	},
+	email: {type: String, required: true, unique: true, match: /^1155\d{6}@link\.cuhk\.edu\.hk$/},
+	msg_buf: {type: Array, default: []}
 });
 // User model: search by uid
 User_Schema.statics.get = function(uid, cb){
-    this.model('User').findById(uid, function(err, user){
-        err_msg = 'Fail to find user.';
-        if(err){
-            if(err.message.indexOf('Cast') > -1){
-                err_msg = 'Invalid User ID';
-            }
-            cb({feedback: 'Failure', err_msg: err_msg});
-            return;
-        }
-        if(!user){
-            err_msg = 'Invalid User ID';
-            cb({feedback: 'Failure', err_msg: err_msg});
-            return;
-        }
-        cb({feedback: 'Success', user: user});
-        return;
-    });
+	this.model('User').findById(uid, function(err, user){
+		err_msg = 'Fail to find user.';
+		if(err){
+			if(err.message.indexOf('Cast') > -1){
+				err_msg = 'Invalid User ID';
+			}
+			cb({feedback: 'Failure', err_msg: err_msg});
+			return;
+		}
+		if(!user){
+			err_msg = 'Invalid User ID';
+			cb({feedback: 'Failure', err_msg: err_msg});
+			return;
+		}
+		cb({feedback: 'Success', user: user});
+		return;
+	});
 }
 // User model: update profile
 User_Schema.methods.update_profile = function(profile, cb){
-    this.profile = profile;
+	this.profile = profile;
 	this.save(function(err, result){
-        err_msg = 'Fail to update information';
-        if(err){
-            if(err.message.indexOf('validation') > -1){
-                err_msg = 'Invalid information';
-            }
-            cb({feedback: 'Failure', err_msg: err_msg});
-            return;
-        }
-        cb({feedback: 'Success', user: user});
-        return;
-    });
+		err_msg = 'Fail to update information';
+		if(err){
+			if(err.message.indexOf('validation') > -1){
+				err_msg = 'Invalid information';
+			}
+			cb({feedback: 'Failure', err_msg: err_msg});
+			return;
+		}
+		cb({feedback: 'Success', user: user});
+		return;
+	});
 }
 // User model: create new instance
 User_Schema.statics.new_ = function(info, cb){
 	var User = this.model('User');
-    User.create(info, function(err, user){
-        err_msg = 'Fail to create user';
-        if(err){
-            if(err.message.indexOf('duplicate') > -1){
-                err_msg = 'The username is taken';
-                if(err.message.indexOf('$email') > -1)err_msg = 'The email is taken';
-            }
-            if(err.message.indexOf('validation') > -1){
-                err_msg = 'Invalid information';
-            }
-            cb({feedback: 'Failure', err_msg: err_msg});
-            return;
-        }
-        cb({feedback: 'Success', user: user});
-        return;
-    });
+	User.create(info, function(err, user){
+		err_msg = 'Fail to create user';
+		if(err){
+			if(err.message.indexOf('duplicate') > -1){
+				err_msg = 'The username is taken';
+				if(err.message.indexOf('$email') > -1)err_msg = 'The email is taken';
+			}
+			if(err.message.indexOf('validation') > -1){
+				err_msg = 'Invalid information';
+			}
+			cb({feedback: 'Failure', err_msg: err_msg});
+			return;
+		}
+		cb({feedback: 'Success', user: user});
+		return;
+	});
 }
 
 // validation function for attribute, in case of JSON parse injection
@@ -152,12 +152,6 @@ Category_Schema.methods.delete_ = function(cb){
 }
 
 // Item validators
-function tag_val(v){
-	for(var i=0;i<v.length;i++){
-		if(/[<>]/.test(v[i]) || v[i].length>20)return false;
-	}
-	return true;
-}
 function attribute_val(d, cb){
 	Category.get(this.cid, function(result){
 		if(result.feedback != 'Success')return false;
@@ -173,7 +167,7 @@ var Item_Schema = db.Schema({
 	cid: {type: db.Schema.ObjectId, required: true},
 	quantity: {type: Number, required: true, validate: {validator: pos_val}},
 	price: {type: Number, required: true, validate: {validator: pos_val}},
-	tags: {type: Array, default: [], validate: {validator: tag_val}},
+	tags: [{type: String, match: /[^<>]{1,20}/}],
 	comment_id : {type: db.Schema.ObjectId},
 	pictures: {type: Array, default: []},
 	attributes: {type: db.Schema.Types.Mixed, required:true, validate: {isAsync:true, validator: attribute_val}},
@@ -437,10 +431,10 @@ module.exports.Transaction = Transaction;
 module.exports.Comment = Comment;
 
 model_ext = require('./model_ext');
-Item = model_ext.Item;
-Category = model_ext.Category;
 User = model_ext.User;
-Item.new_({tags: ['123', '<>', '&$'], uid:'58ccdf88cb72d765c1aab296', cid:'58ccdf88cb72d765c1aab296', quantity:10, price:10.1, attributes:{'title': 'item1', 'description':'testing', 'condition':'10'}}, function(result){
-	console.log(result);
-});
-
+Category = model_ext.Category;
+Item = model_ext.Item;
+Message = model_ext.Message;
+Follow = model_ext.Follow;
+Transaction = model_ext.Transaction;
+Comment = model_ext.Comment;
