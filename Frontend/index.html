@@ -11,17 +11,28 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+
   <!-- load navigator from file -->
-  <script>
+  <!--script>
     $(function(){ $("#navs").load("navs.view.html"); });
-  </script>
+    $(function(){ $("#recmd").load("recommends.view.html"); });
+  </script-->
 
   <!-- load angular functions -->
+  <script>
+    var indexApp = angular.module('indexApp', []);
+  </script>
+  <script src="index_load.js"></script>
   <script src="login.js"></script>
 
 </head>
 <body>
-  <div id="navs"></div>
-  <p>Hello world!</p>
+  <div ng-app="indexApp" ng-controller="loadController">
+    <div id="navs" ng-include="navs.url"></div>
+    <div id="recmd" ng-include="recmd.url"></div>
+  </div>
 </body>
 </html>

@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-  <script>
-    $(function(){ $("#login-modal").load("login.view.html"); });
-  </script>
 </head>
 <body>
   <nav class="navbar navbar-default">
@@ -61,6 +57,6 @@
     </div><!-- /.container-fluid -->
   </nav>
   <!-- Modal -->
-  <div id="login-modal" class="modal fade" role="dialog"></div>
+  <div id="login-modal" class="modal fade" role="dialog" ng-include="login_view.url"></div>
 </body>
 </html>
