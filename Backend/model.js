@@ -1,20 +1,4 @@
 db = require('./db');
-<<<<<<< HEAD
-var MsgSchema = db.Schema({
-    msg: String
-});
-MsgSchema.methods.display = function(){
-    console.log(this.msg);
-}
-
-var Msg = db.model('msg', MsgSchema);
-module.exports.Msg = Msg;
-
-Msg.find({}, function(err, result){
-    if(err)return console.error(err);
-    console.log(result);
-});
-=======
 escape_html = require('escape-html');
 
 // User model
@@ -500,4 +484,3 @@ Message = model_ext.Message;
 Follow = model_ext.Follow;
 Transaction = model_ext.Transaction;
 Comment = model_ext.Comment;
->>>>>>> cc247f248e817f88f764db59521827940dd87c97
