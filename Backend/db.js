@@ -1,6 +1,10 @@
 // connection
 var db = require('mongoose');
 var app = require('./index');
+<<<<<<< HEAD
+=======
+db.Promise = global.Promise;
+>>>>>>> cc247f248e817f88f764db59521827940dd87c97
 db.connect('mongodb://'+app.get('db_u')+':'+app.get('db_p')+'@'+app.get('db_domain')+':'+app.get('db_port')+'/'+app.get('db_db'));
 var conn = db.connection;
 

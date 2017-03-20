@@ -1,1 +1,4 @@
 *.DS_Store
+local/*
+local
+Backend/node_modules
