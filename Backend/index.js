@@ -8,6 +8,12 @@ for(var key in config) {
     app.set(key, config[key]);
 }
 require('./tools/signal');
+var session = require('express-session');
+app.use(session({
+	secret: app.get('secret'),
+	resave: false,
+	saveUninitialized: false
+}));
 
 require('./db');
 require('./view');
