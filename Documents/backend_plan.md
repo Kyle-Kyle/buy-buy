@@ -1,9 +1,11 @@
-[ ] database
+[x] database
 	[x] basic model
 	[x] model relations
-	[ ] model functions
+	[x] model functions
 [ ] pic_upload
 [ ] create thumbnail
+[x] send_email
+[x] session
 [ ] restful api
 [ ] signup
 [ ] activation

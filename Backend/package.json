@@ -4,6 +4,7 @@
   "description": "A web applicatino project",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "escape-html": "^1.0.3",
     "express": "^4.15.2",
     "express-session": "^1.15.1",
