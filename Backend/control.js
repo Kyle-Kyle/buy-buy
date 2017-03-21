@@ -54,6 +54,7 @@ function mv_tmp_pic(item, item_path, i, files, req, res){// leave dirty file
 			})
 			else mv_tmp_pic(item, item_path, i+1, files, req, res);
 		});
+		pic.resize(200, 200).toFile(path.join(item_path, item.pictures[len]+'_thumbnail.jpg'));
 	});
 }
 
@@ -108,19 +109,20 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 		if(result.feedback != 'Success')return res.send(result);
 		var item = result.item;
 		var i = item.pictures.indexOf(p);
-		if(i<0)return res.send({feedback: 'Failure', err_msg: 'Fail to delete picture'});
+		if(i < 0)return res.send({feedback: 'Failure', err_msg: 'Fail to delete picture'});
 		item.pictures.splice(i, 1);
 		item.save(function(err){
 			if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to delete picture'});
-			var pic_path = path.join(__dirname, '..', 'uploads', item._id.toString(), p+'.jpg');
-			fs.unlink(pic_path, function(err){
+			var item_path = path.join(__dirname, '..', 'uploads', item._id.toString());
+			fs.unlink(path.join(item_path, p+'.jpg'), function(err){
 				if(err)console.log(err);
 			});
+			fs.unlink(path.join(item_path, p+'_thumbnail.jpg'), function(err){});
 			return res.send({feedback: 'Success'});
 		});
 	})
 });
-/*app.get('/secret_entrance', function(req, res){
+app.get('/secret_entrance', function(req, res){
 	model.Item.get('58ce8ded4bfd7c75adad1017', function(result){
 		result.item.pictures = [];
 		result.item.save();
@@ -129,4 +131,4 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 		req.session.user = result.user;
 		res.send('Login success!\n');
 	})
-});*/
+});
