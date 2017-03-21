@@ -122,13 +122,10 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 		});
 	})
 });
-app.get('/secret_entrance', function(req, res){
-	model.Item.get('58ce8ded4bfd7c75adad1017', function(result){
-		result.item.pictures = [];
-		result.item.save();
-	})
+
+/*app.get('/secret_entrance', function(req, res){
 	model.User.get('58ce66dd24598a74addd93ba', function(result){
 		req.session.user = result.user;
 		res.send('Login success!\n');
 	})
-});
+});*/
