@@ -49,18 +49,24 @@ function mv_tmp_pic(item, item_path, i, files, req, res){// leave dirty file
 	});
 }
 
-var upload_pic = upload.array('pic', 9);
+var upload_pic = upload.array('pic', app.get('item_pic_size'));
 app.post('/items/:iid/upload', function(req, res){// pictures to jpg
 	upload_pic(req, res, function(err){
 
-		if(err)return res.send({feedback: 'Failure', err_msg: 'Exceed upload max count'});
+		if(err){
+			rm_tmp_pic(req);
+			return res.send({feedback: 'Failure', err_msg: 'Exceed upload max count'});
+		}
 		if(!check_login(req, res))return rm_tmp_pic(req);
 
 		var valid_ext = ['jpg', 'jpeg', 'png'];
 		var files = req.files;
 		for(var i=0; i<files.length; i++){
 			var strs = files[i].originalname.split('.');
-			if(valid_ext.indexOf(strs[strs.length -1].toLowerCase()) < 0)return res.send({feedback: 'Failure', err_msg: 'Invalid extension'});
+			if(valid_ext.indexOf(strs[strs.length -1].toLowerCase()) < 0){
+				rm_tmp_pic(req);
+				return res.send({feedback: 'Failure', err_msg: 'Invalid extension'});
+			}
 		}
 
 		var iid = req.params.iid;
@@ -75,6 +81,10 @@ app.post('/items/:iid/upload', function(req, res){// pictures to jpg
 				rm_tmp_pic(req);
 				return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
 			}
+			if(item.pictures.length+files.length > app.get('item_pic_size')){
+				rm_tmp_pic(req);
+				return res.send({feedback: 'Failure', err_msg: 'Exceed upload max count'});
+			}
 			var item_path = path.join(__dirname, '..', 'uploads', item._id.toString());
 			mkdirp(item_path, function(err){});
 			mv_tmp_pic(item, item_path, 0, files, req, res);
@@ -83,8 +93,8 @@ app.post('/items/:iid/upload', function(req, res){// pictures to jpg
 });
 
 /*app.get('/secret_entrance', function(req, res){
-	model.User.find({}, function(err, users){
-		req.session.user = users[0];
-		res.send('Login success!');
+	model.User.get('58ce66dd24598a74addd93ba', function(result){
+		req.session.user = result.user;
+		res.send('Login success!\n');
 	})
 });*/
