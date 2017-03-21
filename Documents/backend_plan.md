@@ -4,7 +4,7 @@
 	[x] model functions
 [x] pic_upload
 [x] picture process
-[ ] create thumbnail
+[x] create thumbnail
 [x] send_email
 [x] session
 [ ] restful api
