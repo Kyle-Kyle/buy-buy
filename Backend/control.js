@@ -18,9 +18,7 @@ function rm_tmp_pic(req){
 	var files = req.files;
 	for(var i=0; i<files.length; i++){
 		fs.unlink(files[i].path, function(err){
-			if(err){
-				console.log(err);
-			}
+			if(err)console.log(err);
 		});
 	}
 }
@@ -92,7 +90,31 @@ app.post('/items/:iid/upload', function(req, res){// pictures to jpg
 	});
 });
 
+app.delete('/items/:iid/pictures/:p', function(req, res){
+	if(!check_login(req, res))return;
+	var iid = req.params.iid;
+	var p = req.params.p;
+	model.Item.get(iid, function(result){
+		if(result.feedback != 'Success')return res.send(result);
+		var item = result.item;
+		var i = item.pictures.indexOf(p);
+		if(i<0)return res.send({feedback: 'Failure', err_msg: 'Fail to delete picture'});
+		item.pictures.splice(i, 1);
+		item.save(function(err){
+			if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to delete picture'});
+			var pic_path = path.join(__dirname, '..', 'uploads', item._id.toString(), p+'.jpg');
+			fs.unlink(pic_path, function(err){
+				if(err)console.log(err);
+			});
+			return res.send({feedback: 'Success'});
+		});
+	})
+});
 /*app.get('/secret_entrance', function(req, res){
+	model.Item.get('58ce8ded4bfd7c75adad1017', function(result){
+		result.item.pictures = [];
+		result.item.save();
+	})
 	model.User.get('58ce66dd24598a74addd93ba', function(result){
 		req.session.user = result.user;
 		res.send('Login success!\n');
