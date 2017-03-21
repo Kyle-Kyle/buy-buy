@@ -8,12 +8,13 @@ var sharp = require('sharp');
 var upload = multer({dest: '../tmp'});
 
 function check_login(req, res){
-	if(!req.session.user){
+	if(!req.session.uid){
 		res.redirect('/');
 		return false;
 	}
 	return true
 }
+module.exports.check_login = check_login
 
 function rm_tmp_pic(req){
 	var files = req.files;
@@ -84,9 +85,9 @@ app.post('/items/:iid/upload', function(req, res){// pictures to jpg
 				rm_tmp_pic(req);
 				return res.send(result);
 			}
-			var user = req.session.user;
+			var uid = req.session.uid;
 			var item = result.item;
-			if(!item.uid.equals(user._id)){
+			if(!item.uid.equals(uid)){
 				rm_tmp_pic(req);
 				return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
 			}
@@ -125,7 +126,7 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 
 /*app.get('/secret_entrance', function(req, res){
 	model.User.get('58ce66dd24598a74addd93ba', function(result){
-		req.session.user = result.user;
+		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})
 });*/
