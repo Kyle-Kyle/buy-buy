@@ -17,6 +17,7 @@ app.use(session({
 var body_parser = require('body-parser');
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
+app.disable('x-powered-by');
 
 require('./db');
 require('./view');

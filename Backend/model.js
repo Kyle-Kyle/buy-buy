@@ -171,7 +171,7 @@ var Item_Schema = db.Schema({
 	price: {type: Number, required: true, validate: {validator: pos_val}},
 	tags: [{type: String, match: /[^<>]{1,20}/}],
 	comment_id : {type: db.Schema.ObjectId, ref: 'Comment', validate: {isAsync: true, validator: comment_val}},
-	pictures: {type: Array, default: []},
+	pictures: [{type: Number}],
 	attributes: {type: db.Schema.Types.Mixed, required:true, validate: {isAsync:true, validator: attribute_val}},
 	open_timestamp: {type: Number, default: 0},
 	close_timestamp: {type: Number, default: 0}
@@ -187,8 +187,8 @@ Item_Schema.statics.new_ = function(info, cb){
 	info.open_timestamp = timestamp;
 	delete info.close_timestamp;
 	delete info.comments;
-	delete info.pictures;
 	delete info.comment_id;
+	info.pictures = [];
 	if(typeof(info.tags) !== 'undefined' && info.tags){
 		for(var i=0;i<info.tags.length;i++)info.tags[i] = escape_html(info.tags[i]);
 		this.tags = info.tags
