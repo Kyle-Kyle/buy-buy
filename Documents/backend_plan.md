@@ -2,7 +2,8 @@
 	[x] basic model
 	[x] model relations
 	[x] model functions
-[ ] pic_upload
+[x] pic_upload
+[x] picture process
 [ ] create thumbnail
 [x] send_email
 [x] session

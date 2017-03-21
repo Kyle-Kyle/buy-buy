@@ -4,6 +4,7 @@ var model = require('./model');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var sharp = require('sharp');
 var upload = multer({dest: '../tmp'});
 
 function check_login(req, res){
@@ -30,20 +31,29 @@ function mv_tmp_pic(item, item_path, i, files, req, res){// leave dirty file
 	if(len == 0)item.pictures.set(len, 0);
 	else item.pictures.set(len, item.pictures[len-1]+1);
 
-	fs.rename(files[i].path, path.join(item_path, item.pictures[len]+'.jpg'), function(err){
-		if(err){
+	var size;
+	var pic = sharp(files[i].path);
+	pic.metadata(function(err, metadata){
+		if(err || !(metadata.format == 'png' || metadata.format == 'jpeg')){
 			rm_tmp_pic(req);
-			return res.send({feedback: 'Failure', err_msg: 'Fail to save pictures'});
+			return res.send({feedback: 'Failure', err_msg: 'Invalid extension'});
 		}
-
-		if(i == files.length-1)item.save(function(err){
+		size = metadata.width > metadata.height ? metadata.height: metadata.width;
+		pic.resize(size, size).toFile(path.join(item_path, item.pictures[len]+'.jpg'), function(err){
 			if(err){
 				rm_tmp_pic(req);
-				return res.send({feedback: 'Failure', err_msg: 'Fail to save pictures'})
+				return res.send({feedback: 'Failure', err_msg: 'Fail to save pictures'});
 			}
-			return res.send({feedback: 'Success'});
+			if(i == files.length-1)item.save(function(err){
+				if(err){
+					rm_tmp_pic(req);
+					return res.send({feedback: 'Failure', err_msg: 'Fail to save pictures'});
+				}
+				rm_tmp_pic(req);
+				return res.send({feedback: 'Success'});
+			})
+			else mv_tmp_pic(item, item_path, i+1, files, req, res);
 		});
-		else mv_tmp_pic(item, item_path, i+1, files, req, res);
 	});
 }
 
