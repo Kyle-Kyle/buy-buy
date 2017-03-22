@@ -24,7 +24,7 @@ function decrypt(text){
 
 function check_login(req, res){
 	if(!req.session.uid){
-		res.redirect('/');
+		res.redirect('/');//login page
 		return false;
 	}
 	return true
@@ -184,14 +184,30 @@ app.get('/users/activate', function(req, res){// redirect
 			if(user)return res.send({feedback: 'Failure', err_msg: 'Link expires'});
 			model.User.new_({username: username, email: email, password: hash}, function(result){
 				if(result.feedback != 'Success')return res.send({feedback: 'Failure', err_msg: 'Fail to activate'});
-				return res.send({feedback: 'Success'});
+				req.session.uid = result.user._id;
+				return res.send({feedback: 'Success'});// welcome page
 			});
 		})
 	}catch(e){
 		return res.send({feedback: 'Failure', err_msg: 'Fail to activate'});
 	}
 })
-
+app.post('/users/login', function(req, res){
+	var username = req.body.username;
+	var email = req.body.email;
+	var password = req.body.password;
+	var hash = crypto.createHash('sha256').update(password).digest('base64');
+	var condition;
+	if(username)condition = {username: username, password: hash};
+	else if(email)condition = {email: email, password: hash};
+	else return res.redirect('/');//login page
+	model.User.findOne(condition, function(err, user){
+		if(err)return res.redirect('/');//login page
+		if(!user)return res.redirect('/');//login page
+		req.session.uid = user._id;
+		return res.send({feedback: 'Success'});;// welcome page
+	});
+})
 /*app.get('/secret_entrance', function(req, res){
 	model.User.get('58ce4f9792e17573d6ea279a', function(result){
 		req.session.uid = result.user._id;
