@@ -8,9 +8,9 @@
 [x] send_email
 [x] session
 [ ] restful api
-[ ] signup
-[ ] activation
-[ ] login
+[x] signup
+[x] activation
+[x] login
 [ ] message
 [ ] follow
 [ ] transaction

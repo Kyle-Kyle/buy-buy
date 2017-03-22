@@ -79,7 +79,62 @@ app.get('/items/:iid', function(req, res){
 	var iid = req.params.iid;
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-		res.send(result);
+		var item = result.item;
+		item.populate('comment_id').populate('cid', function(err, item){
+			if(err)return res.send({feedback: 'Failure'});
+			var item = item.toObject();
+			try{
+				delete item.__v;
+				delete item.cid.__v;
+				delete item.cid.attributes;
+				delete item.comment_id.__v;
+				delete item.comment_id.iid;
+			}catch(e){
+				return res.send({feedback: 'Failure'});
+			}
+			return res.send({feedback: 'Success', item: item});
+		})
+	})
+})
+app.get('/users/:uid', function(req, res, next){
+	var uid = req.params.uid;
+	if(uid == 'self')return next();
+	if(!check_login(req, res))return;
+	model.User.findById(uid, '_id username email profile', function(err, user){
+		if(err)return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+		return res.send(user);
+	});
+})
+app.get('/users/self', function(req, res){
+	if(!check_login(req, res))return;
+	var uid = req.session.uid;
+	model.User.findById(uid, '_id username email profile msg_buf history', function(err, user){
+		if(err){
+			req.session.destroy();
+			return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+		}
+		return res.send(user);
+	})
+})
+app.put('/users/update', function(req, res){
+	if(!check_login(req, res))return;
+	var uid = req.session.uid;
+	model.User.get(uid, function(result){
+		if(result.feedback != 'Success')return res.send(result);
+		var user = result.user;
+		var keys = Object.keys(user.profile.toObject());
+		var info = {};
+		for(var i=0; i<keys.length; i++){
+			var key = keys[i];
+			if(req.body[key])info[key] = req.body[key];
+			else info[key] = '';
+		}
+		user.update_profile(info, function(result){
+			var user = result.user.toObject();
+			delete user['password'];
+			delete user['__v'];
+			return res.send({feedback: 'Success', user: user});
+		});
 	})
 })
 
