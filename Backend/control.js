@@ -6,6 +6,21 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var sharp = require('sharp');
 var upload = multer({dest: '../tmp'});
+var crypto = require('crypto');
+var send_email = require('./tools/send_email');
+
+function encrypt(text){
+	var cipher = crypto.createCipher(app.get('encrypt_algo'), app.get('secret'));
+	var crypted = cipher.update(text,'utf8','hex');
+	crypted += cipher.final('hex');
+	return crypted;
+}
+function decrypt(text){
+	var decipher = crypto.createDecipher(app.get('encrypt_algo'), app.get('secret'));
+	var dec = decipher.update(text,'hex','utf8')
+	dec += decipher.final('utf8');
+	return dec;
+}
 
 function check_login(req, res){
 	if(!req.session.uid){
@@ -124,9 +139,62 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 	})
 });
 
-app.get('/secret_entrance', function(req, res){
-	model.User.get('58ce66dd24598a74addd93ba', function(result){
+app.post('/users/register', function(req, res){// vulnerable to DOS
+	var username = req.body.username;
+	var password = req.body.password;
+	var email = req.body.email;
+	try{
+		if(!/^1155\d{6}@link\.cuhk\.edu\.hk/.test(email) || !/^[A-Za-z0-9_]{3,20}$/.test(username) || password.length < 8)return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+		var hash = crypto.createHash('sha256').update(password).digest('base64');
+		var encoded = encrypt(email)+'|'+encrypt(hash)+'|'+encrypt(username)+'|'+encrypt((+new Date()).toString());
+		send_email.activate_email(email, encoded, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure', err_msg: 'Fail to send email'});
+			return res.send({feedback: 'Success'});
+		});
+	}catch(e){
+		console.log(e);
+		return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+	}
+});
+app.post('/users/validate', function(req, res){// vulnerable to DOS and info listing
+	var username = req.body.username;
+	var email = req.body.email;
+	var condition;
+	if(username)condition = {username: username};
+	else if(email)condition = {email: email};
+	else return res.send({feedback: 'Failure'});
+	model.User.findOne(condition, function(err, user){
+		if(err)return res.send({feedback: 'Failure'});
+		if(user)return res.send({feedback: 'Success', msg: 'taken'});
+		return res.send({feedback: 'Success', msg: 'available'});
+	})
+})
+app.get('/users/activate', function(req, res){// redirect
+	var info = req.query.text;
+	try{
+		info = info.split('|');
+		var username = decrypt(info[2]);
+		var email = decrypt(info[0]);
+		var hash = decrypt(info[1]);
+		var timestamp = parseInt(decrypt(info[3]));
+		var now = +new Date();
+		if((now - timestamp) > 5*60*1000)return res.send({feedback: 'Failure', err_msg: 'Link expires'});
+		model.User.findOne({username: username, email: email}, function(err, user){
+			if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to activate'});
+			if(user)return res.send({feedback: 'Failure', err_msg: 'Link expires'});
+			model.User.new_({username: username, email: email, password: hash}, function(result){
+				if(result.feedback != 'Success')return res.send({feedback: 'Failure', err_msg: 'Fail to activate'});
+				return res.send({feedback: 'Success'});
+			});
+		})
+	}catch(e){
+		return res.send({feedback: 'Failure', err_msg: 'Fail to activate'});
+	}
+})
+
+/*app.get('/secret_entrance', function(req, res){
+	model.User.get('58ce4f9792e17573d6ea279a', function(result){
 		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})
-});
+});*/
