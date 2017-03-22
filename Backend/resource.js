@@ -36,7 +36,7 @@ app.get('/items/:iid/comments', function(req, res){
 		var item = result.item;
 		item.populate('comment_id', function(err, item){
 			if(err)return res.send({feedback: 'Failure'});
-			res.send(item.comment_id.comments);
+			res.send({feedback: 'Success', comments: item.comment_id.comments});
 		});
 	})
 })
@@ -54,6 +54,7 @@ app.post('/items/:iid/comments', function(req, res){
 		})
 	})
 });
+// Item create
 app.post('/items/create', function(req, res){
 	if(!check_login(req, res))return;
 	var info = req.body;
@@ -72,5 +73,12 @@ app.post('/items/create', function(req, res){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
 		})
+	})
+})
+app.get('/items/:iid', function(req, res){
+	var iid = req.params.iid;
+	model.Item.get(iid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		res.send(result);
 	})
 })
