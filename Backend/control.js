@@ -125,7 +125,22 @@ app.delete('/items/:iid/pictures/:p', function(req, res){
 });
 
 app.get('/secret_entrance', function(req, res){
-	model.User.get('58ce66dd24598a74addd93ba', function(result){
+	/*
+	model.User.new_({username: 'chenpengtest', password: 'password', email: '1155061956@link.cuhk.edu.hk'},function(result){
+		if(result.feedback=='Success')
+		{
+			console.log('Success');
+			res.send('succses');
+		}
+		else
+		{
+			console.log('Fail');
+			res.send('fail');
+		}
+			
+	});
+	*/
+	model.User.get('58d219bc41eb4c6fadadd30e', function(result){
 		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})

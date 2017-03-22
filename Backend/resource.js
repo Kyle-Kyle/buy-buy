@@ -64,7 +64,7 @@ app.post('/items/create', function(req, res){
 		info.price = parseFloat(info.price);
 		info.quantity = parseInt(info.quantity);
 	}catch(err){
-		return res.send(result);
+		return res.send({feedback: 'Failure'});
 	}
 	model.User.get(req.session.uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
@@ -80,5 +80,34 @@ app.get('/items/:iid', function(req, res){
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		res.send(result);
+	})
+})
+
+//Get category list
+app.get('/categories',function(req,res){
+	model.Category.find({}, function(err,categories){
+		err_msg= 'Fail to get category list.';
+		if(err){
+			//may change err_msg
+			
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!categories){
+			err_msg= 'No category returned.';
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		return res.send({feedback: 'Success', categories: categories});
+	})
+})
+//Get items under a category
+app.get('/categories/:cid/items',function(req,res){
+	var cid=req.params.cid;
+	model.Category.get(cid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var category=result.category;
+		category.get_items(function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
 	})
 })
