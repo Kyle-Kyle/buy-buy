@@ -8,6 +8,7 @@ var User_Schema = db.Schema({
 	history: [{type: db.Schema.Types.ObjectId, ref: 'Transaction', validate: {isAsync: true, validator: transaction_val}}],
 	profile: {
 		nickname: {type: String, match: /^[A-Za-z0-9_]{3,20}$/, default: ''},
+		description: {type: String, match: /^.{0,300}$/, default: ''},
 		phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
 		wechat: {type: String, match: /^[A-Za-z0-9]{3:20}$/, default: ''},
 		email: {type: String, match: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, default: ''},
@@ -40,7 +41,8 @@ User_Schema.statics.get = function(uid, cb){
 // User model: update profile
 User_Schema.methods.update_profile = function(profile, cb){
 	this.profile = profile;
-	this.save(function(err, result){
+	this.profile.description = escape_html(profile.description);
+	this.save(function(err, user){
 		err_msg = 'Fail to update information';
 		if(err){
 			if(err.message.indexOf('validation') > -1){

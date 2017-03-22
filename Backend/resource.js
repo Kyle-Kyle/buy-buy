@@ -82,3 +82,44 @@ app.get('/items/:iid', function(req, res){
 		res.send(result);
 	})
 })
+app.get('/users/:uid', function(req, res, next){
+	var uid = req.params.uid;
+	if(uid == 'self')return next();
+	if(!check_login(req, res))return;
+	model.User.findById(uid, '_id username email profile', function(err, user){
+		if(err)return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+		return res.send(user);
+	});
+})
+app.get('/users/self', function(req, res){
+	if(!check_login(req, res))return;
+	var uid = req.session.uid;
+	model.User.findById(uid, '_id username email profile msg_buf history', function(err, user){
+		if(err){
+			req.session.destroy();
+			return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+		}
+		return res.send(user);
+	})
+})
+app.put('/users/update', function(req, res){
+	if(!check_login(req, res))return;
+	var uid = req.session.uid;
+	model.User.get(uid, function(result){
+		if(result.feedback != 'Success')return res.send(result);
+		var user = result.user;
+		var keys = Object.keys(user.profile.toObject());
+		var info = {};
+		for(var i=0; i<keys.length; i++){
+			var key = keys[i];
+			if(req.body[key])info[key] = req.body[key];
+			else info[key] = '';
+		}
+		user.update_profile(info, function(result){
+			var user = result.user.toObject();
+			delete user['password'];
+			delete user['__v'];
+			return res.send({feedback: 'Success', user: user});
+		});
+	})
+})
