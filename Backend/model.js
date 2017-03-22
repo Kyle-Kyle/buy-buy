@@ -168,7 +168,7 @@ function attribute_val(d, cb){
 // Item model
 var Item_Schema = db.Schema({
 	uid: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
-	cid: {type: db.Schema.ObjectId, ref: 'Categroy', required: true, validate: {isAsync: true, validator: category_val}},
+	cid: {type: db.Schema.ObjectId, ref: 'Category', required: true, validate: {isAsync: true, validator: category_val}},
 	quantity: {type: Number, required: true, validate: {validator: pos_val}},
 	price: {type: Number, required: true, validate: {validator: pos_val}},
 	tags: [{type: String, match: /[^<>]{1,20}/}],

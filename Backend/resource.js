@@ -79,7 +79,21 @@ app.get('/items/:iid', function(req, res){
 	var iid = req.params.iid;
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-		res.send(result);
+		var item = result.item;
+		item.populate('comment_id').populate('cid', function(err, item){
+			if(err)return res.send({feedback: 'Failure'});
+			var item = item.toObject();
+			try{
+				delete item.__v;
+				delete item.cid.__v;
+				delete item.cid.attributes;
+				delete item.comment_id.__v;
+				delete item.comment_id.iid;
+			}catch(e){
+				return res.send({feedback: 'Failure'});
+			}
+			return res.send({feedback: 'Success', item: item});
+		})
 	})
 })
 app.get('/users/:uid', function(req, res, next){
