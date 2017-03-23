@@ -1,0 +1,58 @@
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+  <script>
+    var profileApp = angular.module("profileApp", []);
+  </script>
+  <script src="profile.js"></script>
+</head>
+
+<body>
+<div class="container">
+  <div ng-app="profileApp" ng-controller="loadController">
+    <h1 class="text-justify">{{userName}}</h1>
+    <form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <p class="text-center">{{email}}</p>
+        <small id="emailHelp" class="form-text text-muted">Your email address will be in security.</small>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Discription</label>
+        <p class="text-center">{{userDes}}</p>
+      </div>
+      <div class="form-group">
+	<label>Goods in sell</label>
+	<div class="list-group">
+          <a href="{{sellingItem[0].url}}" class="list-group-item" ng-hide="{{sellingItem[0].hide}}">{{sellingItem[0].name}}</a>
+	  <a href="{{sellingItem[1].url}}" class="list-group-item" ng-hide="{{sellingItem[1].hide}}">{{sellingItem[1].name}}</a>
+	  <a href="{{sellingItem[2].url}}" class="list-group-item" ng-hide="{{sellingItem[2].hide}}">{{sellingItem[2].name}}</a>
+	  <a href="{{sellingSeeMoreUrl}}" class="list-group-item" ng-hide="sellingSeeMore">See more</a>
+        </div>
+      </div>
+      <div class="list-group">
+	<label>Sold history</label>
+	<div class="list-group">
+	  <a href="{{soldItem[0].url}}" class="list-group-item" ng-hide="{{soldItem[0].hide}}">{{soldItem[0].name}}</a>
+	  <a href="{{soldItem[1].url}}" class="list-group-item" ng-hide="{{soldItem[1].hide}}">{{soldItem[1].name}}</a>
+	  <a href="{{soldItem[2].url}}" class="list-group-item" ng-hide="{{soldItem[2].hide}}">{{soldItem[2].name}}</a>
+	  <a href="{{SoldSeeMoreUrl}}" class="list-group-item" ng-hide="soldSeeMore">See more</a>
+	</div>
+      </div>
+      <div class"list-group">
+	<label>Buying history</label>
+	  <a href="{{buyingHis[0].url}}" class="list-group-item" ng-hide="{{buyingHis[0].hide}}">{{buyingHis[0].name}}</a>
+	  <a href="{{buyingHis[1].url}}" class="list-group-item" ng-hide="{{buyingHis[1].hide}}">{{buyingHis[1].name}}</a>
+	  <a href="{{buyingHis[2].url}}" class="list-group-item" ng-hide="{{buyingHis[2].hide}}">{{buyingHis[2].name}}</a>
+	  <a href="{{buySeeMoreUrl}}" class="list-group-item" ng-hide="{{buySeeMore}}">See more</a>
+      </div>
+      <br>
+      <button href="#" type="button" class="btn btn-default">Back</button>
+      <button type="button" class="btn btn-info">Contact us</button>
+    </form>
+  </div>
+</div>
+</body>
