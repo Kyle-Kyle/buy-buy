@@ -208,9 +208,10 @@ app.post('/users/login', function(req, res){
 		return res.send({feedback: 'Success'});;// welcome page
 	});
 })
-/*app.get('/secret_entrance', function(req, res){
-	model.User.get('58ce4f9792e17573d6ea279a', function(result){
+app.get('/secret_entrance', function(req, res){
+	model.User.get('58d219bc41eb4c6fadadd30e', function(result){
+	//model.User.get('58ce4f9792e17573d6ea279a', function(result){
 		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})
-});*/
+});
