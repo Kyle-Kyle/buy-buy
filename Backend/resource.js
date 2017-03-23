@@ -40,6 +40,7 @@ app.get('/items/:iid/comments', function(req, res){
 		});
 	})
 })
+// create comments
 app.post('/items/:iid/comments', function(req, res){
 	if(!check_login(req, res))return;
 	var iid = req.params.iid;
@@ -75,6 +76,7 @@ app.post('/items/create', function(req, res){
 		})
 	})
 })
+//get item details
 app.get('/items/:iid', function(req, res){
 	var iid = req.params.iid;
 	model.Item.get(iid, function(result){
@@ -96,6 +98,45 @@ app.get('/items/:iid', function(req, res){
 		})
 	})
 })
+//update item info
+app.put('/items/:iid', function(req, res){
+	if(!check_login(req, res))return;
+	var iid=req.params.iid;
+	var info=req.body;
+	try{
+		info.tags = JSON.parse(info.tags);
+		info.attributes = JSON.parse(info.attributes);
+		info.price = parseFloat(info.price);
+		info.quantity = parseInt(info.quantity);
+	}catch(err){
+		return res.send({feedback: 'Failure'});
+	}
+	model.Item.get(iid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var item=result.item;
+		item.update_info(info, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+//delete item
+app.delete('/items/:iid', function(req, res){
+	if(!check_login(req, res))return;
+	var iid=req.params.iid;
+	model.Item.get(iid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var item=result.item;
+		model.Item.delete_(function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+
+
+
+//get user info
 app.get('/users/:uid', function(req, res, next){
 	var uid = req.params.uid;
 	if(uid == 'self')return next();
@@ -105,6 +146,7 @@ app.get('/users/:uid', function(req, res, next){
 		return res.send(user);
 	});
 })
+//get self info
 app.get('/users/self', function(req, res){
 	if(!check_login(req, res))return;
 	var uid = req.session.uid;
@@ -116,6 +158,7 @@ app.get('/users/self', function(req, res){
 		return res.send(user);
 	})
 })
+//update user info
 app.put('/users/update', function(req, res){
 	if(!check_login(req, res))return;
 	var uid = req.session.uid;
@@ -135,6 +178,22 @@ app.put('/users/update', function(req, res){
 			delete user['__v'];
 			return res.send({feedback: 'Success', user: user});
 		});
+	})
+})
+//get items of a user
+app.get('/users/self/items',function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.session.uid;
+	model.Item.find({uid:uid}, function(err,items){
+		err_msg= 'Fail to get items of this user.'
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!items){
+			err_msg= 'No item returned.';
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
 	})
 })
 
@@ -166,3 +225,112 @@ app.get('/categories/:cid/items',function(req,res){
 		})
 	})
 })
+
+//Message resource need modify
+//send message
+app.post('/messages/:uid', function(req, res){
+	if(!check_login(req, res))return;
+	var info = req.body;
+	var uid=req.params.uid;
+	var uid2=req.session.uid;
+	try{
+		info.uid=uid;
+		info.content = JSON.parse(info.content);
+	}catch(err){
+		return res.send({feedback: 'Failure'});
+	}
+	model.User.findOne({uid:uid2}, function(err, user){
+		err_msg='Fail to find sender.';
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!user){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		user.send_msg(info,function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+//check new messages
+app.get('/users/:uid/new_messages', function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.params.uid;
+	model.User.get(uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var msg_buf=result.user.msg_buf;
+		res.send({feedback: 'Success', msg_buf:msg_buf})
+	})
+})
+//receive messages
+app.get('/messages/:uid', function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.params.uid;
+	var uid2=req.session.uid;
+	model.User.findOne({uid:uid2}, function(err, user){
+		err_msg='Fail to find user.';
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!user){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		user.recv_msg(uid, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+
+//Follow resource
+//follow
+app.get('/follow/:uid',function(req, res){
+	if(!check_login(req, res))return;
+	var followee_uid=req.params.uid;
+	var follower_uid=req.session.uid;
+	model.User.findOne({uid:follower_uid}, function(err, user){
+		err_msg='Fail to find user.';
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!user){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		user.follow(followee_uid,function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+//unfollow
+app.get('/unfollow/:uid',function(req, res){
+	if(!check_login(req, res))return;
+	var followee_uid=req.params.uid;
+	var follower_uid=req.session.uid;
+	model.User.findOne({uid:follower_uid}, function(err, user){
+		err_msg='Fail to find user.';
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!user){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		user.unfollow(followee_uid,function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+
+	//list followee
+	//app.get('/follow/followees', function(req, res){
+
