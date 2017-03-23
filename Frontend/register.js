@@ -50,9 +50,16 @@ angular.module('indexApp')
     var pw = $('#reg-pw');
     var pwcf = $('#pw-confirm');
     if ($scope.pwValid) {
-      $scope.pwMatch = (pw && pwcf && pw[0].value == pwcf[0].value);
+      if (pw && pwcf && pw[0].value == pwcf[0].value) {
+        $scope.pwMatch = true;
+        $scope.regForm.passwordConfirm.$invalid = false;
+      } else {
+        $scope.pwMatch = false;
+        $scope.regForm.passwordConfirm.$invalid = true;
+      }
     } else {
       $scope.pwMatch = false;
+      $scope.regForm.passwordConfirm.$valid = false;
     }
   };
 
