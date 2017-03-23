@@ -134,8 +134,6 @@ app.delete('/items/:iid', function(req, res){
 	})
 })
 
-
-
 //get user info
 app.get('/users/:uid', function(req, res, next){
 	var uid = req.params.uid;
@@ -203,7 +201,7 @@ app.get('/categories',function(req,res){
 		err_msg= 'Fail to get category list.';
 		if(err){
 			//may change err_msg
-			
+
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
 		if(!categories){
@@ -239,16 +237,9 @@ app.post('/messages/:uid', function(req, res){
 	}catch(err){
 		return res.send({feedback: 'Failure'});
 	}
-	model.User.findOne({uid:uid2}, function(err, user){
-		err_msg='Fail to find sender.';
-		if(err){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
-		if(!user){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
+	model.User.get(uid2, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var user=result.user;
 		user.send_msg(info,function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
@@ -270,16 +261,9 @@ app.get('/messages/:uid', function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.params.uid;
 	var uid2=req.session.uid;
-	model.User.findOne({uid:uid2}, function(err, user){
-		err_msg='Fail to find user.';
-		if(err){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
-		if(!user){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
+	model.User.get(uid2, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var user=result.user;
 		user.recv_msg(uid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
@@ -293,16 +277,9 @@ app.get('/follow/:uid',function(req, res){
 	if(!check_login(req, res))return;
 	var followee_uid=req.params.uid;
 	var follower_uid=req.session.uid;
-	model.User.findOne({uid:follower_uid}, function(err, user){
-		err_msg='Fail to find user.';
-		if(err){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
-		if(!user){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
+	model.User.get(follower_uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var user=result.user;
 		user.follow(followee_uid,function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
@@ -314,8 +291,22 @@ app.get('/unfollow/:uid',function(req, res){
 	if(!check_login(req, res))return;
 	var followee_uid=req.params.uid;
 	var follower_uid=req.session.uid;
-	model.User.findOne({uid:follower_uid}, function(err, user){
-		err_msg='Fail to find user.';
+	model.User.get(follower_uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var user=result.user;
+		user.unfollow(followee_uid,function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+
+//list followees
+app.get('/follow/followees', function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.session.uid;
+	model.Follow.find({follower_uid:uid},function(err, followees){
+		err_msg='Fail to find followees.';
 		if(err){
 			//may change err_msg
 			return res.send({feedback: 'Failure', err_msg: err_msg});
@@ -324,13 +315,88 @@ app.get('/unfollow/:uid',function(req, res){
 			//may change err_msg
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
-		user.unfollow(followee_uid,function(result){
+		return res.send({feedback: 'Success', followees: followees})
+	})
+})
+//list followers
+app.get('/follow/followers', function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.session.uid;
+	model.Follow.find({followee_uid:uid},function(err, followers){
+		err_msg='Fail to find followers.';
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		if(!user){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		return res.send({feedback: 'Success', followers: followers})
+	})
+})
+
+//Transaction resource
+//buy request
+app.post('/transactions', function(req, res){
+	if(!check_login(req, res))return;
+	var iid=//need to do
+		var uid=req.session.uid;
+	model.User.get(uid, function(result){
+		var user=result.user;
+		user.buy_request()//need to do
+
+	})
+})
+//sell confirm
+app.get('/transactions/:tid/confirm', function(req, res){
+	if(!check_login(req, res))return;
+	var tid=req.params.tid;
+	var uid=req.session.uid;
+	model.User.get(uid, function(result){
+		var user=result.user;
+		user.sell_confirm(tid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
 		})
 	})
 })
-
-	//list followee
-	//app.get('/follow/followees', function(req, res){
-
+//receive confirm
+app.get('/transactions/:tid/receive', function(req, res){
+	if(!check_login(req, res))return;
+	var tid=req.params.tid;
+	var uid=req.session.uid;
+	model.User.get(uid, function(result){
+		var user=result.user;
+		user.recv_from(tid, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+//seller reject
+app.get('/transactions/:tid/reject', function(req, res){
+	if(!check_login(req, res))return;
+	var tid=req.params.tid;
+	var uid=req.session.uid;
+	model.User.get(uid, function(result){
+		var user=result.user;
+		user.seller_reject(tid, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
+//buyer cancel
+app.get('/transactions/:tid/cancel', function(req, res){
+	if(!check_login(req, res))return;
+	var tid=req.params.tid;
+	var uid=req.session.uid;
+	model.User.get(uid, function(result){
+		var user=result.user;
+		user.buyer_cancel(tid, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
+	})
+})
