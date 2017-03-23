@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<style type="text/css">
+.input-group-btn:first-child > .form-control {
+  margin-right: -1px;
+  width: auto;
+}
+
+</style>
+
+<div class="modal-dialog">
+
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Register - Become one of buy-buy</h4>
+    </div>
+    <div class="modal-body">
+      <div class="container-fluid">
+        <form name="regForm" ng-submit="register()" ng-controller="regController" role="form">
+
+          <!-- username (un) -->
+          <div class="form-group has-feedback"
+            ng-class="regForm.username.$dirty?
+              (unValid?'has-success':'has-error'):''">
+          <label for="username">User name<font color="red">*</font></label>
+          <input type="text" name="username" class="form-control" maxlength="20"
+            ng-model="username" ng-change="validateUsername()"
+            ng-blur="checkServer()" required />
+          <span class="glyphicon form-control-feedback"
+            ng-class="unValid?'glyphicon-ok':'glyphicon-remove'"
+            ng-show="regForm.username.$dirty"></span>
+          <span ng-show="regForm.username.$dirty && !unValid" class="help-block">
+            {{unErrorMsg}}</span>
+          </div>
+
+          <!-- password (pw) -->
+          <div class="form-group has-feedback"
+            ng-class="regForm.password.$dirty?
+              (pwValid?'has-success':'has-error'):''">
+            <label for="password">Password<font color="red">*</font></label>
+            <input id="reg-pw" type="password" name="password"
+              class="form-control" maxlength="20"
+              ng-model="password" ng-change="validatePassword(regForm.passwordConfirm.$dirty)" required />
+            <span class="glyphicon form-control-feedback"
+              ng-class="pwValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="regForm.password.$dirty"></span>
+            <span ng-show="regForm.password.$dirty && !pwValid" class="help-block">
+              {{pwErrorMsg}}</span>
+          </div>
+
+          <!-- password confirmation (pwcf) -->
+          <div class="form-group has-feedback"
+            ng-class="regForm.passwordConfirm.$dirty?
+              (pwMatch?'has-success':'has-error'):''">
+            <label for="passwordConfirm">Password confirmation<font color="red">*</font></label>
+            <input id="pw-confirm" type="password" name="passwordConfirm"
+              class="form-control" maxlength="20"
+              ng-model="passwordConfirm" ng-change="confirmPassword()" required />
+            <span class="glyphicon form-control-feedback"
+              ng-class="pwMatch?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="regForm.passwordConfirm.$dirty"></span>
+            <!--span ng-show="regForm.passwordConfirm.$dirty && !pwValid" class="help-block">
+              Password not match</span-->
+          </div>
+
+          <div class="form-group has-feedback"
+            ng-class="regForm.email.$dirty?
+              (regForm.email.$error.email || regForm.email.$error.required?
+                'has-error':'has-success'):''">
+            <label for="email">Email address<font color="red">*</font></label>
+            <input type="email" name="email" class="form-control" maxlength="40"
+              ng-model="email" ng-change="" required />
+            <span class="glyphicon form-control-feedback"
+              ng-class="regForm.email.$error.email || regForm.email.$error.required?
+                'glyphicon-remove':'glyphicon-ok'"
+              ng-show="regForm.email.$dirty"></span>
+            <span class="help-block"
+              ng-show="regForm.email.$error.email" >
+              Not a valid email address</span>
+            <span class="help-block"
+              ng-show="regForm.email.$dirty && regForm.email.$error.required">
+              E-mail is required</span>
+          </div>
+          <div class="form-group">
+            <label for="tel">Phone number</label>
+            <div class="input-group has-feedback"
+              ng-class="regForm.tel.$dirty?
+                (regForm.tel.$valid?'has-success':'has-error'):''">
+              <div class="input-group-btn" ng-include="'country_code.html'"></div>
+              <input type="text", name="tel" class="form-control" ng-model="tel"
+                ng-pattern="'\\d{8,16}'" />
+              <span class="glyphicon form-control-feedback"
+                ng-class="regForm.tel.$valid?'glyphicon-ok':'glyphicon-remove'"
+                ng-show="regForm.tel.$dirty"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Description - tell us about yourself</label>
+            <textarea name="description" class="form-control" rows="4" style="resize:none;" maxlength="300"
+              ng-model="description"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" ng-disabled="regForm.$invalid ||
+              regForm.passwordConfirm.$invalid" class="btn btn-primary">Register</button>
+            <a href="#!/login" class="btn btn-link">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+    </div>
+  </div>
+</div>

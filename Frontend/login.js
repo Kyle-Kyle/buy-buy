@@ -1,6 +1,5 @@
 angular.module('indexApp')
 	.controller('loginController', function($scope, $http) {
-		alert('bind success!');
 		$scope.login = function(){$http.post("/users/login")
 			.then(function(response) {
 				$scope.login_feedback = response.data;
