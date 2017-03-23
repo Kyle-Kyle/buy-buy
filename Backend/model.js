@@ -8,6 +8,7 @@ var User_Schema = db.Schema({
 	history: [{type: db.Schema.Types.ObjectId, ref: 'Transaction', validate: {isAsync: true, validator: transaction_val}}],
 	profile: {
 		nickname: {type: String, match: /^[A-Za-z0-9_]{3,20}$/, default: ''},
+		description: {type: String, match: /^.{0,300}$/, default: ''},
 		phone: {type: String, match: /^\+?[\d\s]{3,20}$/, default: ''},
 		wechat: {type: String, match: /^[A-Za-z0-9]{3:20}$/, default: ''},
 		email: {type: String, match: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, default: ''},
@@ -40,7 +41,8 @@ User_Schema.statics.get = function(uid, cb){
 // User model: update profile
 User_Schema.methods.update_profile = function(profile, cb){
 	this.profile = profile;
-	this.save(function(err, result){
+	this.profile.description = escape_html(profile.description);
+	this.save(function(err, user){
 		err_msg = 'Fail to update information';
 		if(err){
 			if(err.message.indexOf('validation') > -1){
@@ -166,12 +168,12 @@ function attribute_val(d, cb){
 // Item model
 var Item_Schema = db.Schema({
 	uid: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
-	cid: {type: db.Schema.ObjectId, ref: 'Categroy', required: true, validate: {isAsync: true, validator: category_val}},
+	cid: {type: db.Schema.ObjectId, ref: 'Category', required: true, validate: {isAsync: true, validator: category_val}},
 	quantity: {type: Number, required: true, validate: {validator: pos_val}},
 	price: {type: Number, required: true, validate: {validator: pos_val}},
 	tags: [{type: String, match: /[^<>]{1,20}/}],
 	comment_id : {type: db.Schema.ObjectId, ref: 'Comment', validate: {isAsync: true, validator: comment_val}},
-	pictures: {type: Array, default: []},
+	pictures: [{type: Number}],
 	attributes: {type: db.Schema.Types.Mixed, required:true, validate: {isAsync:true, validator: attribute_val}},
 	open_timestamp: {type: Number, default: 0},
 	close_timestamp: {type: Number, default: 0}
@@ -187,8 +189,8 @@ Item_Schema.statics.new_ = function(info, cb){
 	info.open_timestamp = timestamp;
 	delete info.close_timestamp;
 	delete info.comments;
-	delete info.pictures;
 	delete info.comment_id;
+	info.pictures = [];
 	if(typeof(info.tags) !== 'undefined' && info.tags){
 		for(var i=0;i<info.tags.length;i++)info.tags[i] = escape_html(info.tags[i]);
 		this.tags = info.tags
@@ -475,12 +477,3 @@ module.exports.Message = Message;
 module.exports.Follow = Follow;
 module.exports.Transaction = Transaction;
 module.exports.Comment = Comment;
-
-model_ext = require('./model_ext');
-User = model_ext.User;
-Category = model_ext.Category;
-Item = model_ext.Item;
-Message = model_ext.Message;
-Follow = model_ext.Follow;
-Transaction = model_ext.Transaction;
-Comment = model_ext.Comment;
