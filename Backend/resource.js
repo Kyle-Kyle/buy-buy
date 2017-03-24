@@ -247,9 +247,9 @@ app.post('/messages/:uid', function(req, res){
 	})
 })
 //check new messages
-app.get('/users/:uid/new_messages', function(req, res){
+app.get('/users/new_messages', function(req, res){
 	if(!check_login(req, res))return;
-	var uid=req.params.uid;
+	var uid=req.session.uid;
 	model.User.get(uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var msg_buf=result.user.msg_buf;
