@@ -17,17 +17,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
 </head>
 <body>
-  <div ng-app="indexApp" ng-controller="initController">
+  <div ng-app="indexApp" ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
     <div id="recmd" ng-include="recmd.url"></div>
   </div>
 
   <!-- load angular functions -->
-  <script src="initController.js"></script>
+  <script src="mainController.js"></script>
   <script>
     angular
       .module('indexApp', ['ngRoute', 'ngCookies'])
-      .controller('initController', initController);
+      .controller('mainController', mainController);
   </script>
   <script src="login.js"></script>
   <script src="register.js"></script>

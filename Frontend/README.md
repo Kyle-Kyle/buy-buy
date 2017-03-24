@@ -1,6 +1,6 @@
 # Front end :blush:
 ## Notice
-1. Please load initController.js in the first place on every individual pages and add the initController to the ngApp of that page
+1. Please load mainController.js in the first place on every individual pages and add the mainController to the ngApp of that page
 2. To view `index.html` or other pages, run `../Backend/test_index.js` on nodejs, then visit [localhost:8081/index.html](http://localhost:8081/index.html) on your browser  
 ## Working schedule
 - [ ] Finish all UI before 3-27
