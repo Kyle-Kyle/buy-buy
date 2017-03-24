@@ -10,6 +10,8 @@
     <div class="modal-body">
       <div class="container-fluid">
         <form name="loginForm" ng-submit="login()" ng-controller="LoginController" role="form">
+          <span class="help-block" ng-init="loginFailed=false" ng-show="loginFailed" >
+              Wrong username or password</span>
           <div class="form-group" ng-class="{
             'has-error': loginForm.username.$dirty && loginForm.username.$error.required }">
             <label for="username">Username</label>
@@ -29,9 +31,11 @@
                 Password is required</span>
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary"
-              ng-disabled="loginForm.$invalid" >Login</button>
-            <a href="#" onclick="$('#login-modal').modal('hide');" data-toggle="modal"
+            <button type="submit" class="btn smooth-trans-btn" id="login_btn"
+              ng-init="login_btn_text='Login'; login_btn_style='btn-primary'"
+              ng-class="login_btn_style" ng-disabled="loginForm.$invalid" >
+                {{login_btn_text}}</button>
+            <a href="#" onclick="$('#login-modal').modal('toggle');" data-toggle="modal"
               data-target="#register-modal" class="btn btn-link">Register</a>
           </div>
         </form>

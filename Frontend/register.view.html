@@ -24,7 +24,7 @@
           <div class="form-group has-feedback"
             ng-class="regForm.username.$dirty?
               (unValid?'has-success':'has-error'):''">
-          <label for="username">User name<font color="red">*</font></label>
+          <label for="username">Username<font color="red">*</font></label>
           <input type="text" name="username" class="form-control" maxlength="20"
             ng-model="username" ng-change="validateUsername()"
             ng-blur="checkServer()" required />
@@ -102,9 +102,10 @@
               ng-model="description"></textarea>
           </div>
           <div class="form-actions">
-            <button type="submit" ng-disabled="regForm.$invalid ||
-              regForm.passwordConfirm.$invalid" class="btn btn-primary">Register</button>
-            <a href="#!/login" class="btn btn-link">Cancel</a>
+            <button type="submit" class="btn btn-primary smooth-trans-btn"
+              ng-disabled="regForm.$invalid || regForm.passwordConfirm.$invalid" >
+                Register</button>
+            <a href="#" class="btn btn-link" onclick="$('#register-modal').modal('toggle')">Cancel</a>
           </div>
         </form>
       </div>

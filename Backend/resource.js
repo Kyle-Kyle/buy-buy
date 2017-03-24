@@ -340,7 +340,7 @@ app.get('/follow/followers', function(req, res){
 //buy request
 app.post('/transactions', function(req, res){
 	if(!check_login(req, res))return;
-	var iid=//need to do
+	//var iid=//need to do
 		var uid=req.session.uid;
 	model.User.get(uid, function(result){
 		var user=result.user;

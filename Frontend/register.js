@@ -1,5 +1,10 @@
 angular.module('indexApp')
-.controller('regController', function($scope) {
+.controller('regController', function($scope, $http) {
+  $scope.register = function() {
+
+  }
+
+
   $scope.validateUsername = function(dirty) {
     var pattern = /^[_A-Za-z0-9]{3,20}$/;
     if ($scope.username != undefined && $scope.username.match(pattern)) {
@@ -7,7 +12,7 @@ angular.module('indexApp')
     } else {
       $scope.unValid = false;
       if ($scope.username == undefined) {
-        $scope.unErrorMsg = 'User name is required';
+        $scope.unErrorMsg = 'Username is required';
       }
       else if ($scope.username.length < 3) {
         $scope.unErrorMsg = 'No less than 3 characters';
