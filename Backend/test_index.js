@@ -3,7 +3,7 @@ var app = express();
 module.exports = app;
 
 // load configurations
-var config = require('../config');
+var config = require('../test_config');
 for(var key in config) {
     app.set(key, config[key]);
 }
