@@ -231,12 +231,6 @@ app.post('/messages/:uid', function(req, res){
 	var info = req.body;
 	var uid=req.params.uid;
 	var uid2=req.session.uid;
-	try{
-		info.uid=uid;
-		info.content = JSON.parse(info.content);
-	}catch(err){
-		return res.send({feedback: 'Failure'});
-	}
 	model.User.get(uid2, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
@@ -341,12 +335,6 @@ app.get('/follow/followers', function(req, res){
 app.post('/transactions/create', function(req, res){
 	if(!check_login(req, res))return;
 	var info=req.body;
-	try{
-		info.iid=JSON.parse(info.iid);
-	}
-	catch(err){
-		return res.send({feedback: 'Failure'});
-	}
 	var iid=info.iid;
 	var uid=req.session.uid;
 	model.User.get(uid, function(result){
