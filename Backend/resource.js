@@ -338,14 +338,23 @@ app.get('/follow/followers', function(req, res){
 
 //Transaction resource
 //buy request
-app.post('/transactions', function(req, res){
+app.post('/transactions/create', function(req, res){
 	if(!check_login(req, res))return;
-	var iid=//need to do
-		var uid=req.session.uid;
+	var info=req.body;
+	try{
+		info.iid=JSON.parse(info.iid);
+	}
+	catch(err){
+		return res.send({feedback: 'Failure'});
+	}
+	var iid=info.iid;
+	var uid=req.session.uid;
 	model.User.get(uid, function(result){
 		var user=result.user;
-		user.buy_request()//need to do
-
+		user.buy_request(iid, function(result){
+			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			res.send(result);
+		})
 	})
 })
 //sell confirm
@@ -400,3 +409,29 @@ app.get('/transactions/:tid/cancel', function(req, res){
 		})
 	})
 })
+
+//debug test, for testing only, should be removed when the website goes online
+//for convenience, no error handling here
+app.get('/showdbs', function(req,res){
+	var dbs={}
+	model.User.find({}, function(err ,user){
+		dbs.user=user;
+		model.Item.find({}, function(err ,item){
+			dbs.item=item;
+			model.Category.find({}, function(err ,category){
+				dbs.category=category;
+				model.Follow.find({}, function(err ,follow){
+					dbs.follow=follow;
+					model.Message.find({}, function(err ,message){
+						dbs.message=message;
+						model.Transaction.find({}, function(err ,transaction){
+							dbs.transaction=transaction;
+							return res.send({feedback:'Success', dbs:dbs})
+						})
+					})
+				})
+			})
+		})
+	})
+})
+
