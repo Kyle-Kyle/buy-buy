@@ -17,12 +17,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
 </head>
 <body>
+
+  <!-- dynamic loading of page content -->
   <div ng-app="indexApp" ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
     <div id="recmd" ng-include="recmd.url"></div>
   </div>
 
-  <!-- load angular functions -->
+  <!-- load angular scripts -->
   <script src="mainController.js"></script>
   <script>
     angular

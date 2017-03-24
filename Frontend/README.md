@@ -1,7 +1,8 @@
 # Front end :blush:
 ## Notice
-1. Please load mainController.js in the first place on every individual pages and add the mainController to the ngApp of that page
-2. To view `index.html` or other pages, run `../Backend/test_index.js` on nodejs, then visit [localhost:8081/index.html](http://localhost:8081/index.html) on your browser  
+1. Please load mainController.js on every individual pages in the first place and add the mainController to the ngApp of that page
+2. Add profile_update.html for user profile updating
+3. To view `index.html` or other pages, run `../Backend/test_index.js`(this has been deleted from repo, you can save and use it locally) on nodejs, then visit [localhost:8081/index.html(/otherpage.html)](http://localhost:8081/index.html) on your browser  
 ## Working schedule
 - [ ] Finish all UI before 3-27
 - [ ] Finish interfaces before 4-3
@@ -17,6 +18,10 @@
 - [ ] Client-server interface  
 
 ### Profile page: `profile.html`  
+- [x] UI  
+- [ ] Client-server interface  
+
+### Profile page: `profile_update.html`  
 - [ ] UI  
 - [ ] Client-server interface  
 
@@ -44,7 +49,7 @@
 - [ ] Client-server interface  
 
 ### Sign-in view: `login.view.html`  
-- [ ] UI (part-finished)  
+- [x] UI
 - [ ] Client-server interface (part-finished)  
 
 ### Messenger view: `messenger.view.html`  
@@ -55,4 +60,4 @@
 - [ ] UI  
 - [ ] Client-server interface  
 
-3-23 mjust
+3-25 mjust
