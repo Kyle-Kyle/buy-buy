@@ -192,6 +192,7 @@ app.get('/users/self/items',function(req, res){
 			err_msg= 'No item returned.';
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
+		return res.send({feedback: 'Success', items: items});
 	})
 })
 
