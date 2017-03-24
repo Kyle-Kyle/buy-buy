@@ -1,17 +1,29 @@
 var express = require('express');
-var path = require('path');
-
 var app = express();
 module.exports = app;
 
-app.use(express.static(path.join(__dirname, '../Frontend')));
+// load configurations
+var config = require('../config');
+for(var key in config) {
+    app.set(key, config[key]);
+}
+require('./tools/signal');
+var session = require('express-session');
+app.use(session({
+	secret: app.get('secret'),
+	resave: false,
+	saveUninitialized: false
+}));
+var body_parser = require('body-parser');
+app.use(body_parser.json());
+app.use(body_parser.urlencoded({extended: true}));
+app.disable('x-powered-by');
 
-app.get('/*.html', function(req, res) {
-	res.type('text/html');
-	console.log(path.join(__dirname, '../Frontend', req.url));
-	res.sendFile(path.join(__dirname, '../Frontend', req.url));
-});
+require('./db');
+require('./view');
+require('./resource');
+require('./control');
 
-app.listen(8081, function(){
-    console.log('Buy-Buy is running on port', 8081);
+app.listen(app.get('port'), function(){
+    console.log('Buy-Buy is running on port', app.get('port'));
 });
