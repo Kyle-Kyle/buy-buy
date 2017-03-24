@@ -141,7 +141,7 @@ app.get('/users/:uid', function(req, res, next){
 	if(!check_login(req, res))return;
 	model.User.findById(uid, '_id username email profile', function(err, user){
 		if(err)return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
-		return res.send(user);
+		return res.send({feedback: 'Success',user:user});
 	});
 })
 //get self info
@@ -153,7 +153,7 @@ app.get('/users/self', function(req, res){
 			req.session.destroy();
 			return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
 		}
-		return res.send(user);
+		return res.send({feedback: 'Success',user:user});
 	})
 })
 //update user info
