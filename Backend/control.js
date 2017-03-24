@@ -200,17 +200,18 @@ app.post('/users/login', function(req, res){
 	var condition;
 	if(username)condition = {username: username, password: hash};
 	else if(email)condition = {email: email, password: hash};
-	else return res.redirect('/');//login page
+	else return res.send({feedback: 'Failure', err_msg: 'Fail to login'});
 	model.User.findOne(condition, function(err, user){
-		if(err)return res.redirect('/');//login page
-		if(!user)return res.redirect('/');//login page
+		if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to login'});;
+		if(!user)return res.send({feedback: 'Failure', err_msg: 'Fail to login'});
 		req.session.uid = user._id;
 		return res.send({feedback: 'Success'});;// welcome page
 	});
 })
-/*app.get('/secret_entrance', function(req, res){
-	model.User.get('58ce4f9792e17573d6ea279a', function(result){
+app.get('/secret_entrance', function(req, res){
+	model.User.get('58d219bc41eb4c6fadadd30e', function(result){
+	//model.User.get('58ce4f9792e17573d6ea279a', function(result){
 		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})
-});*/
+});
