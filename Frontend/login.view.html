@@ -9,7 +9,7 @@
     </div>
     <div class="modal-body">
       <div class="container-fluid">
-        <form name="loginForm" ng-submit="login()" ng-controller="loginController" role="form">
+        <form name="loginForm" ng-submit="login()" ng-controller="LoginController" role="form">
           <div class="form-group" ng-class="{
             'has-error': loginForm.username.$dirty && loginForm.username.$error.required }">
             <label for="username">Username</label>
@@ -23,7 +23,7 @@
             'has-error': loginForm.password.$dirty && loginForm.password.$error.required }">
             <label for="password">Password</label>
             <input type="password" name="password" id="password" class="form-control"
-              ng-model="password" required />
+              ng-model="credential.password" required />
             <span class="help-block"
               ng-show="loginForm.password.$dirty && loginForm.password.$error.required" >
                 Password is required</span>
