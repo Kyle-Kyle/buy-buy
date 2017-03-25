@@ -21,6 +21,7 @@ angular.module('indexApp')
     });
   };
 
+
   $scope.validateUsername = function(dirty) {
     var pattern = /^[_A-Za-z0-9]{3,20}$/;
     if ($scope.username != undefined && $scope.username.match(pattern)) {
