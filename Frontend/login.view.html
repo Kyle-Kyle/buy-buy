@@ -9,7 +9,13 @@
     </div>
     <div class="modal-body">
       <div class="container-fluid">
-        <form name="loginForm" ng-submit="login()" ng-controller="loginController" role="form">
+        <form name="loginForm" ng-submit="login()" ng-controller="LoginController" role="form">
+
+          <!-- Login error -->
+          <span class="help-block" ng-init="loginFailed=false" ng-show="loginFailed" >
+              Wrong username or password</span>
+
+          <!-- Username -->
           <div class="form-group" ng-class="{
             'has-error': loginForm.username.$dirty && loginForm.username.$error.required }">
             <label for="username">Username</label>
@@ -19,27 +25,31 @@
               ng-show="loginForm.username.$dirty && loginForm.username.$error.required" >
                 Username is required</span>
           </div>
+
+          <!-- Password -->
           <div class="form-group" ng-class="{
             'has-error': loginForm.password.$dirty && loginForm.password.$error.required }">
             <label for="password">Password</label>
             <input type="password" name="password" id="password" class="form-control"
-              ng-model="password" required />
+              ng-model="credential.password" required />
             <span class="help-block"
               ng-show="loginForm.password.$dirty && loginForm.password.$error.required" >
                 Password is required</span>
           </div>
+
+          <!-- Form action buttons -->
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary"
-              ng-disabled="loginForm.$invalid" >Login</button>
-            <a href="#" onclick="$('#login-modal').modal('hide');" data-toggle="modal"
+            <button type="submit" class="btn smooth-trans-btn" id="login_btn"
+              ng-init="login_btn_text='Login'; login_btn_style='btn-primary'"
+              ng-class="login_btn_style" ng-disabled="loginForm.$invalid" >
+                {{login_btn_text}}</button>
+            <a href="#" onclick="$('#login-modal').modal('toggle');" data-toggle="modal"
               data-target="#register-modal" class="btn btn-link">Register</a>
           </div>
         </form>
       </div>
     </div>
-    <div class="modal-footer">
-      <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
-    </div>
+    <div class="modal-footer"></div>
   </div>
 
 </div>

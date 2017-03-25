@@ -8,6 +8,7 @@
   <title>buy-buy</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/btn_anim.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -16,16 +17,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
 </head>
 <body>
-  <div ng-app="indexApp" ng-controller="loadController">
+
+  <!-- dynamic loading of page content -->
+  <div ng-app="indexApp" ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
     <div id="recmd" ng-include="recmd.url"></div>
   </div>
 
-  <!-- load angular functions -->
+  <!-- load angular scripts -->
+  <script src="mainController.js"></script>
   <script>
-    var indexApp = angular.module('indexApp', ['ngRoute', 'ngCookies']);
+    angular
+      .module('indexApp', ['ngRoute', 'ngCookies'])
+      .controller('mainController', mainController);
   </script>
-  <script src="index_load.js"></script>
   <script src="login.js"></script>
   <script src="register.js"></script>
 </body>
