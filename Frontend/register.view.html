@@ -70,16 +70,16 @@
             ng-class="regForm.email.$dirty?
               (regForm.email.$error.email || regForm.email.$error.required?
                 'has-error':'has-success'):''">
-            <label for="email">Email address<font color="red">*</font></label>
-            <input type="email" name="email" class="form-control" maxlength="40"
-              ng-model="email" ng-change="" required />
+            <label for="email">Student Email address<font color="red">*</font></label>
+            <input type="email" name="email" class="form-control" maxlength="27"
+              ng-model="email" ng-change="validateEmail()" required />
             <span class="glyphicon form-control-feedback"
               ng-class="regForm.email.$error.email || regForm.email.$error.required?
                 'glyphicon-remove':'glyphicon-ok'"
               ng-show="regForm.email.$dirty"></span>
             <span class="help-block"
               ng-show="regForm.email.$error.email" >
-              Not a valid email address</span>
+              {{emErrorMsg}}</span>
             <span class="help-block"
               ng-show="regForm.email.$dirty && regForm.email.$error.required">
               E-mail is required</span>

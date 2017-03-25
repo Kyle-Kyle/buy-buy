@@ -3,19 +3,40 @@ angular.module('indexApp')
 
   // POST register request to server
   $scope.register = function() {
+    $http.post("/users/register", {
+      // requried
+      username: $scope.username,
+      password: $scope.password,
+      email: $scope.email,
+      // not required (undefined if there is no input)
+      tel: $scope.tel,
+      description: $scope.description,
+    })
+    .then(function(response) {
+      // TODO: finish callback
+      console.log(response);
 
-  }
+      $scope.reg_msg = 'A confirmation email has sent to ' + $scope.email +
+        '. Please confirm the email to finish your registration.'
+    });
+  };
 
   $scope.validateUsername = function(dirty) {
     var pattern = /^[_A-Za-z0-9]{3,20}$/;
     if ($scope.username != undefined && $scope.username.match(pattern)) {
-      //TODO: send request to server check if the name has been taken
-      if ($scope.nameTaken == true) {
-        $scope.unValid = false;
-        $scope.unErrorMsg = 'The name has already been taken';
-      } else {
-        $scope.unValid = true;  // valid username, show ok feedback
-      }
+      // send request to server to check if the name has been taken
+      $http.post("/users/validate", {
+        username: $scope.username,
+      })
+      .then(function(response) {
+        $scope.nameTaken = (response.data.msg == 'taken');
+        if ($scope.nameTaken == true) {
+          $scope.unValid = false;
+          $scope.unErrorMsg = 'The name has already been taken';
+        } else {
+          $scope.unValid = true;  // valid username, show ok feedback
+        }
+      });
     } else {
       $scope.unValid = false;
       if ($scope.username == undefined) {
@@ -69,6 +90,27 @@ angular.module('indexApp')
       $scope.regForm.passwordConfirm.$invalid = true;
     }
   };
+
+  $scope.validateEmail = function() {
+    var pattern = /^1155\d{6}@link\.cuhk\.edu.\hk$/;
+    if ($scope.email != undefined && $scope.email.match(pattern)) {
+      $http.post("/users/validate", {
+        email: $scope.email,
+      })
+      .then(function(response) {
+        $scope.emailTaken = (response.data.msg == 'taken');
+        if ($scope.emailTaken == true) {
+          $scope.regForm.email.$setValidity('email', false);
+          $scope.emErrorMsg = 'The email has already been used';
+        } else {
+          $scope.regForm.email.$setValidity('email', true);  // valid email, show ok feedback
+        }
+      })
+    } else {
+      $scope.regForm.email.$setValidity('email', false);
+      $scope.emErrorMsg = 'Not a valid email address';
+    }
+  }
 
 })
 .directive('compareTo', function() {
