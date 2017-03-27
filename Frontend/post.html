@@ -1,3 +1,124 @@
-<!-- Here is a useful plugin for creating and editing tags:
-  https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
--->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="buy-buy, buy2, second-hand, used, sell" />
+  <meta name="description" content="Second-hand goods online trading platform" />
+
+  <title>buy-buy</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+
+  <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
+  <script src="lib/bootstrap-tagsinput.js"></script>
+  <script src="lib/bootstrap-tagsinput-angular.js"></script>
+
+  <style>
+    .bootstrap-tagsinput {
+      width: 100%;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div ng-app="postApp" ng-controller="loadController">
+    <div id="navs" ng-include="navs.url"></div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Post your items</h4>
+        </div>
+
+        <div class="container-fluid">
+          <form name="PostForm" ng-submit = "post()" ng-controller = "postController" role="form">
+            <!-- title -->
+            <div class="form-group has-feedback" ng-class = "PostForm.title.$dirty?
+              (titleValid?'has-success':'has-error'):''">
+              <label for="title">Title<font color="red">*</font></label>
+              <input type="text" class="form-control" name="title" id="title" ng-model="title" ng-change="validateTitle(PostForm.title.$dirty)" required/>
+              <span class="glyphicon form-control-feedback"
+              ng-class="titleValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="PostForm.title.$dirty"></span>
+              <span class="help-block" ng-show="PostForm.title.$dirty && !titleValid" >Title is required</span>
+            </div>
+            <!-- quality -->
+            <div class="form-group has-feedback"ng-class = "PostForm.quantity.$dirty?
+              (quantityValid?'has-success':'has-error'):''">
+              <label for="quantity">Quantity<font color="red">*</font></label>
+              <input class="form-control" name="quantity"type="number" value="1" id="quantity" placeholder="1" ng-model="quantity"ng-change="validateQuantity(PostForm.quantity.$dirty)"required/>
+              <span class="glyphicon form-control-feedback"
+              ng-class="quantityValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="PostForm.quantity.$dirty"></span>
+              <span ng-show="PostForm.quantity.$dirty && !quantityValid" class="help-block">{{quantityErrorMsg}}</span>
+            </div>
+            <!-- condition -->
+            <div class="form-group">
+              <label for="condition">Condition</label>
+              <select class="form-control" name="condition" id="condition"ng-model="condition">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              <small id="conditionHelp" class="form-text text-muted">Number smaller, item newer</small>
+            </div>
+
+            <!-- price -->
+            <div class="form-group has-feedback"ng-class = "PostForm.price.$dirty?
+              (priceValid?'has-success':'has-error'):''">
+              <label for="price">Price<font color="red">*</font></label>
+              <input class="form-control" name="price" type="number" id="price" ng-model="price" ng-change="validatePrice(PostForm.price.$dirty)"required/>
+              <span class="glyphicon form-control-feedback"
+              ng-class="priceValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="PostForm.price.$dirty"></span>
+              <span ng-show="PostForm.price.$dirty && !priceValid" class="help-block">{{priceErrorMsg}}</span>
+            </div>
+
+            <!-- description -->
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" rows="3" maxlength="300" ng-model="description"></textarea>
+              <small id="desciptionHelp" class="form-text text-muted">Maxlength is 300</small>
+            </div>
+
+            <!-- tag -->
+            <div class="form-group">
+              <label for="tag">Tag</label><br/>
+              <input class="form-control" type="text" id="tag" name="tag" data-role="tagsinput" style="display: none;">
+            </div>
+
+            <!-- picture -->
+            <div class="form-group">
+              <label for="picture">Picture</label>
+              <input class="form-control" type="file" data-preview-file-type="text" id="picture" class="file"name="picture"/>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- load angular functions -->
+  <script>
+    var app = angular.module('postApp', ['ngRoute', 'ngCookies'])
+    app.controller('loadController', function($scope) {
+      $scope.navs = {url: "navs.view.html"};
+    });
+  </script>
+  <script src="post_load.js"></script>
+
+</body>
+</html>
