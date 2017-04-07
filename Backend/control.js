@@ -196,7 +196,13 @@ app.post('/users/login', function(req, res){
 	var username = req.body.username;
 	var email = req.body.email;
 	var password = req.body.password;
-	var hash = crypto.createHash('sha256').update(password).digest('base64');
+	console.log(req.body)
+	try{
+		var hash = crypto.createHash('sha256').update(password).digest('base64');
+	}catch(e){
+		console.log(e);
+		return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
+	}
 	var condition;
 	if(username)condition = {username: username, password: hash};
 	else if(email)condition = {email: email, password: hash};
