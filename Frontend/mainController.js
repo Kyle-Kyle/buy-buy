@@ -3,6 +3,7 @@ var mainController = function($scope) {
   $scope.recmd = {url: "recommends.view.html"};
   $scope.login_view = {url: "login.view.html"};
   $scope.register_view = {url: "register.view.html"};
+  $scope.msg_view = {url: "messenger.view.html"};
 
   //TODO: check cookies for login session
 
