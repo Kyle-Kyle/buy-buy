@@ -214,9 +214,14 @@ app.post('/users/login', function(req, res){
 		return res.send({feedback: 'Success'});;// welcome page
 	});
 })
+app.get('/users/logout', function(req, res){
+	req.session.destroy(function(err){
+		if(err)return res.send({feedback: 'Failure'});
+		return res.send({feedback: 'Success'});
+	})
+})
 app.get('/secret_entrance', function(req, res){
-	model.User.get('58d219bc41eb4c6fadadd30e', function(result){
-	//model.User.get('58ce4f9792e17573d6ea279a', function(result){
+	model.User.get('58e7896bb482cb0f902a55fc', function(result){
 		req.session.uid = result.user._id;
 		res.send('Login success!\n');
 	})
