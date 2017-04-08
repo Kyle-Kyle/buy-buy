@@ -73,34 +73,38 @@ User.prototype.send_msg = function(info, cb){
 		uid2 = info.uid;
 		u = 1;
 	}
-	var user = this;
-	info.content = escape_html(info.content);
-	Message.findOne({uid1: uid1, uid2: uid2}, function(err, message){
-		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find message'});
-		if(!message){
-			Message.new_({uid1: uid1, uid2: uid2}, function(result){
-				if(result.feedback != 'Success')return cb(result);
-				user.update_buffer(info.uid, function(result){
+	var sender = this;
+	User.get(info.uid, function(result){
+		if(result.feedback != 'Success')return cb(result);
+		var receiver = result.user;
+		info.content = escape_html(info.content);
+		Message.findOne({uid1: uid1, uid2: uid2}, function(err, message){
+			if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find message'});
+			if(!message){
+				Message.new_({uid1: uid1, uid2: uid2}, function(result){
 					if(result.feedback != 'Success')return cb(result);
-					user.send_msg(info, cb);
-				});
-			})
-		}
-		else{
-			var messages = message.messages;
-			if(messages.length == app.get('msg_buf_size')){
-				messages.pull(messages[0]);
+					receiver.update_buffer(info.uid, function(result){
+						if(result.feedback != 'Success')return cb(result);
+						sender.send_msg(info, cb);
+					});
+				})
 			}
-			messages.set(messages.length, [u, info.content, +new Date()]);
-			message.messages = messages;
-			message.save(function(err, message){
-				if(err)return cb({feedback: 'Failure', err_msg: 'Fail to save message'});
-				user.update_buffer(info.uid, function(result){
-					if(result.feedback != 'Success')return cb(result);
-					return cb({feedback: 'Success', message: message});
+			else{
+				var messages = message.messages;
+				if(messages.length == app.get('msg_buf_size')){
+					messages.pull(messages[0]);
+				}
+				messages.set(messages.length, [u, info.content, +new Date()]);
+				message.messages = messages;
+				message.save(function(err, message){
+					if(err)return cb({feedback: 'Failure', err_msg: 'Fail to save message'});
+					receiver.update_buffer(info.uid, function(result){
+						if(result.feedback != 'Success')return cb(result);
+						return cb({feedback: 'Success', message: message});
+					});
 				});
-			});
-		}
+			}
+		})
 	})
 }
 User.prototype.recv_msg = function(uid, cb){

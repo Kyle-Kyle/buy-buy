@@ -249,6 +249,9 @@ app.get('/users/new_messages', function(req, res){
 	model.User.get(uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var msg_buf=result.user.msg_buf;
+		var user = result.user;
+		user.msg_buf = [];
+		user.save();
 		return res.send({feedback: 'Success', msg_buf:msg_buf})
 	})
 })
