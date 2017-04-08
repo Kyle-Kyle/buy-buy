@@ -1,3 +1,5 @@
 **/.DS_Store
 local
 Backend/node_modules
+Backend/test_index.js
+test_config.js

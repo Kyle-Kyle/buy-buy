@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
+<!-- integrate country code to phone number input field -->
 <style type="text/css">
 .input-group-btn:first-child > .form-control {
   margin-right: -1px;
   width: auto;
 }
-
 </style>
 
 <div class="modal-dialog">
@@ -24,7 +24,7 @@
           <div class="form-group has-feedback"
             ng-class="regForm.username.$dirty?
               (unValid?'has-success':'has-error'):''">
-          <label for="username">User name<font color="red">*</font></label>
+          <label for="username">Username<font color="red">*</font></label>
           <input type="text" name="username" class="form-control" maxlength="20"
             ng-model="username" ng-change="validateUsername()"
             ng-blur="checkServer()" required />
@@ -56,33 +56,36 @@
               (pwMatch?'has-success':'has-error'):''">
             <label for="passwordConfirm">Password confirmation<font color="red">*</font></label>
             <input id="pw-confirm" type="password" name="passwordConfirm"
-              class="form-control" maxlength="20"
+              class="form-control" maxlength="20" ng-disabled="!pwValid"
               ng-model="passwordConfirm" ng-change="confirmPassword()" required />
             <span class="glyphicon form-control-feedback"
               ng-class="pwMatch?'glyphicon-ok':'glyphicon-remove'"
               ng-show="regForm.passwordConfirm.$dirty"></span>
-            <!--span ng-show="regForm.passwordConfirm.$dirty && !pwValid" class="help-block">
-              Password not match</span-->
+            <span ng-show="regForm.passwordConfirm.$dirty && !pwMatch && pwValid" class="help-block">
+              Password not match</span>
           </div>
 
+          <!-- email -->
           <div class="form-group has-feedback"
             ng-class="regForm.email.$dirty?
               (regForm.email.$error.email || regForm.email.$error.required?
                 'has-error':'has-success'):''">
-            <label for="email">Email address<font color="red">*</font></label>
-            <input type="email" name="email" class="form-control" maxlength="40"
-              ng-model="email" ng-change="" required />
+            <label for="email">Student Email address<font color="red">*</font></label>
+            <input type="email" name="email" class="form-control" maxlength="27"
+              ng-model="email" ng-change="validateEmail()" required />
             <span class="glyphicon form-control-feedback"
               ng-class="regForm.email.$error.email || regForm.email.$error.required?
                 'glyphicon-remove':'glyphicon-ok'"
               ng-show="regForm.email.$dirty"></span>
             <span class="help-block"
               ng-show="regForm.email.$error.email" >
-              Not a valid email address</span>
+              {{emErrorMsg}}</span>
             <span class="help-block"
               ng-show="regForm.email.$dirty && regForm.email.$error.required">
               E-mail is required</span>
           </div>
+
+          <!-- phone number -->
           <div class="form-group">
             <label for="tel">Phone number</label>
             <div class="input-group has-feedback"
@@ -96,21 +99,24 @@
                 ng-show="regForm.tel.$dirty"></span>
             </div>
           </div>
+
+          <!-- description -->
           <div class="form-group">
             <label for="description">Description - tell us about yourself</label>
             <textarea name="description" class="form-control" rows="4" style="resize:none;" maxlength="300"
               ng-model="description"></textarea>
           </div>
+
+          <!-- form action buttons -->
           <div class="form-actions">
-            <button type="submit" ng-disabled="regForm.$invalid ||
-              regForm.passwordConfirm.$invalid" class="btn btn-primary">Register</button>
-            <a href="#!/login" class="btn btn-link">Cancel</a>
+            <button type="submit" class="btn btn-primary smooth-trans-btn"
+              ng-disabled="regForm.$invalid || regForm.passwordConfirm.$invalid || !unValid" >
+                Register</button>
+            <a href="#" class="btn btn-link" onclick="$('#register-modal').modal('toggle')">Cancel</a>
           </div>
         </form>
       </div>
     </div>
-    <div class="modal-footer">
-      <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
-    </div>
+    <div class="modal-footer"></div>
   </div>
 </div>
