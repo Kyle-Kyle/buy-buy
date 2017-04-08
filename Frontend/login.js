@@ -21,9 +21,6 @@ angular.module('indexApp')
 				if ($scope.login_feedback == 'Success') {
 					$scope.loginFailed = false;
 
-					//TODO: set cookies
-
-
 					// change button style, show successful feedback
 					$scope.login_btn_style = 'btn-success';
 					$scope.login_btn_text = 'Success';

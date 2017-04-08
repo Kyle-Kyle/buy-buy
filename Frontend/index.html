@@ -22,7 +22,8 @@
   <div ng-app="indexApp" ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
     <div id="recmd" ng-include="recmd.url"></div>
-    <div id='msg-window' ng-include="msg_view.url"></div>
+    <div id='msg-window' ng-include="msg_view.url"
+      ng-show="msgShow" ng-init="msgShow=false"></div>
   </div>
 
   <!-- load angular scripts -->

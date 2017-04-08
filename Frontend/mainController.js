@@ -21,17 +21,27 @@ var mainController = function($scope, $http, $interval, $cookies) {
 
   // open a chat window
   $scope.start_chat = function() {
+    $scope.msgShow = true;
     console.log("chat start")
   };
 
   $scope.send_msg = function(msgContent) {
+    // for testing
+    var uid = 'abc';
+
     if (msgContent != "") {
-      console.log("'" + msgContent + "'" + " sent");
+      $http.post("/messages/" + uid, {
+        content: msgContent,
+      })
+      .then(function(response) {
+        if (response.data.feedback == "Success") {
+          console.log("'" + msgContent + "'" + " sent");
+        } else {
+          console.log("Failed to send message");
+        }
+      });
     }
   };
-
-
-
 
   var promise;
   $scope.sign_in = function() {
@@ -43,9 +53,21 @@ var mainController = function($scope, $http, $interval, $cookies) {
     // TODO send http request to server
 
 
-    $scope.signed_in = false;
-    $cookies.remove("logged_in");
-    $interval.cancel(promise);
+    $http.get("/users/logout")
+    .then(function(response) {
+      console.log(response);
+
+
+
+
+      if (response.data.feedback == "Success") {
+        $scope.signed_in = false;
+        $cookies.remove("logged_in");
+        $interval.cancel(promise);
+      } else {
+        console.log("logout failure")
+      }
+    });
   };
 
   if ($cookies.get("logged_in") == "true") {
