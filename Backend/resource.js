@@ -136,8 +136,9 @@ app.delete('/items/:iid', function(req, res){
 
 //get contacts of this user
 app.get('/users/contacts', function(req, res){
+	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	modle.Message.find({ $or: [{uid1:uid}, {uid2:uid} ] }, function(err,messages){
+	model.Message.find({ $or: [{uid1:uid}, {uid2:uid} ] }, function(err,messages){
 		err_msg= 'Fail to get items of this user.'
 		if(err){
 			//may change err_msg
