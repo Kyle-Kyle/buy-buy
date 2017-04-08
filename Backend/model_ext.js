@@ -83,10 +83,7 @@ User.prototype.send_msg = function(info, cb){
 			if(!message){
 				Message.new_({uid1: uid1, uid2: uid2}, function(result){
 					if(result.feedback != 'Success')return cb(result);
-					receiver.update_buffer(info.uid, function(result){
-						if(result.feedback != 'Success')return cb(result);
-						sender.send_msg(info, cb);
-					});
+					sender.send_msg(info, cb);
 				})
 			}
 			else{
@@ -98,7 +95,7 @@ User.prototype.send_msg = function(info, cb){
 				message.messages = messages;
 				message.save(function(err, message){
 					if(err)return cb({feedback: 'Failure', err_msg: 'Fail to save message'});
-					receiver.update_buffer(info.uid, function(result){
+					receiver.update_buffer(sender._id, function(result){
 						if(result.feedback != 'Success')return cb(result);
 						return cb({feedback: 'Success', message: message});
 					});
