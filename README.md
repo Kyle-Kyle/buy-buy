@@ -5,6 +5,6 @@
 ## Setpup:
 - install dependencies: `npm install`
 - configuration: edit `config.js` under app root folder
-- run server: `node Backend/index.js` under app root folder
+- run server: `node index.js` under Backend folder
 
 
