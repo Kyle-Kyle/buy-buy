@@ -137,7 +137,7 @@ app.delete('/items/:iid', function(req, res){
 //get user info
 app.get('/users/:uid', function(req, res, next){
 	var uid = req.params.uid;
-	if(uid == 'self')return next();
+	if(!db.Types.ObjectId.isValid(uid) || uid == 'new_messages')return next();
 	if(!check_login(req, res))return;
 	model.User.findById(uid, '_id username email profile', function(err, user){
 		if(err)return res.send({feedback: 'Failure', err_msg: 'Invalid information'});
@@ -248,7 +248,7 @@ app.get('/users/new_messages', function(req, res){
 	model.User.get(uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var msg_buf=result.user.msg_buf;
-		res.send({feedback: 'Success', msg_buf:msg_buf})
+		return res.send({feedback: 'Success', msg_buf:msg_buf})
 	})
 })
 //receive messages
