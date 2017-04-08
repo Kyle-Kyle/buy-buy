@@ -41,7 +41,7 @@ User.prototype.create_item = function(info, cb){
 }
 User.prototype.follow = function(uid, cb){
 	var user = this;
-	if(user._id.equals(uid))return cb({feedback: 'Failure', err_msg: 'Self follow is prohibited'});
+	if(user._id.toString() == uid)return cb({feedback: 'Failure', err_msg: 'Self follow is prohibited'});
 	Follow.findOne({follower_id: user._id, followee_id: uid}, function(err, follow){
 		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find follow instance'});
 		if(follow)return cb({feedback: 'Failure', err_msg: 'Follow instance exists'});
@@ -52,7 +52,7 @@ User.prototype.follow = function(uid, cb){
 }
 User.prototype.unfollow = function(uid, cb){
 	var user = this;
-	if(user._id.equals(uid))return cb({feedback: 'Failure', err_msg: 'Self unfollow is prohibited'});
+	if(user._id.toString() == uid)return cb({feedback: 'Failure', err_msg: 'Self unfollow is prohibited'});
 	Follow.findOne({follower_id: user._id, followee_id: uid}, function(err, follow){
 		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find follow instance'});
 		if(!follow)return cb({feedback: 'Failure', err_msg: 'Follow instance doesn\'t exist'});
@@ -64,7 +64,7 @@ User.prototype.unfollow = function(uid, cb){
 User.prototype.send_msg = function(info, cb){
 	if(typeof(info.content) == 'undefined' || !info.content)return cb({feedback: 'Success', err_msg: 'Invalid information'});
 	if(typeof(info.uid) == 'undefined' || !info.uid)return cb({feedback: 'Success', err_msg: 'Invalid information'});
-	if(this._id.equals(info.uid))return cb({feedback: 'Failure', err_msg: 'Self message sending is prohibited'});
+	if(this._id.toString() == info.uid)return cb({feedback: 'Failure', err_msg: 'Self message sending is prohibited'});
 	var uid1 = info.uid;
 	var uid2 = this._id;
 	var u = 2;
@@ -78,12 +78,11 @@ User.prototype.send_msg = function(info, cb){
 	Message.findOne({uid1: uid1, uid2: uid2}, function(err, message){
 		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find message'});
 		if(!message){
-			var messages = [[u, info.content, +new Date()]];
-			Message.new_({uid1: uid1, uid2: uid2, messages: messages}, function(result){
+			Message.new_({uid1: uid1, uid2: uid2}, function(result){
 				if(result.feedback != 'Success')return cb(result);
 				user.update_buffer(info.uid, function(result){
 					if(result.feedback != 'Success')return cb(result);
-					return cb({feedback: 'Success', message: message});
+					user.send_msg(info, cb);
 				});
 			})
 		}
@@ -106,7 +105,7 @@ User.prototype.send_msg = function(info, cb){
 }
 User.prototype.recv_msg = function(uid, cb){
 	if(typeof(uid) == 'undefined' || !uid)return cb({feedback: 'Failure', err_msg: 'Invalid information'});
-	if(uid.equals(this._id))return cb({feedback: 'Failure', err_msg: 'Self message receiving is prohibited'});
+	if(uid == this._id.toString())return cb({feedback: 'Failure', err_msg: 'Self message receiving is prohibited'});
 	var uid1 = uid;
 	var uid2 = this._id;
 	if(this._id < uid){
@@ -143,7 +142,7 @@ User.prototype.buy_request = function(iid, cb){
 	var buyer = this;
 	Item.get(iid, function(result){
 		if(result.feedback != 'Success')return cb(result);
-		if(buyer._id.equals(result.item.uid))return cb({feedback: 'Failure', err_msg: 'Self buying is prohibited'});
+		if(buyer._id.toString() == result.item.uid)return cb({feedback: 'Failure', err_msg: 'Self buying is prohibited'});
 		User.get(result.item.uid, function(result){
 			if(result.feedback != 'Success')return cb(result);
 			var seller = result.user;
@@ -165,7 +164,7 @@ User.prototype.sell_confirm = function(tid, cb){
 	Transaction.get(tid, function(result){
 		if(result.feedback != 'Success')return cb(result);
 		var trans = result.transaction;
-		if(!trans.seller_id.equals(user._id))return cb({feedback: 'Failure', err_msg: 'Fail to confirm sale'});
+		if(!trans.seller_id == user._id.toString())return cb({feedback: 'Failure', err_msg: 'Fail to confirm sale'});
 		if(trans.status_code == 2)return cb({feedback: 'Success', transaction: trans});
 		if(trans.status_code != 1)return cb({feedback: 'Failure', err_msg: 'Fail to confirm sale'});
 		trans.update_status_code(2, function(result){
@@ -177,7 +176,7 @@ User.prototype.receive_confirm = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
 		var trans = result.transaction;
-		if(!trans.buyer_id.equals(user._id))return cb({feedback: 'Failure', err_msg: 'Fail to confirm receive'});
+		if(!trans.buyer_id == user._id.toString())return cb({feedback: 'Failure', err_msg: 'Fail to confirm receive'});
 		if(trans.status_code == 3)return cb({feedback: 'Success', transaction: trans});
 		if(trans.status_code != 2)return cb({feedback: 'Failure', err_msg: 'Fail to confirm receive'});
 		trans.update_status_code(3, function(result){
@@ -189,7 +188,7 @@ User.prototype.seller_reject = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
 		var trans = result.transaction;
-		if(!trans.seller_id.equals(user._id))return cb({feedback: 'Failure', err_msg: 'Fail to reject sale'});
+		if(!trans.seller_id == user._id.toString())return cb({feedback: 'Failure', err_msg: 'Fail to reject sale'});
 		if(trans.status_code == 4)return cb({feedback: 'Success', transaction: trans});
 		if(trans.status_code != 1)return cb({feedback: 'Failure', err_msg: 'Fail to reject sale'});
 		trans.update_status_code(4, function(result){
@@ -201,7 +200,7 @@ User.prototype.buyer_cancel = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
 		var trans = result.transaction;
-		if(!trans.buyer_id.equals(user._id))return cb({feedback: 'Failure', err_msg: 'Fail to cancel purchase'});
+		if(!trans.buyer_id == user._id.toString())return cb({feedback: 'Failure', err_msg: 'Fail to cancel purchase'});
 		if(trans.status_code == 5)return cb({feedback: 'Success', transaction: trans});
 		if(trans.status_code != 1 && tran.status_code != 2)return cb({feedback: 'Failure', err_msg: 'Fail to cancel purchase'});
 		trans.update_status_code(5, function(result){

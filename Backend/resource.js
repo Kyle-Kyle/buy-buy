@@ -229,15 +229,16 @@ app.get('/categories/:cid/items',function(req,res){
 //send message
 app.post('/messages/:uid', function(req, res){
 	if(!check_login(req, res))return;
-	var info = req.body;
-	var uid=req.params.uid;
+	var info = {};
+	info.content = req.body.content;
+	info.uid = req.params.uid;
 	var uid2=req.session.uid;
 	model.User.get(uid2, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
 		user.send_msg(info,function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+			return res.send(result);
 		})
 	})
 })
