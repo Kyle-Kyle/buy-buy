@@ -53,7 +53,8 @@
 
           <li class="dropdown" ng-show="signed_in">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="false">Messenger <span class="caret"></span></a>
+              aria-haspopup="true" aria-expanded="false">Messenger <span class="badge" ng-show="new_message_num">new</span>
+              <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li class="disabled" ng-show="!recent">
                 <a>No contacts</a>

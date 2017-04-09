@@ -8,6 +8,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
 
   // register messenger and watch messages
   $scope.messenger = {};
+  $scope.new_message_num = 0;
   $scope.$watch('messenger.msgNum', function() {
     $scope.scroll_down();
   });
@@ -20,13 +21,15 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
           if ($scope.recent == undefined) {
             $scope.recent = {};
           }
-          $http.get("/users/" + uid)
-          .then(function(name_response) {
-            console.log("Found recent contact: " + name_response.data.user.username);
-            $scope.recent[uid] = {'uid': uid, 'name': name_response.data.user.username, 'new': false};
-          });
+          if (!(uid in $scope.recent)) {
+            $http.get("/users/" + uid)
+            .then(function(name_response) {
+              //console.log("Found recent contact: " + name_response.data.user.username);
+              $scope.recent[uid] = {'uid': uid, 'name': name_response.data.user.username, 'new': false};
+            });
+          }
         });
-        console.log($scope.recent);
+        //console.log($scope.recent);
       } else {
         console.log("Error: cannot get recent contacts")
       }
@@ -44,9 +47,13 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       else if (response.data.msg_buf.length == 0) {
         console.log("No new message");
       } else {
+        console.log("You got new message")
         response.data.msg_buf.forEach(function(uid) {
           if (uid in $scope.recent) {
-            $scope.recent[uid].new = true;
+            if (uid != $scope.msgUID) {
+              $scope.recent[uid].new = true;
+              $scope.new_message_num += 1;
+            }
           } else {
             console.log("Error: new messages from anonymous ID: " + uid);
           }
@@ -58,16 +65,26 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   // open a chat window
   var receive_msg_promise;
   $scope.start_chat = function(contact) {
-    $scope.msgShow = true;
-    $scope.msgUID = contact.uid;
-    $scope.chatName = contact.name;
-    $scope.lastViewTime = 0;
-    $scope.msgList = [];
+    if ($scope.msgUID != contact.uid) {
+      $scope.close_chat();
+      
+      $scope.msgShow = true;
+      $scope.msgUID = contact.uid;
 
-    console.log("chat start")
-    $scope.rcv_msg();
-    $timeout($scope.scroll_down, 50);
-    receive_msg_promise = $interval($scope.rcv_msg, 1000);
+      if ($scope.recent[contact.uid].new == true) {
+        $scope.new_message_num -= 1;
+      }
+      $scope.recent[contact.uid].new = false;
+
+      $scope.chatName = contact.name;
+      $scope.lastViewTime = 0;
+      $scope.msgList = [];
+
+      console.log("chat start")
+      $scope.rcv_msg();
+      $timeout($scope.scroll_down, 50);
+      receive_msg_promise = $interval($scope.rcv_msg, 1000);
+    }
   };
 
   $scope.close_chat = function() {
@@ -90,7 +107,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.rcv_msg = function() {
     $http.get("/messages/" + $scope.msgUID)  // TODO change to uid
     .then(function(response) {
-      console.log(response);
+      //console.log(response);
       response.data.message.messages.forEach(function(msg) {
         var timestamp = msg[2];
         if (timestamp > $scope.lastViewTime) {
@@ -103,6 +120,10 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
           $scope.lastViewTime = timestamp;
         }
       });
+      var objDiv = document.getElementById("msg-panel");
+      if (objDiv.scrollTop + 400 > objDiv.scrollHeight) {
+        $timeout($scope.scroll_down, 50);
+      }
     });
   };
 
@@ -112,11 +133,11 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       //console.log($("#btn-input").val());
       $("#btn-input").val("");
 
-      $scope.msgList.push({
-        "to_send": true,
-        "content": msgContent,
-        "time": $scope.get_formatted_time(new Date()),    // TODO: change time
-      });
+      //$scope.msgList.push({
+      //  "to_send": true,
+      //  "content": msgContent,
+      //  "time": $scope.get_formatted_time(new Date()),    // TODO: change time
+      //});
 
       //console.log($scope.msgNum);
       $scope.messenger.msgNum += 1;
@@ -128,6 +149,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       })
       .then(function(response) {
         if (response.data.feedback == "Success") {
+          $scope.rcv_msg();
           console.log("'" + msgContent + "'" + " sent");
         } else {
           console.log(response);
@@ -144,6 +166,11 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     }, 50)
   }
 
+  $scope.update_messenger = function() {
+    $scope.recent_chat();
+    $timeout($scope.check_msg, 50);
+  }
+
   var check_msg_promise;
   $scope.sign_in = function(client_name) {
     $http.get("/users/self")
@@ -154,9 +181,8 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       $scope.signed_in = true;
       $cookies.put("logged_in", client_name);
 
-      $scope.recent_chat();
-      $scope.check_msg();
-      check_msg_promise = $interval($scope.check_msg, 5000);
+      $scope.update_messenger();
+      check_msg_promise = $interval($scope.update_messenger, 1000);
     })
   };
   $scope.sign_out = function() {
