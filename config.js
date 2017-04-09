@@ -4,6 +4,7 @@ module.exports = {
 	secret: 'this is a testing secret',
 	msg_buf_size: 50,
 	item_pic_size: 9,
+	recommend_size: 10,
 	encrypt_algo: 'aes-256-ctr',
 	db_domain: '',
 	db_u: '',
