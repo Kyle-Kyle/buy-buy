@@ -295,7 +295,9 @@ app.get('/messages/:uid', function(req, res){
 
 //Follow resource
 //follow
-app.get('/follow/:uid',function(req, res){
+app.get('/follow/:uid',function(req, res, next){
+	var uid = req.params.uid;
+	if(!db.Types.ObjectId.isValid(uid) || uid == 'followers' || uid == 'followees')return next();
 	if(!check_login(req, res))return;
 	var followee_uid=req.params.uid;
 	var follower_uid=req.session.uid;
