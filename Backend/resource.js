@@ -129,6 +129,7 @@ app.delete('/items/:iid', function(req, res){
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item=result.item;
+		if(item.uid != req.session.uid) return res.send({feedback: 'Failure'});
 		model.Item.delete_(function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
