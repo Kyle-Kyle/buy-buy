@@ -73,7 +73,7 @@ app.post('/items/create', function(req, res){
 		var user = result.user;
 		user.create_item(info, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+			return res.send(result);
 		})
 	})
 })
@@ -499,6 +499,14 @@ app.get('/search', function(req, res){
 			}
 		})
 		return res.send({feedback: 'Success',items:items});
+	})
+})
+app.get('/recommends', function(req, res){
+	Category.findOne().sort('-sold').exec(function(err, category){
+		if(err)return res.send({feedback: 'Failure'});
+		Item.find({cid: category._id}).limit(app.get('recommend_size')).exec(function(err, items){
+			return res.send(items);
+		});
 	})
 })
 
