@@ -327,7 +327,7 @@ app.get('/unfollow/:uid',function(req, res){
 app.get('/follow/followees', function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	model.Follow.find({follower_uid:uid},function(err, followees){
+	model.Follow.find({follower_id:uid},function(err, followees){
 		err_msg='Fail to find followees.';
 		if(err){
 			//may change err_msg
@@ -340,7 +340,7 @@ app.get('/follow/followees', function(req, res){
 app.get('/follow/followers', function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	model.Follow.find({followee_uid:uid},function(err, followers){
+	model.Follow.find({followee_id:uid},function(err, followers){
 		err_msg='Fail to find followers.';
 		if(err){
 			//may change err_msg
