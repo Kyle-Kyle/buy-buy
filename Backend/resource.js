@@ -3,6 +3,7 @@ var path = require('path');
 var control = require('./control');
 var model = require('./model_ext');
 var check_login = control.check_login;
+var async = require('async');
 
 // Picture resource
 app.get('/items/:iid/pictures/:p', function(req, res){
@@ -114,6 +115,7 @@ app.put('/items/:iid', function(req, res){
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item=result.item;
+		if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
 		item.update_info(info, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
@@ -407,22 +409,36 @@ app.get('/transactions/:tid/cancel', function(req, res){
 //for convenience, no error handling here
 app.get('/showdbs', function(req,res){
 	var dbs={}
-	model.User.find({}, function(err ,user){
-		dbs.user=user;
-		model.Item.find({}, function(err ,item){
-			dbs.item=item;
-			model.Category.find({}, function(err ,category){
-				dbs.category=category;
-				model.Follow.find({}, function(err ,follow){
-					dbs.follow=follow;
-					model.Message.find({}, function(err ,message){
-						dbs.message=message;
-						model.Transaction.find({}, function(err ,transaction){
-							dbs.transaction=transaction;
-							return res.send({feedback:'Success', dbs:dbs})
+	model.User.find({}, function(err ,users){
+		dbs.users=users;
+		model.Item.find({}, function(err ,items){
+			count = 0;
+			items_new = [];
+			async.whilst(function(){
+				return count<items.length;
+			},
+			function(next){
+				items[count].populate('comment_id', function(err, item){
+					items_new.push(item);
+				})
+				count += 1;
+				next();
+			},
+			function(err){
+			dbs.items=items;
+			model.Category.find({}, function(err ,categories){
+				dbs.categories=categories;
+				model.Follow.find({}, function(err ,follows){
+					dbs.follows=follows;
+					model.Message.find({}, function(err ,messages){
+						dbs.messages=messages;
+						model.Transaction.find({}, function(err ,transactions){
+							dbs.transactions=transactions;
+							return res.send('<pre>'+JSON.stringify(dbs, null, 4)+'</pre>');
 						})
 					})
 				})
+			})
 			})
 		})
 	})
