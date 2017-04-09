@@ -55,19 +55,19 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
               aria-haspopup="true" aria-expanded="false">Messenger <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#"><span class="badge">5</span> Luke</a></li>
-              <li><a href="#"><span class="badge">1</span> Joyce</a></li>
-              <li><a ng-click="start_chat()"> Miguel</a></li>
+              <li ng-repeat="c_data in contact">
+                <a href="" ng-click="start_chat(c_data)">{{c_data.name}} <span class="badge">new</span></a>
+              </li>
               <li role="separator" class="divider"></li>
               <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New Contact</a></li>
             </ul>
           </li>
           <li class="dropdown" ng-show="signed_in">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-              aria-haspopup="true" aria-expanded="false">User <span class="caret"></span></a>
+              aria-haspopup="true" aria-expanded="false">{{client_name}} <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Trading</a></li>
+              <li><a href="#">Your Profile</a></li>
+              <li><a href="#">Your Trading</a></li>
               <li role="separator" class="divider"></li>
               <li><a href="#" ng-click="sign_out()">Sign out</a></li>
             </ul>
