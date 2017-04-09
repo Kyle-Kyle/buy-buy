@@ -67,7 +67,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.start_chat = function(contact) {
     if ($scope.msgUID != contact.uid) {
       $scope.close_chat();
-      
+
       $scope.msgShow = true;
       $scope.msgUID = contact.uid;
 
