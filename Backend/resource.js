@@ -473,6 +473,35 @@ app.get('/transactions/:tid/cancel', function(req, res){
 	})
 })
 
+app.get('/search', function(req, res){
+	var keyword=req.query.keyword;
+	var items=[];
+	model.Item.find({}, function(err ,all_items){
+		if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to access items.'});
+		all_items.forEach(function(item){
+			var attributes=item.attributes;
+			if (attributes.title.toUpperCase().includes(keyword.toUpperCase())){
+				items.push(item);
+			}
+			else if(attributes.description.toUpperCase().includes(keyword.toUpperCase())){
+				items.push(item);
+			}
+			else{
+				var flag=0;//if a tag matches, set flag to 1
+				item.tags.forEach(function(tag){
+					if(tag.toUpperCase().includes(keyword.toUpperCase())){
+						flag=1;
+					}
+				})
+				if(flag==1){
+					items.push(item);
+				}
+			}
+		})
+		return res.send({feedback: 'Success',items:items});
+	})
+})
+
 //debug test, for testing only, should be removed when the website goes online
 //for convenience, no error handling here
 app.get('/showdbs', function(req,res){
