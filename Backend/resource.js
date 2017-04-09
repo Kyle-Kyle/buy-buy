@@ -393,20 +393,27 @@ app.get('/transactions/:tid/confirm', function(req, res){
 			var item=result.item;
 			//check whether quantity is 0 or not
 			if (item.quantity <= 0) return res.send({feedback: 'Failure',err_msg:'No inventory.'});
+			//check owner
+			if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
 			var new_info={};
 			new_info.quantity=item.quantity-1;
-			console.log(new_info);
 
-			//update item info (quantity)
-			item.update_info(new_info, function(result){
-				console.log(result);
+			model.User.get(uid, function(result){
 				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-				model.User.get(uid, function(result){
+				var user=result.user;
+				user.sell_confirm(tid, function(result){
 					if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-					var user=result.user;
-					user.sell_confirm(tid, function(result){
+					//update item info (quantity)
+					item.update_info(new_info, function(result){
 						if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-						return res.send(result);
+						model.Category.get(item.cid, function(result){
+							if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+							var category=result.category;
+							category.update_sold(function(result){
+								if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+								return res.send(result);
+							})
+						})
 					})
 				})
 			})
@@ -432,12 +439,22 @@ app.get('/transactions/:tid/reject', function(req, res){
 	if(!check_login(req, res))return;
 	var tid=req.params.tid;
 	var uid=req.session.uid;
-	model.User.get(uid, function(result){
-		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-		var user=result.user;
-		user.seller_reject(tid, function(result){
-			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+	model.Transaction.get(tid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure',err_msg:'Cannot find this transaction.'});
+		var iid=result.transaction.iid;
+		model.Item.get(iid, function(result){
+			if(result.feedback != 'Success') return res.send({feedback: 'Failure',err_msg:'Cannot find the item.'});
+			var item=result.item;
+			//check owner
+			if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
+			model.User.get(uid, function(result){
+				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+				var user=result.user;
+				user.seller_reject(tid, function(result){
+					if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+					res.send(result);
+				})
+			})
 		})
 	})
 })
