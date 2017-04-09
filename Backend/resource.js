@@ -134,6 +134,30 @@ app.delete('/items/:iid', function(req, res){
 	})
 })
 
+//get contacts of this user
+app.get('/users/contacts', function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.session.uid;
+	model.Message.find({ $or: [{uid1:uid}, {uid2:uid} ] }, function(err,messages){
+		err_msg= 'Fail to get items of this user.'
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		var contacts=[];
+		messages.forEach(function(message){
+			if(message.uid1==uid){
+				contacts.push(message.uid2);
+			}
+			else{
+				contacts.push(message.uid1);
+			}
+		})
+		return res.send({feedback: 'Success', contacts: contacts});
+	})
+})
+
+
 //get user info
 app.get('/users/:uid', function(req, res, next){
 	var uid = req.params.uid;
@@ -186,10 +210,6 @@ app.get('/users/self/items',function(req, res){
 		err_msg= 'Fail to get items of this user.'
 		if(err){
 			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
-		if(!items){
-			err_msg= 'No item returned.';
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
 		return res.send({feedback: 'Success', items: items});
@@ -310,10 +330,6 @@ app.get('/follow/followees', function(req, res){
 			//may change err_msg
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
-		if(!user){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
 		return res.send({feedback: 'Success', followees: followees})
 	})
 })
@@ -324,10 +340,6 @@ app.get('/follow/followers', function(req, res){
 	model.Follow.find({followee_uid:uid},function(err, followers){
 		err_msg='Fail to find followers.';
 		if(err){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
-		if(!user){
 			//may change err_msg
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
@@ -342,11 +354,16 @@ app.post('/transactions/create', function(req, res){
 	var info=req.body;
 	var iid=info.iid;
 	var uid=req.session.uid;
-	model.User.get(uid, function(result){
-		var user=result.user;
-		user.buy_request(iid, function(result){
-			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+	model.Item.get(iid, function(result){//check whether quantity is 0 or not
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var item=result.item;
+		if (item.quantity <= 0) return res.send({feedback: 'Failure'});
+		model.User.get(uid, function(result){
+			var user=result.user;
+			user.buy_request(iid, function(result){
+				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+				res.send(result);
+			})
 		})
 	})
 })
@@ -355,11 +372,32 @@ app.get('/transactions/:tid/confirm', function(req, res){
 	if(!check_login(req, res))return;
 	var tid=req.params.tid;
 	var uid=req.session.uid;
-	model.User.get(uid, function(result){
-		var user=result.user;
-		user.sell_confirm(tid, function(result){
+	model.Transaction.get(tid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		var iid=result.iid;
+		//check whether quantity is 0 or not
+		model.Item.get(iid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+			var item=result.item;
+			if (item.quantity <= 0) return res.send({feedback: 'Failure'});
+			var new_info={};
+			new_info.price=item.price;
+			new_info.quantity=item.quantity-1;
+			new_info.tags=item.tags;
+			new_info.attributes=item.attributes;
+
+			model.User.get(uid, function(result){
+				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+				var user=result.user;
+				user.sell_confirm(tid, function(result){
+					if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+					//update item info (quantity)
+					item.update_info(new_info, function(result){
+						if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+						return res.send(result);
+					})
+				})
+			})
 		})
 	})
 })
@@ -369,6 +407,7 @@ app.get('/transactions/:tid/receive', function(req, res){
 	var tid=req.params.tid;
 	var uid=req.session.uid;
 	model.User.get(uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
 		user.recv_from(tid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
@@ -382,6 +421,7 @@ app.get('/transactions/:tid/reject', function(req, res){
 	var tid=req.params.tid;
 	var uid=req.session.uid;
 	model.User.get(uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
 		user.seller_reject(tid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
@@ -395,6 +435,7 @@ app.get('/transactions/:tid/cancel', function(req, res){
 	var tid=req.params.tid;
 	var uid=req.session.uid;
 	model.User.get(uid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
 		user.buyer_cancel(tid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
