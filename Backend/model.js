@@ -239,7 +239,7 @@ Item_Schema.methods.update_info = function(info, cb){
 	if(typeof(info.price) !== 'undefined' && info.price){
 		this.price = info.price
 	}
-	if(typeof(info.quantity) !== 'undefined' && info.quantity){
+	if(typeof(info.quantity) !== 'undefined'){
 		this.quantity = info.quantity
 	}
 	if(typeof(info.tags) !== 'undefined' && info.tags){
