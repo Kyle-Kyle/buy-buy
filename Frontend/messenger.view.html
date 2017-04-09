@@ -21,18 +21,6 @@ $(document).on('focus', '.panel-footer input.chat_input', function (e) {
     $('#minim_chat_window').removeClass('glyphicon-plus').addClass('glyphicon-minus');
   }
 });
-$(document).on('click', '#new_chat', function (e) {
-  var size = $( ".chat-window:last-child" ).css("margin-left");
-  size_total = parseInt(size) + 400;
-  alert(size_total);
-  var clone = $( "#chat_window_1" ).clone().appendTo( ".container" );
-  clone.css("margin-left", size_total);
-});
-$(document).on('click', '.icon_close', function (e) {
-  //$(this).parent().parent().parent().parent().remove();
-  $( "#chat_window_1" ).remove();
-});
-
 $("#btn-input").keyup(function(event){
   if(event.keyCode == 13){
     $("#btn-chat").click();
@@ -50,7 +38,8 @@ $("#btn-input").keyup(function(event){
           </div>
           <div class="col-md-4 col-xs-4" style="text-align: right;">
             <a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim"></span></a>
-            <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span></a>
+            <a href="#"><span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"
+              ng-click="close_chat()"></span></a>
           </div>
         </div>
 
@@ -59,16 +48,16 @@ $("#btn-input").keyup(function(event){
         <div id="msg-panel" class="panel-body msg_container_base" style="min-height:300px">
           <div class="row msg_container" ng-repeat="msg in msgList"
           ng-class="msg.to_send ? 'base_sent' : 'base_receive'">
-          <div class="col-md-2 col-xs-2 avatar" ng-show="msg.to_send">
+          <div class="col-md-2 col-xs-2 avatar" ng-show="!msg.to_send">
             <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
           </div>
           <div class="col-md-10 col-xs-10">
             <div class="messages" ng-class="msg.to_send ? 'msg_sent' : 'msg_receive'">
               <p>{{msg.content}}</p>
-              <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+              <time datetime="2009-11-13T20:00">{{msg.time}}</time>
             </div>
           </div>
-          <div class="col-md-2 col-xs-2 avatar" ng-show="!msg.to_send">
+          <div class="col-md-2 col-xs-2 avatar" ng-show="msg.to_send">
             <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
           </div>
         </div>

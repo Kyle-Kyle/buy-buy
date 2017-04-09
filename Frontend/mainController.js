@@ -12,67 +12,99 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     $scope.scroll_down();
   });
 
+  $scope.recent_chat = function() {
+    $http.get("/users/contacts")
+    .then(function(response) {
+      if (response.data.feedback == "Success") {
+        response.data.contacts.forEach(function(uid) {
+          if ($scope.recent == undefined) {
+            $scope.recent = {};
+          }
+          $http.get("/users/" + uid)
+          .then(function(name_response) {
+            console.log("Found recent contact: " + name_response.data.user.username);
+            $scope.recent[uid] = {'uid': uid, 'name': name_response.data.user.username, 'new': false};
+          });
+        });
+        console.log($scope.recent);
+      } else {
+        console.log("Error: cannot get recent contacts")
+      }
+    });
+  }
+
   // check message buffer for new messages
   $scope.check_msg = function() {
     $http.get("/users/new_messages")
     .then(function(response) {
-      console.log(response);
+      //console.log(response);
       if (response.data.feedback == "Failure") {
         console.log("Error when checking for new messages")
       }
       else if (response.data.msg_buf.length == 0) {
         console.log("No new message");
       } else {
-        if ($scope.contact == undefined) {
-          $scope.contact = {};
-        }
         response.data.msg_buf.forEach(function(uid) {
-          if (uid in $scope.contact) {
-            // do nothing
+          if (uid in $scope.recent) {
+            $scope.recent[uid].new = true;
           } else {
-            // get user-info by uid
-            $http.get("/users/" + uid)
-            .then(function(response) {
-              console.log("New messages from " + response.data.user.username);
-              $scope.contact[uid] = {'uid': uid, 'name': response.data.user.username};
-            });
+            console.log("Error: new messages from anonymous ID: " + uid);
           }
-          console.log($scope.contact);
         });
       }
     });
   };
 
   // open a chat window
+  var receive_msg_promise;
   $scope.start_chat = function(contact) {
     $scope.msgShow = true;
-    $scope.chatUID = contact.uid;
+    $scope.msgUID = contact.uid;
     $scope.chatName = contact.name;
+    $scope.lastViewTime = 0;
     $scope.msgList = [];
-
-    // testing uid
-    $scope.msgUID = "58e7896bb482cb0f902a55fc"; //mjust
 
     console.log("chat start")
     $scope.rcv_msg();
+    $timeout($scope.scroll_down, 50);
+    receive_msg_promise = $interval($scope.rcv_msg, 1000);
   };
 
+  $scope.close_chat = function() {
+    $scope.msgShow = false;
+    $scope.msgUID = undefined;
+    $scope.chatName = undefined;
+    $interval.cancel(receive_msg_promise);
+  };
+
+  $scope.get_formatted_time = function(timestamp) {
+    var a = new Date(timestamp);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    return date + ' ' + month + ' ' + hour + ':' + (min < 10 ? '0' : '') + min;
+  }
+
   $scope.rcv_msg = function() {
-    $http.get("/messages/" + "58e5fbe40eb7a21abbbafe0d")  // TODO change to uid
+    $http.get("/messages/" + $scope.msgUID)  // TODO change to uid
     .then(function(response) {
       console.log(response);
       response.data.message.messages.forEach(function(msg) {
-        $scope.msgList.push({
-          "to_send": false,
-          "content": msg[1],
-          "time": 0,    // TODO: change time
-        });
-      })
-
+        var timestamp = msg[2];
+        if (timestamp > $scope.lastViewTime) {
+          var sender_id = msg[0] == 1 ? response.data.message.uid1 : response.data.message.uid2;
+          $scope.msgList.push({
+            "to_send": sender_id == $scope.uid,
+            "content": msg[1],
+            "time": $scope.get_formatted_time(timestamp),    // TODO: change time
+          });
+          $scope.lastViewTime = timestamp;
+        }
+      });
     });
-
-
-  }
+  };
 
   $scope.send_msg = function(msgContent) {
     if (msgContent != "") {
@@ -83,7 +115,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       $scope.msgList.push({
         "to_send": true,
         "content": msgContent,
-        "time": 0,    // TODO: change time
+        "time": $scope.get_formatted_time(new Date()),    // TODO: change time
       });
 
       //console.log($scope.msgNum);
@@ -105,11 +137,6 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     }
   };
 
-  // testing
-  //$scope.msgList = [];
-  //$scope.msgUID = "58e7896bb482cb0f902a55fc"; //mjust
-  //$scope.send_msg('test2');
-
   $scope.scroll_down = function() {
     $timeout(function() {
       var objDiv = document.getElementById("msg-panel");
@@ -117,14 +144,20 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     }, 50)
   }
 
-  var promise;
+  var check_msg_promise;
   $scope.sign_in = function(client_name) {
-    $scope.client_name = client_name;
-    $scope.signed_in = true;
-    $cookies.put("logged_in", client_name);
+    $http.get("/users/self")
+    .then(function(response) {
+      $scope.uid = response.data.user._id;
 
-    //promise = $interval($scope.check_msg, 5000);
-    $scope.check_msg();
+      $scope.client_name = client_name;
+      $scope.signed_in = true;
+      $cookies.put("logged_in", client_name);
+
+      $scope.recent_chat();
+      $scope.check_msg();
+      check_msg_promise = $interval($scope.check_msg, 5000);
+    })
   };
   $scope.sign_out = function() {
     $http.get("/users/logout")
@@ -133,7 +166,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       if (response.data.feedback == "Success") {
         $scope.signed_in = false;
         $cookies.remove("logged_in");
-        $interval.cancel(promise);
+        $interval.cancel(check_msg_promise);
       } else {
         console.log("logout failure")
       }
