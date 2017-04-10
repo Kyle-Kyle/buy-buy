@@ -3,6 +3,10 @@
 1. Please load `mainController.js` on every individual pages and add the `mainController` to ngApp in the first place
 
 ## Tasklist
+### Welcome page: `welcome.html`  
+- [x] UI  
+- [x] Client-server interface  
+
 ### Home page: `index.html`  
 &nbsp;&nbsp;includes `navs.view.html`, `recommends.view.html`  
 - [ ] UI (part-finished)  
