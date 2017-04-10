@@ -73,7 +73,7 @@ app.post('/items/create', function(req, res){
 		var user = result.user;
 		user.create_item(info, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+			return res.send(result);
 		})
 	})
 })
@@ -129,7 +129,8 @@ app.delete('/items/:iid', function(req, res){
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item=result.item;
-		model.Item.delete_(function(result){
+		if(item.uid != req.session.uid) return res.send({feedback: 'Failure'});
+		item.delete_(function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
 		})
@@ -294,7 +295,9 @@ app.get('/messages/:uid', function(req, res){
 
 //Follow resource
 //follow
-app.get('/follow/:uid',function(req, res){
+app.get('/follow/:uid',function(req, res, next){
+	var uid = req.params.uid;
+	if(!db.Types.ObjectId.isValid(uid) || uid == 'followers' || uid == 'followees')return next();
 	if(!check_login(req, res))return;
 	var followee_uid=req.params.uid;
 	var follower_uid=req.session.uid;
@@ -326,12 +329,16 @@ app.get('/unfollow/:uid',function(req, res){
 app.get('/follow/followees', function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	model.Follow.find({follower_uid:uid},function(err, followees){
+	model.Follow.find({follower_id:uid},function(err, follows){
 		err_msg='Fail to find followees.';
 		if(err){
 			//may change err_msg
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
+		var followees=[];
+		follows.forEach(function(follow){
+			followees.push(follow.followee_id);
+		})
 		return res.send({feedback: 'Success', followees: followees})
 	})
 })
@@ -339,17 +346,33 @@ app.get('/follow/followees', function(req, res){
 app.get('/follow/followers', function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	model.Follow.find({followee_uid:uid},function(err, followers){
+	model.Follow.find({followee_id:uid},function(err, follows){
 		err_msg='Fail to find followers.';
 		if(err){
 			//may change err_msg
 			return res.send({feedback: 'Failure', err_msg: err_msg});
 		}
+		var followers=[];
+		follows.forEach(function(follow){
+			followers.push(follow.follower_id);
+		})
 		return res.send({feedback: 'Success', followers: followers})
 	})
 })
 
 //Transaction resource
+app.get('/transactions/:tid', function(req, res, next){
+	var tid = req.params.tid;
+	if(!db.Types.ObjectId.isValid(tid))return next();
+	if(!check_login(req, res))return;
+	var uid = req.session.uid;
+	model.Transaction.get(tid, function(result){
+		if(result.feedback != 'Success')return res.send(result);
+		var transaction = result.transaction;
+		if(transaction.seller_id != uid && transaction.buyer_id != uid)return res.send({feedback: 'Failure', err_msg: 'Invalid user'});
+		return res.send({feedback: 'Success', transaction: transaction});
+	})
+})
 //buy request
 app.post('/transactions/create', function(req, res){
 	if(!check_login(req, res))return;
@@ -357,9 +380,9 @@ app.post('/transactions/create', function(req, res){
 	var iid=info.iid;
 	var uid=req.session.uid;
 	model.Item.get(iid, function(result){//check whether quantity is 0 or not
-		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure',err_msg:'Cannot find this item.'});
 		var item=result.item;
-		if (item.quantity <= 0) return res.send({feedback: 'Failure'});
+		if (item.quantity <= 0) return res.send({feedback: 'Failure',err_msg:'No inventory.'});
 		model.User.get(uid, function(result){
 			var user=result.user;
 			user.buy_request(iid, function(result){
@@ -375,18 +398,17 @@ app.get('/transactions/:tid/confirm', function(req, res){
 	var tid=req.params.tid;
 	var uid=req.session.uid;
 	model.Transaction.get(tid, function(result){
-		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-		var iid=result.iid;
-		//check whether quantity is 0 or not
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure',err_msg:'Cannot find this transaction.'});
+		var iid=result.transaction.iid;
 		model.Item.get(iid, function(result){
-			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+			if(result.feedback != 'Success') return res.send({feedback: 'Failure',err_msg:'Cannot find the item.'});
 			var item=result.item;
-			if (item.quantity <= 0) return res.send({feedback: 'Failure'});
+			//check whether quantity is 0 or not
+			if (item.quantity <= 0) return res.send({feedback: 'Failure',err_msg:'No inventory.'});
+			//check owner
+			if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
 			var new_info={};
-			new_info.price=item.price;
 			new_info.quantity=item.quantity-1;
-			new_info.tags=item.tags;
-			new_info.attributes=item.attributes;
 
 			model.User.get(uid, function(result){
 				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
@@ -396,7 +418,14 @@ app.get('/transactions/:tid/confirm', function(req, res){
 					//update item info (quantity)
 					item.update_info(new_info, function(result){
 						if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-						return res.send(result);
+						model.Category.get(item.cid, function(result){
+							if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+							var category=result.category;
+							category.update_sold(function(result){
+								if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+								return res.send(result);
+							})
+						})
 					})
 				})
 			})
@@ -411,7 +440,7 @@ app.get('/transactions/:tid/receive', function(req, res){
 	model.User.get(uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
-		user.recv_from(tid, function(result){
+		user.receive_confirm(tid, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			res.send(result);
 		})
@@ -422,12 +451,22 @@ app.get('/transactions/:tid/reject', function(req, res){
 	if(!check_login(req, res))return;
 	var tid=req.params.tid;
 	var uid=req.session.uid;
-	model.User.get(uid, function(result){
-		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-		var user=result.user;
-		user.seller_reject(tid, function(result){
-			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+	model.Transaction.get(tid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure',err_msg:'Cannot find this transaction.'});
+		var iid=result.transaction.iid;
+		model.Item.get(iid, function(result){
+			if(result.feedback != 'Success') return res.send({feedback: 'Failure',err_msg:'Cannot find the item.'});
+			var item=result.item;
+			//check owner
+			if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
+			model.User.get(uid, function(result){
+				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+				var user=result.user;
+				user.seller_reject(tid, function(result){
+					if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+					res.send(result);
+				})
+			})
 		})
 	})
 })
@@ -446,6 +485,43 @@ app.get('/transactions/:tid/cancel', function(req, res){
 	})
 })
 
+app.get('/search', function(req, res){
+	var keyword=req.query.keyword;
+	var items=[];
+	model.Item.find({}, function(err ,all_items){
+		if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to access items.'});
+		all_items.forEach(function(item){
+			var attributes=item.attributes;
+			if (attributes.title.toUpperCase().includes(keyword.toUpperCase())){
+				items.push(item);
+			}
+			else if(attributes.description.toUpperCase().includes(keyword.toUpperCase())){
+				items.push(item);
+			}
+			else{
+				var flag=0;//if a tag matches, set flag to 1
+				item.tags.forEach(function(tag){
+					if(tag.toUpperCase().includes(keyword.toUpperCase())){
+						flag=1;
+					}
+				})
+				if(flag==1){
+					items.push(item);
+				}
+			}
+		})
+		return res.send({feedback: 'Success',items:items});
+	})
+})
+app.get('/recommends', function(req, res){
+	Category.findOne().sort('-sold').exec(function(err, category){
+		if(err)return res.send({feedback: 'Failure'});
+		Item.find({cid: category._id}).limit(app.get('recommend_size')).exec(function(err, items){
+			return res.send(items);
+		});
+	})
+})
+
 //debug test, for testing only, should be removed when the website goes online
 //for convenience, no error handling here
 app.get('/showdbs', function(req,res){
@@ -458,29 +534,29 @@ app.get('/showdbs', function(req,res){
 			async.whilst(function(){
 				return count<items.length;
 			},
-			function(next){
-				items[count].populate('comment_id', function(err, item){
-					items_new.push(item);
-				})
-				count += 1;
-				next();
-			},
-			function(err){
-			dbs.items=items;
-			model.Category.find({}, function(err ,categories){
-				dbs.categories=categories;
-				model.Follow.find({}, function(err ,follows){
-					dbs.follows=follows;
-					model.Message.find({}, function(err ,messages){
-						dbs.messages=messages;
-						model.Transaction.find({}, function(err ,transactions){
-							dbs.transactions=transactions;
-							return res.send('<pre>'+JSON.stringify(dbs, null, 4)+'</pre>');
+				function(next){
+					items[count].populate('comment_id', function(err, item){
+						items_new.push(item);
+					})
+					count += 1;
+					next();
+				},
+				function(err){
+					dbs.items=items;
+					model.Category.find({}, function(err ,categories){
+						dbs.categories=categories;
+						model.Follow.find({}, function(err ,follows){
+							dbs.follows=follows;
+							model.Message.find({}, function(err ,messages){
+								dbs.messages=messages;
+								model.Transaction.find({}, function(err ,transactions){
+									dbs.transactions=transactions;
+									return res.send('<pre>'+JSON.stringify(dbs, null, 4)+'</pre>');
+								})
+							})
 						})
 					})
 				})
-			})
-			})
 		})
 	})
 })
