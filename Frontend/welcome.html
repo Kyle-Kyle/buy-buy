@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="buy-buy, buy2, second-hand, used, sell" />
+  <meta name="description" content="Second-hand goods online trading platform" />
+
+  <title>buy-buy</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+
+  <script type="text/javascript" src="widget/bubble/alphabet.js"></script>
+
+  <style>
+    #myCanvas {
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+    div.shadow {
+      width: 150px;
+      height: 50px;
+      margin: auto;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.5);
+    }
+    #enter-btn {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+</head>
+<body>
+  <div id="header_back" class="container-fluid" style="padding: 0; width:100%; background-image: url(img/desk.jpg); background-size: 100% 100%;">
+    <div id="header_fore" style="background-image: url(img/desk_51.jpg); background-size: 100% 100%;">
+    </div>
+  </div>
+  <div class="container-fluid" style="position: absolute; top: 0; margin: 0 auto; left: 0; right: 0;">
+    <div>
+      <div class="container">
+        <canvas id="myCanvas"></canvas>
+        <script type="text/javascript" src="widget/bubble/bubbles.js"></script>
+        <script type="text/javascript" src="widget/bubble/main.js"></script>
+      </div>
+      <div class="container">
+        <div class="shadow">
+          <button id="enter-btn" class="btn btn-info" style="border-radius: 0; font-size: 18px;"
+            onclick="location.href='index.html';">Enter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var mapElement_back = document.getElementById("header_back");
+    var mapElement_fore = document.getElementById("header_fore");
+    mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 1200.0/1920.0) + 'px'
+    mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 1200.0/1920.0) + 'px'
+    window.addEventListener("resize", function(e) {
+      mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 1200.0/1920.0) + 'px'
+      mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 1200.0/1920.0) + 'px'
+    });
+    $("#enter-btn").hover(function() {
+      $('#header_fore')
+      .animate({opacity: 0}, 'slow', function() {
+        $(this)
+        .css('background-image', "url(img/desk_51.jpg)")
+      });
+      //$('#header_fore').css('opacity', '0');
+      //$("#header").css("background-image", "url(img/desk.jpg)")
+    }, function() {
+      $('#header_fore')
+      .animate({opacity: 1}, 'slow', function() {
+        $(this)
+        .css('background-image', "url(img/desk_51.jpg)")
+      });
+    });
+  </script>
+</body>
+</html>

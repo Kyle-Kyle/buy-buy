@@ -57,7 +57,7 @@ angular.module('postApp')
   }
 
   // verify credential
-  if ($cookies.get("logged_in") == "true") {
+  if ($cookies.get("logged_in") != undefined) {
 
     // submit the data
     $scope.post_item = function() {
