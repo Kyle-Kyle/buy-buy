@@ -487,32 +487,70 @@ app.get('/transactions/:tid/cancel', function(req, res){
 
 app.get('/search', function(req, res){
 	var keyword=req.query.keyword;
+	var min_price=req.query.minprice;
+	var max_price=req.query.maxprice;
+	var cid=req.query.cid;
+	var tags=JSON.parse(req.query.tags);
 	var items=[];
 	model.Item.find({}, function(err ,all_items){
 		if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to access items.'});
 		all_items.forEach(function(item){
-			var attributes=item.attributes;
-			if (attributes.title.toUpperCase().includes(keyword.toUpperCase())){
-				items.push(item);
-			}
-			else if(attributes.description.toUpperCase().includes(keyword.toUpperCase())){
-				items.push(item);
-			}
-			else{
-				var flag=0;//if a tag matches, set flag to 1
-				item.tags.forEach(function(tag){
-					if(tag.toUpperCase().includes(keyword.toUpperCase())){
-						flag=1;
-					}
-				})
-				if(flag==1){
+			var deprecate=0; //1 indicates that this item should not be returned
+			if (min_price && item.price < min_price)
+				deprecate=1;
+			if (max_price && item.price > max_price)
+				deprecate=1;
+			if (cid && item.cid != cid)
+				deprecate=1;
+			if(deprecate!=1){
+				var attributes=item.attributes;
+				if (attributes.title.toUpperCase().includes(keyword.toUpperCase())){
 					items.push(item);
+				}
+				else if(attributes.description.toUpperCase().includes(keyword.toUpperCase())){
+					items.push(item);
+				}
+				else{
+					var tag_no=item.tags.length;
+					for (let j=0;j<tag_no;j++){
+						if(item.tags[j].toUpperCase().includes(keyword.toUpperCase())){
+							items.push(item);
+							break;
+						}
+					}
 				}
 			}
 		})
+		if(tags){
+			var i=0;
+			var n=items.length;
+			var tmp_items=[];
+			var match=0;
+			while(i<n)
+			{
+				match=1;
+
+				for(let j=0;j<tags.length;j++){
+					if(items[i].tags.indexOf(tags[j])<0)
+					{
+						match=0;
+					}
+				}
+
+				if(match){
+					tmp_items=tmp_items.concat(items.splice(i,1));
+					n--;
+				}
+				else{
+					i++;
+				}
+			}
+			items=tmp_items.concat(items);
+		}
 		return res.send({feedback: 'Success',items:items});
 	})
 })
+
 app.get('/recommends', function(req, res){
 	Category.findOne().sort('-sold').exec(function(err, category){
 		if(err)return res.send({feedback: 'Failure'});
