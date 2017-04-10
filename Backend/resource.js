@@ -361,6 +361,18 @@ app.get('/follow/followers', function(req, res){
 })
 
 //Transaction resource
+app.get('/transactions/:tid', function(req, res, next){
+	var tid = req.params.tid;
+	if(!db.Types.ObjectId.isValid(tid))return next();
+	if(!check_login(req, res))return;
+	var uid = req.session.uid;
+	model.Transaction.get(tid, function(result){
+		if(result.feedback != 'Success')return res.send(result);
+		var transaction = result.transaction;
+		if(transaction.seller_id != uid && transaction.buyer_id != uid)return res.send({feedback: 'Failure', err_msg: 'Invalid user'});
+		return res.send({feedback: 'Success', transaction: transaction});
+	})
+})
 //buy request
 app.post('/transactions/create', function(req, res){
 	if(!check_login(req, res))return;
