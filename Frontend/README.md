@@ -9,30 +9,34 @@
 - [ ] Client-server interface  
 
 ### Post-item page: `post.html`  
-- [x] UI  
+- [ ] UI(need to add category)  
 - [ ] Client-server interface  
 
 ### Profile page: `profile.html`  
-- [x] UI  
-- [ ] Client-server interface  
+- [ ] UI  
+- [x] Client-server interface  
 
 ### Profile page: `profile_update.html`  
 - [x] UI  
-- [ ] Client-server interface  
+- [x] Client-server interface  
 
-### Profile page: `item_detail.html`  
+### item detail page: `item_detail.html`  
 &nbsp;&nbsp;includes `transaction.view.html`  
-- [x] UI  
+- [ ] UI(need to add category)  
 - [ ] Client-server interface  
 
-### Profile page: `item_list.html`  
+### item list page: `item_list.html`  
+- [ ] UI  
+- [ ] Client-server interface  
+
+### Search page: `search.html`  
 - [ ] UI  
 - [ ] Client-server interface  
 
 ### Navs view: `navs.view.html`  
 &nbsp;&nbsp;includes `login.view.html`, `register.view.html`  
-- [ ] UI (part-finished)  
-- [ ] Client-server interface  
+- [x] UI  
+- [x] Client-server interface  
 
 ### Recommendation view: `recommends.view.html`  
 - [x] UI  
@@ -45,7 +49,7 @@
 
 ### Sign-in view: `login.view.html`  
 - [x] UI
-- [ ] Client-server interface (part-finished)  
+- [x] Client-server interface  
 
 ### Messenger view: `messenger.view.html`  
 - [x] UI  
