@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="buy-buy, buy2, second-hand, used, sell" />
+  <meta name="description" content="Second-hand goods online trading platform" />
+
+  <title>buy-buy</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/btn_anim.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+</head>
+<body>
+  <!-- dynamic loading of navigator and messenger -->
+  <div ng-app="indexApp" ng-controller="mainController">
+    <div id="navs" ng-include="navs.url"></div>
+    <div id='msg-window' ng-include="msg_view.url"
+      ng-show="msgShow" ng-init="msgShow=false"></div>
+  </div>
+
+  <div class="container" ng-app="searchApp" ng-controller="searchController">
+
+    <form id="searchForm" role="form" style="padding-left: 20%; padding-right: 20%; padding-bottom: 5%;">
+      <label for="username">Search for goods</label>
+      <div class="input-group">
+        <div class="input-group-btn">
+          <!-- category -->
+          <select id="categorySelect" class="form-control" name="category">
+            <option>All</option>
+            <optgroup label="Others">
+              <option>Others</option>
+            </optgroup>
+            <optgroup label="Book">
+              <option>Books</option>
+              <option>Textbook</option>
+              <option>Fiction</option>
+              <option>Magizine</option>
+            </optgroup>
+            <optgroup label="Life">
+              <option>Kitchenware</option>
+              <option>Makeup</option>
+              <option>Sports</option>
+              <option>Clothing & Shoes</option>
+            </optgroup>
+            <optgroup label="Entertainment">
+              <option>Electronics</option>
+              <option>Musical Instrument</option>
+            </optgroup>
+          </select>
+        </div>
+        <input type="text" class="form-control"/>
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-default"/>Search</button>
+        </span>
+      </div>
+    </form>
+
+    <!-- dynamically load item list -->
+    <div ng-include="'item_list.html'"></div>
+
+  </div>
+
+  <!-- load main controller -->
+  <script src="mainController.js"></script>
+  <script>
+    angular
+      .module('indexApp', ['ngRoute', 'ngCookies'])
+      .controller('mainController', mainController);
+  </script>
+
+  <!-- load login & register controller -->
+  <script src="login.js"></script>
+  <script src="register.js"></script>
+
+  <!-- load search controller -->
+  <script src="searchController.js"></script>
+  <script>
+    angular
+      .module('searchApp', [])
+      .controller('searchController', searchController);
+  </script>
+
+  <script>
+    angular.bootstrap(document, ["indexApp", "searchApp"]);
+  </script>
+</body>
+</html>

@@ -9,7 +9,6 @@
 <body>
   <div ng-include="item_list.url">
   </div>
-
   <div class="container-fluid" ng-controller="recommendController" ng-init="get_recommendations()">
     <table class="table">
       <thead>
@@ -35,10 +34,10 @@
                   <div class="content">
                     <div class="main">
                       <h3 class="name">{{item.attributes.title}}</h3>
-                      <h3 class="name">$149</h3>
+                      <h3 class="name">$ {{item.price}}</h3>
                     </div>
                     <div class="footer">
-                      <i class="fa fa-mail-forward"></i> Auto Rotation
+                      {{item.post_time}}
                     </div>
                   </div>
                 </div> <!-- end front panel -->
@@ -55,7 +54,7 @@
                           </p>
                         </div>
                         <div class="stats">
-                          <h4>{{item.attributes.condition}}</h4>
+                          <h4>{{get_condition[item.attributes.condition-1]}}</h4>
                           <p>
                             Condition
                           </p>
@@ -344,6 +343,15 @@
         </tr>
       </tbody>
     </table>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
   </div>
 </body>
 </html>
