@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="buy-buy, buy2, second-hand, used, sell" />
+  <meta name="description" content="Second-hand goods online trading platform" />
+
+  <title>buy-buy</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+
+  <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
+
+  <style>
+  .bootstrap-tagsinput {
+    width: 100%;
+  }
+  </style>
+
+</head>
+<body>
+
+  <div ng-app="postApp" ng-controller="loadController">
+    <div id="navs" ng-include="navs.url"></div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Meizu!!</h4>
+          </div>
+
+          <div id="myCarousel" class="carousel slide " data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+              <li data-target="#myCarousel" data-slide-to="1"></li>
+              <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+              <div class="item active"align="center">
+                <img class="img-responsive" style="max-height:500px;"src="https://img.alicdn.com/bao/uploaded/i3/6000000005963/TB2RcJki80kpuFjy1zdXXXuUVXa_!!0-fleamarket.jpg_728x728.jpg" alt="phone">
+              </div>
+
+              <div class="item"align="center">
+                <img class="img-responsive" style="max-height:500px;"src="https://img.alicdn.com/bao/uploaded/i1/6000000000620/TB2D0ZYiMJkpuFjSszcXXXfsFXa_!!0-fleamarket.jpg_728x728.jpg" alt="phone">
+              </div>
+
+              <div class="item"align="center">
+                <img class="img-responsive" style="max-height:500px;"src="https://img.alicdn.com/bao/uploaded/i4/6000000001795/TB2SrpIi3JlpuFjSspjXXcT.pXa_!!0-fleamarket.jpg_728x728.jpg" alt="phone">
+              </div>
+
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+          <div class="modal-body">
+            <!-- tab-->
+            <div class="container-fluid">
+              <ul id="itemTab" class="nav nav-tabs nav-justified">
+                <li role="presentation" class="active"><a href="#detail"data-toggle="tab"><b>Detail</b></a></li>
+                <li role="presentation"><a data-toggle="tab"href="#description"><b>Description</b></a></li>
+                <li role="presentation"><a data-toggle="tab"href="#comment"><b>Comment</b></a></li>
+                <li role="presentation"><a data-toggle="tab"href="transition.view.html"><b>Buy</b></a></li>
+              </ul>
+              <div id="itemTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="detail">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <td><span class="glyphicon glyphicon-yen"></span> <b>Price</b></td>
+                        <td>$1500</td>
+                      </tr>
+                      <tr>
+                        <td><span class="glyphicon glyphicon-tag"></span> <b>Tag</b></td>
+                        <td><div>
+                          <a href="#" style="text-decoration: none;"><span class="label btn btn-info">The MIT Press</span></a>
+                          <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Computer Science</span></a>
+                          <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Machine Learning</span></a>
+                        </div></td>
+                      </tr>
+                      <tr>
+                        <td><span class="glyphicon glyphicon-duplicate"></span> <b> Quantity</b></td>
+                        <td>1</td>
+                      </tr>
+                      <tr>
+                        <td><span class="glyphicon glyphicon-wrench"></span> <b>Condition</b></td>
+                        <td>Like new</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+                <div class="tab-pane fade" id="description">
+                  <textarea class="form-control" disabled="true">FREE!!!</textarea>
+                </div>
+                <div class="tab-pane fade" id="comment">
+                  <div class="input-group">
+                    <input class="form-control" placeholder="Add a comment" type="text">
+                    <span class="input-group-addon">
+                      <a href="#"><span class="glyphicon glyphicon-comment"></span></a>
+                    </span>
+                  </div>
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <td><a href="#"><img style="max-height:50px;" src="http://bootdey.com/img/Content/user_1.jpg" ><h5 class="user" >Li Wei</h5></a></td>
+                        <td><textarea class="form-control" disabled="true" rows="3" id="comment">TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT</textarea></td>
+                      </tr>
+                      <tr>
+                        <td><a href="#"><img style="max-height:50px;" src="http://bootdey.com/img/Content/user_3.jpg" ><h5 class="user" >Li kaican</h5></a></td>
+                        <td><textarea class="form-control" disabled="true" rows="3" id="comment">TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaTTTTTTTTTTTTTTTTTTT</textarea></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- load angular functions -->
+    <script>
+    var app = angular.module('postApp', ['ngRoute', 'ngCookies'])
+    app.controller('loadController', function($scope) {
+      $scope.navs = {url: "navs.view.html"};
+    });
+    </script>
+    <script src="post_load.js"></script>
+
+  </body>
+  </html>

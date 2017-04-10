@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="css/profile.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
+  <style>
+  .box-shadow2{
+    -webkit-box-shadow:0 0 5px;
+    -moz-box-shadow:0 0 5px ;
+    box-shadow: 0 0 5px ;
+  }
+  </style>
+  <script>
+  angular
+  .module('profileApp', ['ngRoute', 'ngCookies'])
+  </script>
+  <script src="profile.js"></script>
+
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div ng-app="profileApp" ng-controller="loadController">
+      <div class="container">
+        <div class="row profile">
+          <div class="col-md-3">
+            <div class="profile-sidebar card hoverable">
+              <!-- SIDEBAR USERPIC -->
+
+              <!-- END SIDEBAR USERPIC -->
+              <!-- SIDEBAR USER TITLE -->
+              <div ng-include="user_info.url">
+
+              </div>
+              <!-- END SIDEBAR BUTTONS -->
+              <!-- SIDEBAR MENU -->
+              <div class="profile-usermenu">
+                <ul class="nav navs-tab">
+                  <li class="active">
+                    <a data-toggle="tab"href="#Following">
+                      <i class="glyphicon glyphicon-eye-open"></i>Following
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab"href="#Follower">
+                      <i class="glyphicon glyphicon-eye-open"></i>Follower
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab" href="#Selling">
+                      <i class="glyphicon glyphicon-transfer"></i>Selling
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab"href="#Sold">
+                      <i class="glyphicon glyphicon-transfer"></i>Sold
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab"href="#Bought">
+                      <i class="glyphicon glyphicon-transfer"></i>Bought
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab"href="#Contact">
+                      <i class="glyphicon glyphicon-flag"></i>Contact Us
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <!-- END MENU -->
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="profile-content tab-content">
+              <div class="tab-pane fade in acive" id="Following" ng-include="user_list.url"></div>
+              <div class="tab-pane fade" id="Selling" ng-include="item_list.url">
+              </div>
+              <div class="tab-pane fade" id="Sold" ng-include="item_list.url">
+              </div>
+              <div class="tab-pane fade" id="Bought" ng-include="item_list.url">
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
