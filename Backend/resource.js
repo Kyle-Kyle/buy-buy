@@ -517,7 +517,22 @@ app.get('/recommends', function(req, res){
 	Category.findOne().sort('-sold').exec(function(err, category){
 		if(err)return res.send({feedback: 'Failure'});
 		Item.find({cid: category._id}).limit(app.get('recommend_size')).exec(function(err, items){
-			return res.send(items);
+			var count = 0;
+			var items_new = [];
+			async.whilst(function(){
+				return count < app.get('recommend_size');
+			},
+			function(next){
+				items[count].populate('cid', function(err, item){
+					items_new.push(item);
+					count += 1;
+					next();
+				})
+			},
+			function(err){
+				if(err)return res.send({feedback: 'Failure'});
+				return res.send({feedback: 'Success', items: items_new});
+			});
 		});
 	})
 })
@@ -537,9 +552,9 @@ app.get('/showdbs', function(req,res){
 				function(next){
 					items[count].populate('comment_id', function(err, item){
 						items_new.push(item);
+						count += 1;
+						next();
 					})
-					count += 1;
-					next();
 				},
 				function(err){
 					dbs.items=items;
