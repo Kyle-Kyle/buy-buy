@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="css/new_card.css">
+  <script src="new_card.js"></script>
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900" rel="stylesheet">
 </head>
 <body>
+  <div ng-include="item_list.url">
+  </div>
+
   <div class="container-fluid" ng-controller="recommendController" ng-init="get_recommendations()">
     <table class="table">
       <thead>
@@ -11,17 +18,261 @@
           <th>&nbsp;</th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="r in rows">
-          <td ng-repeat="item in items.slice(r, r+4)" class="col-md-3" style="padding-left:0; padding-right:0;">
-            {{item.attributes.title}}
+        <tr ng-repeat="r in rows" style="height: 400px;">
+          <td class="col col-md-2 hidden-sm hidden-xs"> </td>
+          <td ng-repeat="item in items.slice(r, r+4)" class="col col-md-2 col-sm-3 col-xs-6">
+            <div class="card-container">
+              <div class="card">
+                <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+                  <div class="cover">
+                    <img src="img/item_test_img.jpg"/>
+                  </div>
+                  <div class="content">
+                    <div class="main">
+                      <h3 class="name">{{item.attributes.title}}</h3>
+                      <h3 class="name">$149</h3>
+                    </div>
+                    <div class="footer">
+                      <i class="fa fa-mail-forward"></i> Auto Rotation
+                    </div>
+                  </div>
+                </div> <!-- end front panel -->
+                <div class="back">
+                  <div class="content">
+                    <div class="main">
+                      <h4 class="text-center">Description</h4>
+                      <p class="text-center">{{item.attributes.description}}</p>
+                      <div class="stats-container">
+                        <div class="stats">
+                          <h4>{{item.quantity}}</h4>
+                          <p>
+                            Quantity
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>{{item.attributes.condition}}</h4>
+                          <p>
+                            Condition
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>{{item.category}}</h4>
+                          <p>
+                            Category
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end back panel --></a>
+              </div> <!-- end card -->
+            </div> <!-- end card-container -->
           </td>
+          <td class="col col-md-2 hidden-sm hidden-xs"> </td>
         </tr>
 
         <tr>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
+          <td class="col col-md-2 hidden-sm hidden-xs"> </td>
+          <td class="col col-md-2 col-sm-3 col-xs-6">
+            <div class="card-container">
+              <div class="card">
+                <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+                  <div class="cover">
+                    <img src="img/item_test_img.jpg"/>
+                  </div>
+                  <div class="content">
+                    <div class="main">
+                      <h3 class="name">Deep learning</h3>
+                      <h3 class="name">$149</h3>
+                    </div>
+                    <div class="footer">
+                      <i class="fa fa-mail-forward"></i> Auto Rotation
+                    </div>
+                  </div>
+                </div> <!-- end front panel -->
+                <div class="back">
+                  <div class="content">
+                    <div class="main">
+                      <h4 class="text-center">Description</h4>
+                      <p class="text-center">A book about deep learning...</p>
+                      <div class="stats-container">
+                        <div class="stats">
+                          <h4>1</h4>
+                          <p>
+                            Quantity
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>Like New</h4>
+                          <p>
+                            Condition
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>book</h4>
+                          <p>
+                            Category
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end back panel --></a>
+              </div> <!-- end card -->
+            </div> <!-- end card-container -->
+          </td>
+          <td class="col col-md-2 col-sm-3 col-xs-6">
+            <div class="card-container">
+              <div class="card">
+                <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+                  <div class="cover">
+                    <img src="img/item_test_img.jpg"/>
+                  </div>
+                  <div class="content">
+                    <div class="main">
+                      <h3 class="name">Deep learning</h3>
+                      <h3 class="name">$149</h3>
+                    </div>
+                    <div class="footer">
+                      <i class="fa fa-mail-forward"></i> Auto Rotation
+                    </div>
+                  </div>
+                </div> <!-- end front panel -->
+                <div class="back">
+                  <div class="content">
+                    <div class="main">
+                      <h4 class="text-center">Description</h4>
+                      <p class="text-center">A book about deep learning...</p>
+                      <div class="stats-container">
+                        <div class="stats">
+                          <h4>1</h4>
+                          <p>
+                            Quantity
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>Like New</h4>
+                          <p>
+                            Condition
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>book</h4>
+                          <p>
+                            Category
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end back panel --></a>
+              </div> <!-- end card -->
+            </div> <!-- end card-container -->
+          </td>
+          <td class="col col-md-2 col-sm-3 col-xs-6">
+            <div class="card-container">
+              <div class="card">
+                <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+                  <div class="cover">
+                    <img src="img/item_test_img.jpg"/>
+                  </div>
+                  <div class="content">
+                    <div class="main">
+                      <h3 class="name">Deep learning</h3>
+                      <h3 class="name">$149</h3>
+                    </div>
+                    <div class="footer">
+                      <i class="fa fa-mail-forward"></i> Auto Rotation
+                    </div>
+                  </div>
+                </div> <!-- end front panel -->
+                <div class="back">
+                  <div class="content">
+                    <div class="main">
+                      <h4 class="text-center">Description</h4>
+                      <p class="text-center">A book about deep learning...</p>
+                      <div class="stats-container">
+                        <div class="stats">
+                          <h4>1</h4>
+                          <p>
+                            Quantity
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>Like New</h4>
+                          <p>
+                            Condition
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>book</h4>
+                          <p>
+                            Category
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end back panel --></a>
+              </div> <!-- end card -->
+            </div> <!-- end card-container -->
+          </td>
+          <td class="col col-md-2 col-sm-3 col-xs-6">
+            <div class="card-container">
+              <div class="card">
+                <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+                  <div class="cover">
+                    <img src="img/item_test_img.jpg"/>
+                  </div>
+                  <div class="content">
+                    <div class="main">
+                      <h3 class="name">Deep learning</h3>
+                      <h3 class="name">$149</h3>
+                    </div>
+                    <div class="footer">
+                      <i class="fa fa-mail-forward"></i> Auto Rotation
+                    </div>
+                  </div>
+                </div> <!-- end front panel -->
+                <div class="back">
+                  <div class="content">
+                    <div class="main">
+                      <h4 class="text-center">Description</h4>
+                      <p class="text-center">A book about deep learning...</p>
+                      <div class="stats-container">
+                        <div class="stats">
+                          <h4>1</h4>
+                          <p>
+                            Quantity
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>Like New</h4>
+                          <p>
+                            Condition
+                          </p>
+                        </div>
+                        <div class="stats">
+                          <h4>book</h4>
+                          <p>
+                            Category
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> <!-- end back panel --></a>
+              </div> <!-- end card -->
+            </div> <!-- end card-container -->
+          </td>
+
+
+          <!--td class="col col-md-2" style="padding-left:0; padding-right:0;">
             <div class="col-md-4" style="padding-right:0;">
               <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://s-media-cache-ak0.pinimg.com/564x/a5/62/69/a5626960dd8641d2235cce2f1bf6eb8a.jpg" />
             </div>
@@ -38,7 +289,7 @@
               </div>
             </div>
           </td>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
+          <td class="col col-md-2" style="padding-left:0; padding-right:0;">
             <div class="col-md-4" style="padding-right:0;">
               <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://mitpress.mit.edu/sites/default/files/9780262035613_0.jpg" />
             </div>
@@ -55,7 +306,7 @@
               </div>
             </div>
           </td>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
+          <td class="col col-md-2" style="padding-left:0; padding-right:0;">
             <div class="col-md-4" style="padding-right:0;">
               <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://n3.sdlcdn.com/imgs/a/a/1/Chromozome_Yamaha_102017_m_1_2x_new-48538.jpg" />
             </div>
@@ -73,7 +324,7 @@
               </div>
             </div>
           </td>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
+          <td class="col col-md-2" style="padding-left:0; padding-right:0;">
             <div class="col-md-4" style="padding-right:0;">
               <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://store.storeimages.cdn-apple.com/8749/as-images.apple.com/is/image/AppleInc/aos/published/images/M/P5/MP582/MP582?wid=572&hei=572&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1483642749433" />
             </div>
@@ -88,7 +339,8 @@
               <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Music</span>
               <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Wireless</span>
             </div>
-          </td>
+          </td-->
+          <td class="col col-md-2 hidden-sm hidden-xs"> </td>
         </tr>
       </tbody>
     </table>
