@@ -3,7 +3,7 @@
 <head>
 </head>
 <body>
-  <div class="container-fluid">
+  <div class="container-fluid" ng-controller="recommendController" ng-init="get_recommendations()">
     <table class="table">
       <thead>
         <tr>
@@ -14,6 +14,12 @@
         </tr>
       </thead>
       <tbody>
+        <tr ng-repeat="r in rows">
+          <td ng-repeat="item in items.slice(r, r+4)" class="col-md-3" style="padding-left:0; padding-right:0;">
+            {{item.attributes.title}}
+          </td>
+        </tr>
+
         <tr>
           <td class="col-md-3" style="padding-left:0; padding-right:0;">
             <div class="col-md-4" style="padding-right:0;">

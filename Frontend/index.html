@@ -28,14 +28,24 @@
       ng-show="msgShow" ng-init="msgShow=false"></div>
   </div>
 
-  <!-- load angular scripts -->
+  <!-- load main controller -->
   <script src="mainController.js"></script>
   <script>
     angular
       .module('indexApp', ['ngRoute', 'ngCookies'])
       .controller('mainController', mainController);
   </script>
+
+  <!-- load login & register controller -->
   <script src="login.js"></script>
   <script src="register.js"></script>
+
+  <!-- load recommendation controller -->
+  <script src="recommendController.js"></script>
+  <script>
+    angular
+      .module('indexApp')
+      .controller('recommendController', recommendController);
+  </script>
 </body>
 </html>
