@@ -7,16 +7,14 @@ var recommendController = function($scope, $http) {
     $http.get("/recommends")
     .then(function(response) {
       console.log(response)
-      /*
-      $scope.items = response.data;
+      $scope.items = response.data.items;
       $scope.items.forEach(function(item) {
-        console.log($scope.$parent.get_formatted_time(item.open_timestamp))
+        //console.log($scope.$parent.get_formatted_time(item.open_timestamp))
         item.post_time = "Posted on " + $scope.$parent.get_formatted_time(item.open_timestamp);
       });
       var rowNum = Math.floor($scope.items.length / 3);
       $scope.rows = range(rowNum);
       console.log($scope.items)
-      */
     });
   };
 }
