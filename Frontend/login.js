@@ -28,7 +28,7 @@ angular.module('indexApp')
 					// update frontend user status and corresponding UI
 					$timeout(function() {
 						$('#login-modal').modal('toggle');
-						$scope.$parent.sign_in();	// method of mainController
+						$scope.$parent.sign_in($scope.credential.username);	// method of mainController
 					}, 1000);	// delay 1s for feedback's display
 
 				} else if ($scope.login_feedback == 'Failure') {

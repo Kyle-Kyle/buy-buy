@@ -393,18 +393,27 @@ app.get('/transactions/:tid/confirm', function(req, res){
 			var item=result.item;
 			//check whether quantity is 0 or not
 			if (item.quantity <= 0) return res.send({feedback: 'Failure',err_msg:'No inventory.'});
+			//check owner
+			if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
 			var new_info={};
 			new_info.quantity=item.quantity-1;
 
-			//update item info (quantity)
-			item.update_info(new_info, function(result){
+			model.User.get(uid, function(result){
 				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-				model.User.get(uid, function(result){
+				var user=result.user;
+				user.sell_confirm(tid, function(result){
 					if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-					var user=result.user;
-					user.sell_confirm(tid, function(result){
+					//update item info (quantity)
+					item.update_info(new_info, function(result){
 						if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-						return res.send(result);
+						model.Category.get(item.cid, function(result){
+							if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+							var category=result.category;
+							category.update_sold(function(result){
+								if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+								return res.send(result);
+							})
+						})
 					})
 				})
 			})
@@ -430,12 +439,22 @@ app.get('/transactions/:tid/reject', function(req, res){
 	if(!check_login(req, res))return;
 	var tid=req.params.tid;
 	var uid=req.session.uid;
-	model.User.get(uid, function(result){
-		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-		var user=result.user;
-		user.seller_reject(tid, function(result){
-			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
-			res.send(result);
+	model.Transaction.get(tid, function(result){
+		if(result.feedback != 'Success')return res.send({feedback: 'Failure',err_msg:'Cannot find this transaction.'});
+		var iid=result.transaction.iid;
+		model.Item.get(iid, function(result){
+			if(result.feedback != 'Success') return res.send({feedback: 'Failure',err_msg:'Cannot find the item.'});
+			var item=result.item;
+			//check owner
+			if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
+			model.User.get(uid, function(result){
+				if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+				var user=result.user;
+				user.seller_reject(tid, function(result){
+					if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
+					res.send(result);
+				})
+			})
 		})
 	})
 })
@@ -454,6 +473,34 @@ app.get('/transactions/:tid/cancel', function(req, res){
 	})
 })
 
+app.get('/search', function(req, res){
+	var keyword=req.query.keyword;
+	var items=[];
+	model.Item.find({}, function(err ,all_items){
+		if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to access items.'});
+		all_items.forEach(function(item){
+			var attributes=item.attributes;
+			if (attributes.title.toUpperCase().includes(keyword.toUpperCase())){
+				items.push(item);
+			}
+			else if(attributes.description.toUpperCase().includes(keyword.toUpperCase())){
+				items.push(item);
+			}
+			else{
+				var flag=0;//if a tag matches, set flag to 1
+				item.tags.forEach(function(tag){
+					if(tag.toUpperCase().includes(keyword.toUpperCase())){
+						flag=1;
+					}
+				})
+				if(flag==1){
+					items.push(item);
+				}
+			}
+		})
+		return res.send({feedback: 'Success',items:items});
+	})
+})
 app.get('/recommends', function(req, res){
 	Category.findOne().sort('-sold').exec(function(err, category){
 		if(err)return res.send({feedback: 'Failure'});
