@@ -6,7 +6,7 @@
   <meta name="description" content="Second-hand goods online trading platform" />
 
   <title>buy-buy</title>
-  <link href="css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<link href="css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -17,10 +17,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+  <script src="lib/canvas-to-blob.min.js" type="text/javascript"></script>
+<!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+     This must be loaded before fileinput.min.js -->
+<script src="lib/sortable.min.js" type="text/javascript"></script>
+<!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
+     This must be loaded before fileinput.min.js -->
+<script src="lib/purify.min.js" type="text/javascript"></script>
+<!-- the main fileinput plugin file -->
+<script src="lib/fileinput.min.js"></script>
 
   <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
   <script src="lib/bootstrap-tagsinput.js"></script>
   <script src="lib/bootstrap-tagsinput-angular.js"></script>
+
   <style>
   .bootstrap-tagsinput {
     width: 100%;
@@ -30,15 +40,7 @@
 </head>
 <body>
 
-  <!-- dynamic loading of page content -->
-  <div ng-controller="mainController">
-    <div id="navs" ng-include="navs.url"></div>
-    <div id='msg-window' ng-include="msg_view.url"
-    ng-show="msgShow" ng-init="msgShow=false"></div>
-  </div>
-
-
-  <div ng-controller="postController">
+  <div ng-app="postApp" ng-controller="loadController">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -47,7 +49,7 @@
         </div>
 
         <div class="container-fluid">
-          <form name="PostForm" ng-controller = "postController" role="form">
+          <form name="PostForm" ng-submit = "post()" ng-controller = "postController" role="form">
             <!-- title -->
             <div class="form-group has-feedback" ng-class = "PostForm.title.$dirty?
             (titleValid?'has-success':'has-error'):''">
@@ -62,7 +64,7 @@
           <div class="form-group has-feedback"ng-class = "PostForm.quantity.$dirty?
           (quantityValid?'has-success':'has-error'):''">
           <label for="quantity">Quantity<font color="red">*</font></label>
-          <input class="form-control" name="quantity"type="number" id="quantity" ng-model="quantity"ng-init="quantityValid=true;"ng-change="validateQuantity(PostForm.quantity.$dirty)"required/>
+          <input class="form-control" name="quantity"type="number" value="1" id="quantity" placeholder="1" ng-model="quantity"ng-init="quantityValid=true;"ng-change="validateQuantity(PostForm.quantity.$dirty)"required/>
           <span class="glyphicon form-control-feedback"
           ng-class="quantityValid?'glyphicon-ok':'glyphicon-remove'"
           ng-show="PostForm.quantity.$dirty"></span>
@@ -71,7 +73,7 @@
         <!-- condition -->
         <div class="form-group">
           <label for="condition">Condition<font color="red">*</font></label>
-          <select  class="form-control" name="condition" ng-model="condition" id="condition"required>
+          <select  class="form-control" name="condition" id="condition"required>
             <option value="1"selected="selected">Like New</option>
             <option value="2">Very good</option>
             <option value ="3">Good</option>
@@ -88,7 +90,7 @@
         <span class="glyphicon form-control-feedback"
         ng-class="priceValid?'glyphicon-ok':'glyphicon-remove'"
         ng-show="PostForm.price.$dirty"></span>
-        <span ng-show="PostForm.price.$dirty" class="help-block">{{priceErrorMsg}}</span>
+        <span ng-show="PostForm.price.$dirty && !priceValid" class="help-block">{{priceErrorMsg}}</span>
       </div>
 
       <!-- description -->
@@ -101,21 +103,22 @@
       <!-- tag -->
       <div class="form-group">
         <label for="tag">Tag</label><br/>
-        <input class="form-control" type="text" data-role="tagsinput" id="tag" name="tag" ng-model="tags">
+        <input class="form-control" type="text" id="tag" name="tag" data-role="tagsinput" style="display: none;">
       </div>
 
       <!-- picture -->
       <div class="form-group">
         <label for="picture">Picture</label>
-        <input type="file" name="pic" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+        <input id="input-id" name="picture[]" type="file" class="file" multiple data-preview-file-type="file" data-show-upload="false">
       </div>
 
       <div class="form-actions">
-        <button class="btn btn-primary smooth-trans-btn"
-        ng-disabled="!priceValid || !titleValid || !quantityValid" ng-click="post_item()">
+        <button type="submit" class="btn btn-primary smooth-trans-btn"
+        ng-disabled="!priceValid || !titleValid || !quantityValid" >
         Post</button>
-        <a href="profile.view.html" class="btn btn-link" onclick="$('#post-modal').modal('toggle')">Cancel</a>
+        <a href="#" class="btn btn-link" onclick="$('#post-modal').modal('toggle')">Cancel</a>
       </div>
+
     </form>
   </div>
   <div class="modal-footer"></div>
@@ -125,24 +128,12 @@
 </div>
 
 <!-- load angular functions -->
-
-<!-- load angular scripts -->
-<script src="mainController.js"></script>
 <script>
-angular
-.module('indexApp', ['ngRoute', 'ngCookies'])
-.controller('mainController', mainController);
-</script>
-<script src="login.js"></script>
-<script src="register.js"></script>
-<script>
-angular.module('postApp', ['ngRoute', 'ngCookies']);
+var app = angular.module('postApp', ['ngRoute', 'ngCookies'])
+app.controller('loadController', function($scope) {
+});
 </script>
 <script src="post_load.js"></script>
-<script>
-angular.element(function() {
-  angular.bootstrap(document, ['indexApp', 'postApp'])
-})
-</script>
+
 </body>
 </html>
