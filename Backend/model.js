@@ -3,7 +3,7 @@ escape_html = require('escape-html');
 
 // User model
 var User_Schema = db.Schema({
-	username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_]{3,20}$/},
+	username: {type: String, required: true, unique: true, match: /^[A-Za-z0-9_.]{3,20}$/},
 	password: {type: String, required: true},
 	history: [{type: db.Schema.Types.ObjectId, ref: 'Transaction', validate: {isAsync: true, validator: transaction_val}}],
 	profile: {
