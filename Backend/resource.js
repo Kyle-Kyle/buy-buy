@@ -487,12 +487,12 @@ app.get('/transactions/:tid/cancel', function(req, res){
 
 app.get('/search', function(req, res){//search is not in order
 	var keyword=req.query.keyword;
-	var min_price=req.query.min_price;
-	var max_price=req.query.max_price;
+	var min_price=req.query.minprice;
+	var max_price=req.query.maxprice;
 	var cid=req.query.cid;
 	var tags = req.query.tags;
 	var items=[];
-	var condition = {};
+	var condition = {quantity: {$gt: 0}};
 	if(typeof(keyword) != 'undefined'){
 		keyword = escape_html(keyword);
 		condition.$or = [];
