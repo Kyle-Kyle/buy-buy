@@ -1,67 +1,161 @@
-// demo item list
-// user info:
-// 1. user.userName
-// 2. user.email
-// 3. user.userDes
-// 4. user.soldItem
-// 5. user.sellingItem
-// 6. user.buyingHis
+angular.module('profileApp', ['ngRoute', 'ngCookies'])
+.controller('loadController', function($scope, $http, $cookies) {
 
-class item {
-  constructor(name, url, hide) {
-    this.name = name;
-    this.url = url;
-    this.hide = hide;
+  // dynamic loading
+  $scope.user_followees={url:"user_list.html"};
+  $scope.item_list={url:"item_list.html"};
+  $scope.user_info={url:"user_info.html"};
+
+
+  // verify credential
+  $scope.user = $cookies.get("logged_in");
+
+  $scope.users = [];
+
+  // get user info
+  if ($scope.user != undefined) {
+    console.log("loged in");
+
+    // GET self information
+    $http.get("/users/self")
+    .then(function(response) {
+
+      // feedback: success or fail
+      $scope.user = response.data;
+      console.log($scope.user);
+
+    });
   }
-}
 
-var item1 = new item("book", "#", "false");
-var item2 = new item("textbook", "#", "false");
-var item3 = new item("noval", "#", "false");
-var item4 = new item("new item", "#", "false");
-var itemList = [item1, item2, item3];
-var itemList2 = [item1, item2];
-var itemList3 = [item1, item2, item3, item4];
-var url = "#";
+  $scope.items = [];
+  $scope.users = [];
 
-// module function
-angular.module('profileApp')
-  .controller('loadController', function($scope, $http) {
-    $scope.user_list={url:"user_list.html"};
-    $scope.item_list={url:"item_list.html"};
-    $scope.user_info={url:"user_info.html"};
+  // get following info
+  if ($scope.user != undefined) {
 
-    $scope.userName = "Lyn";
-    $scope.email = "hechevr@gmail.com";
-    $scope.userDes = "csci3100";
-    $scope.sellingItem = itemList;
-    if ($scope.sellingItem.length > 3) {
-      $scope.sellingSeeMore = "false";
-      $scope.sellingSeeMoreUrl = url;
-    } else {
-      $scope.sellingSeeMore = "true";
-      for (i = $scope.sellingItem.length; i <= 3; i++) {
-        $scope.sellingItem.push(new item("empty", "#", "true"));
-      }
+
+    $scope.getSell = function() {
+      var post_item = [];
+      // get post item list
+      $http.get('/users/self/items')
+      .then(function(response) {
+        console.log(response);
+        console.log('load user items');
+        post_item = response.data.items;
+        $scope.items = post_item.filter(function(element) {
+          return element.qunatity != 0;
+        })
+        console.log($scope.items);
+      });
     }
-    $scope.soldItem = itemList2;
-    if ($scope.soldItem.length > 3) {
-      $scope.soldSeeMore = "false";
-      $scope.soldSeeMoreUrl = url;
-    } else {
-      $scope.soldSeeMore = "true";
-      for (i = $scope.soldItem.length; i <= 3; i++) {
-        $scope.soldItem.push(new item("empty", "#", "true"));
-      }
+
+    $scope.getSold = function() {
+      var sold_item = [];
+      // get post item list
+      $http.get('/users/self/items')
+      .then(function(response) {
+        console.log(response);
+        console.log('load user items');
+        sold_item = response.data.items;
+        $scope.items = sold_item.filter(function(element) {
+          return element.qunatity == 0;
+        })
+        console.log($scope.items);
+      });
     }
-    $scope.buyingHis = itemList3;
-    if ($scope.buyingHis.length > 3) {
-      $scope.buySeeMore = "false";
-      $scope.buySeeMoreUrl = url;
-    } else {
-      $scope.buySeeMore = "true";
-      for (i = $scope.buyingHis.length; i <= 3; i++) {
-        $scope.buyingHis.push(new item("empty", "#", "true"));
-      }
+
+
+    $scope.getFollowee = function() {
+      var follist = [];
+      var followees = [];
+      // get followee
+      $http.get('/follow/followees')
+      .then(function(response) {
+        follist = response.data.followees;
+        console.log(response);
+      }).then(function(response) {
+
+        // get the detail of every followees
+        var f;
+        for (f in follist) {
+          $https.get('/users/' + f)
+          .then(function(response) {
+            if (response.feedback == "Success") {
+              followees.push(response.user);
+            }
+          })
+        }
+      });
+
+      $scope.users = followees;
     }
-  });
+
+    $scope.getFollower = function() {
+      var follist = [];
+      var followers = [];
+      // get follower
+      $http.get('/follow/followers')
+      .then(function(response) {
+        follist = response.data.followers;
+        console.log(response);
+      }).then(function(response) {
+
+        // get the detail of every followers
+        var f;
+        for (f in follist) {
+          $https.get('/users/' + f)
+          .then(function(response) {
+            if (response.feedback == "Success") {
+              followers.push(response.user);
+            }
+          });
+        }
+      });
+      $scope.users = followers;
+    }
+
+  }
+
+  $scope.changeTo = function(url) {
+    window.location = url;
+  }
+
+
+
+  // update profile information
+  $scope.submit = function() {
+    console.log($scope.feedback);
+    if ($scope.feedback == "Success") {
+      $http.put('/users/update',
+      {
+        "nickname": $scope.profile.nickname,
+        "description": $scope.profile.description,
+        "phone": $scope.profile.phone,
+        "wechat": $scope.profile.wechat,
+        "email": $scope.profile.email,
+        "qq": $scope.profile.qq,
+        "facebook": $scope.profile.facebook
+      })
+      .then(function(response) {
+        console.log(response);
+        if ($scope.feedback == "Success") {
+          console.log("Update success!");
+          window.location = "profile.view.html";
+        }
+        else {
+          console.log("Fail to update!");
+          window.location = "index.html";
+        }
+      })
+    }
+    else {
+      console.log("Doesn't connect server!");
+      window.location = "index.html";
+    }
+  }
+
+  // cancel
+  $scope.cancel = "index.html";
+
+
+});

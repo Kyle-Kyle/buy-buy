@@ -18,19 +18,21 @@
     box-shadow: 0 0 5px ;
   }
   </style>
-  <script>
-  angular
-  .module('profileApp', ['ngRoute', 'ngCookies'])
-  </script>
-  <script src="profile.js"></script>
 
 
 </head>
 
 <body>
 
+  <!-- dynamic loading of page content -->
+  <div ng-controller="mainController">
+    <div id="navs" ng-include="navs.url"></div>
+    <div id='msg-window' ng-include="msg_view.url"
+    ng-show="msgShow" ng-init="msgShow=false"></div>
+  </div>
+
   <div class="container">
-    <div ng-app="profileApp" ng-controller="loadController">
+    <div ng-controller="loadController">
       <div class="container">
         <div class="row profile">
           <div class="col-md-3">
@@ -47,28 +49,23 @@
               <div class="profile-usermenu">
                 <ul class="nav navs-tab">
                   <li class="active">
-                    <a data-toggle="tab"href="#Following">
+                    <a data-toggle="tab"href="#Following" ng-click="getFollowee()">
                       <i class="glyphicon glyphicon-eye-open"></i>Following
                     </a>
                   </li>
                   <li>
-                    <a data-toggle="tab"href="#Follower">
+                    <a data-toggle="tab"href="#Follower" ng-click="getFollower()">
                       <i class="glyphicon glyphicon-eye-open"></i>Follower
                     </a>
                   </li>
                   <li>
-                    <a data-toggle="tab" href="#Selling">
+                    <a data-toggle="tab" href="#Selling" ng-click="getSell()">
                       <i class="glyphicon glyphicon-transfer"></i>Selling
                     </a>
                   </li>
                   <li>
-                    <a data-toggle="tab"href="#Sold">
+                    <a data-toggle="tab"href="#Sold" ng-click="getSold()">
                       <i class="glyphicon glyphicon-transfer"></i>Sold
-                    </a>
-                  </li>
-                  <li>
-                    <a data-toggle="tab"href="#Bought">
-                      <i class="glyphicon glyphicon-transfer"></i>Bought
                     </a>
                   </li>
                   <li>
@@ -83,13 +80,11 @@
           </div>
           <div class="col-md-9">
             <div class="profile-content tab-content">
-              <div class="tab-pane fade in acive" id="Following" ng-include="user_list.url"></div>
+              <div class="tab-pane fade in active" id="Following" ng-include="user_followees.url"></div>
+              <div class="tab-pane fade" id="Follower" ng-include="user_followers.url"></div>
               <div class="tab-pane fade" id="Selling" ng-include="item_list.url">
               </div>
               <div class="tab-pane fade" id="Sold" ng-include="item_list.url">
-              </div>
-              <div class="tab-pane fade" id="Bought" ng-include="item_list.url">
-              </div>
 
             </div>
           </div>
@@ -98,5 +93,44 @@
     </div>
   </div>
 
+
+
+  <!-- load angular scripts -->
+  <script src="mainController.js"></script>
+  <script>
+  var app = angular.module('indexApp', ['ngRoute', 'ngCookies']);
+  app.controller('mainController', mainController);
+  app.directive('errSrc', function() {
+    return {
+      link: function(scope, element, attrs) {
+        element.bind('error', function() {
+          if (attrs.src != attrs.errSrc) {
+            attrs.$set('src', attrs.errSrc);
+          }
+        });
+      }
+    }
+  });
+  </script>
+  <script src="login.js"></script>
+  <script src="register.js"></script>
+
+  <!-- load search controller -->
+  <script src="searchController.js"></script>
+  <script>
+    angular
+      .module("indexApp")
+      .controller("searchController", searchController)
+  </script>
+
+  <script>
+  angular.module('profileApp', ['ngRoute', 'ngCookies']);
+  </script>
+  <script src="profile.js"></script>
+  <script>
+  angular.element(function() {
+    angular.bootstrap(document, ['indexApp', 'profileApp'])
+  })
+  </script>
 </body>
 </html>
