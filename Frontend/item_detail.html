@@ -7,13 +7,10 @@
 
   <title>buy-buy</title>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/css/fileinput.min.css" />
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/btn_anim.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
@@ -262,15 +259,26 @@
     </div>
 
 
-    <!-- load angular functions -->
+    <!-- load main controller -->
     <script src="mainController.js"></script>
     <script>
-    angular
-    .module('indexApp', ['ngRoute', 'ngCookies'])
-    .controller('mainController', mainController);
+      angular
+        .module('indexApp', ['ngRoute', 'ngCookies'])
+        .controller('mainController', mainController);
     </script>
+
+    <!-- load login & register controller -->
     <script src="login.js"></script>
     <script src="register.js"></script>
+
+    <!-- load search controller -->
+    <script src="searchController.js"></script>
+    <script>
+      angular
+        .module("indexApp")
+        .controller("searchController", searchController)
+    </script>
+
     <script>
     angular.module('itemApp', ['ngRoute', 'ngCookies']);
     </script>

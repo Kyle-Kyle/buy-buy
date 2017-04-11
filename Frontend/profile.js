@@ -1,11 +1,13 @@
 angular.module('profileApp', ['ngRoute', 'ngCookies'])
 .controller('loadController', function($scope, $http, $cookies) {
 
+  // for item-list post-adjustment
+  $scope.is_profile = true;
+
   // dynamic loading
   $scope.user_followees={url:"user_list.html"};
   $scope.item_list={url:"item_list.html"};
   $scope.user_info={url:"user_info.html"};
-
 
   // verify credential
   $scope.user_name = $cookies.get("logged_in");
@@ -33,6 +35,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   }
   else {
     console.log("vistor");
+
 
     // get user info
     if ($scope.user_name != undefined) {
@@ -69,6 +72,10 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
           $scope.items = post_item.filter(function(element) {
             return element.qunatity != 0;
           })
+          $scope.items.forEach(function(item) {
+            item.post_time = get_formatted_time(item.open_timestamp);
+            item.condition_name = get_condition[item.attributes.condition-1];
+          })
           console.log($scope.items);
         });
       }
@@ -84,11 +91,15 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
           $scope.items = sold_item.filter(function(element) {
             return element.qunatity == 0;
           })
+          $scope.items.forEach(function(item) {
+            item.post_time = get_formatted_time(item.open_timestamp);
+            item.condition_name = get_condition[item.attributes.condition-1];
+          })
           console.log($scope.items);
         });
       }
-    }
 
+    }
 
     $scope.getFollowee = function() {
       var follist = [];
