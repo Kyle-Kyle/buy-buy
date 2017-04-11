@@ -38,11 +38,11 @@
         </ul>
 
         <!-- search entry -->
-        <form class="navbar-form navbar-left">
+        <form class="navbar-form navbar-left" ng-controller="searchController">
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search">
+            <input type="text" class="form-control" placeholder="Search" ng-model="keyword">
           </div>
-          <button type="submit" class="btn btn-default">Submit</button>
+          <button type="submit" class="btn btn-default" ng-click="goto(get_search_route());">Submit</button>
         </form>
 
         <ul class="nav navbar-nav navbar-right">
@@ -84,5 +84,6 @@
   <!-- Modals -->
   <div id="login-modal" class="modal fade" role="dialog" ng-include="login_view.url"></div>
   <div id="register-modal" class="modal fade" role="dialog" ng-include="register_view.url"></div>
+
 </body>
 </html>
