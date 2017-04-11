@@ -50,7 +50,7 @@
   <div class="container-fluid" style="position: absolute; top: 0; margin: 0 auto; left: 0; right: 0;">
     <div>
       <div class="container"  style="margin-top:130px;" >
-        <div class="enter-btn title col-lg-8 col-lg-offset-2 text-center" style="color:WHITE;font-size:70px ;font-weight:500;">
+        <div class="title col-lg-8 col-lg-offset-2 text-center" style="color:WHITE;font-size:70px ;font-weight:500;">
           Let's be billy!
         </div>
         <div class="enter-btn col-lg-4 col-lg-offset-2 text-center title" style="margin-top:100px;color:WHITE;font-size:32px ;font-weight:300;">
@@ -79,7 +79,7 @@
     });
     $(".enter-btn").hover(function() {
       $('#header_fore')
-      .animate({opacity: 0}, 'fast', function() {
+      .animate({opacity: 0}, 'middle', function() {
         $(this)
         .css('background-image', "url(img/F4.jpg)")
       });
@@ -87,7 +87,7 @@
       //$("#header").css("background-image", "url(img/desk.jpg)")
     }, function() {
       $('#header_fore')
-      .animate({opacity: 1}, 'fast', function() {
+      .animate({opacity: 1}, 'middle', function() {
         $(this)
         .css('background-image', "url(img/F4.jpg)")
       });
