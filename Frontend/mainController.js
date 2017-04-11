@@ -94,16 +94,6 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     $interval.cancel(receive_msg_promise);
   };
 
-  $scope.get_formatted_time = function(timestamp) {
-    var a = new Date(timestamp);
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    return date + ' ' + month + ' ' + hour + ':' + (min < 10 ? '0' : '') + min;
-  }
-
   $scope.rcv_msg = function() {
     $http.get("/messages/" + $scope.msgUID)  // TODO change to uid
     .then(function(response) {
@@ -115,7 +105,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
           $scope.msgList.push({
             "to_send": sender_id == $scope.uid,
             "content": msg[1],
-            "time": $scope.get_formatted_time(timestamp),    // TODO: change time
+            "time": get_formatted_time(timestamp),    // TODO: change time
           });
           $scope.lastViewTime = timestamp;
         }
@@ -136,7 +126,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       //$scope.msgList.push({
       //  "to_send": true,
       //  "content": msgContent,
-      //  "time": $scope.get_formatted_time(new Date()),    // TODO: change time
+      //  "time": get_formatted_time(new Date()),    // TODO: change time
       //});
 
       //console.log($scope.msgNum);

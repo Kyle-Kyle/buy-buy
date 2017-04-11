@@ -9,84 +9,9 @@
 <body>
 
   <div class="container-fluid" ng-controller="recommendController" ng-init="get_recommendations()">
-    <div class="col col-md-1 hidden-xs hidden-sm">
-    </div>
-    <div class="col col-md-10 col-xs-12">
-      <h3 style="padding-bottom: 3rem">Recommendations</h3>
-      <div ng-repeat="item in items" class="col col-md-3 col-sm-6" >
-        <div class="card-container">
-          <div class="card">
-            <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
-              <div class="cover">
-                <img src="img/item_test_img.jpg"/>
-              </div>
-              <div class="content">
-                <div class="main">
-                  <h3 class="name">{{item.attributes.title}}</h3>
-                  <h3 class="name">$ {{item.price}}</h3>
-                </div>
-                <div class="footer">
-                  {{item.post_time}}
-                </div>
-              </div>
-            </div> <!-- end front panel -->
-            <div class="back">
-              <div class="content">
-                <div class="main">
-                  <h4 class="text-center">Description</h4>
-                  <p class="text-center">{{item.attributes.description}}</p>
-                  <div class="stats-container">
-                    <div class="stats">
-                      <h4>{{item.quantity}}</h4>
-                      <p>
-                        Quantity
-                      </p>
-                    </div>
-                    <div class="stats">
-                      <h4>{{get_condition[item.attributes.condition-1]}}</h4>
-                      <p>
-                        Condition
-                      </p>
-                    </div>
-                    <div class="stats">
-                      <h4>{{item.category}}</h4>
-                      <p>
-                        Category
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div> <!-- end back panel --></a>
-          </div> <!-- end card -->
-        </div> <!-- end card-container -->
-      </div>
-    </div>
-    <div class="col col-md-1 hidden-xs hidden-sm">
-    </div>
+    <!-- dynamically load item list -->
+    <div ng-include="'item_list.html'"></div>
   </div>
-
-  <!-- reponsive height for cards -->
-  <script>
-    console.log('haha')
-    var card_container = $(".card-container");
-    var card_back = $(".back");
-    var card_front = $(".front");
-    console.log(parseFloat(card_container.css("width").split("px")[0]))
-    card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    console.log(card_front.css("width"))
-    window.addEventListener("resize", function(e) {
-      card_container = $(".card-container");
-      card_back = $(".back");
-      card_front = $(".front");
-      card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-      card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-      card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    });
-  </script>
 
 </body>
 </html>

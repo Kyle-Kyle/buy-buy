@@ -1,6 +1,7 @@
 # Front end :blush:
 ## Notice
-1. Please load `mainController.js` on every individual pages and add the `mainController` to ngApp in the first place
+1. Please load `mainController.js`, `searchController.js`, `login.js`, `register.js` on every individual pages and add the `mainController` to ngApp in the first place  
+2. Please include `tools.js` in the head  
 
 ## Tasklist
 ### Welcome page: `welcome.html`  

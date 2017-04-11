@@ -41,7 +41,7 @@
   </div>
 
 
-  <div ng-controller="postController">
+  <div ng-controller="postController" style="margin-top: 70px;">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -156,15 +156,26 @@
 
 <!-- load angular functions -->
 
-<!-- load angular scripts -->
+<!-- load main controller -->
 <script src="mainController.js"></script>
 <script>
-angular
-.module('indexApp', ['ngRoute', 'ngCookies'])
-.controller('mainController', mainController);
+  angular
+    .module('indexApp', ['ngRoute', 'ngCookies'])
+    .controller('mainController', mainController);
 </script>
+
+<!-- load login & register controller -->
 <script src="login.js"></script>
 <script src="register.js"></script>
+
+<!-- load search controller -->
+<script src="searchController.js"></script>
+<script>
+  angular
+    .module("indexApp")
+    .controller("searchController", searchController)
+</script>
+
 <script>
 angular.module('postApp', ['ngRoute', 'ngCookies']);
 </script>

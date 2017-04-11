@@ -15,50 +15,85 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+
+  <script src="tools.js"></script>
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 1000,
+      values: [ 0, 1000 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  } );
+  </script>
+
+  <style>
+    #searchForm {
+      padding-left: 20%;
+      padding-right: 20%;
+      padding-top: 3%;
+      padding-bottom: 5%;
+    }
+  </style>
+
 </head>
 <body>
   <!-- dynamic loading of navigator and messenger -->
-  <div ng-app="indexApp" ng-controller="mainController">
+  <div ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
     <div id='msg-window' ng-include="msg_view.url"
       ng-show="msgShow" ng-init="msgShow=false"></div>
   </div>
 
-  <div class="container" ng-app="searchApp" ng-controller="searchController">
-
-    <form id="searchForm" role="form" style="padding-left: 20%; padding-right: 20%; padding-bottom: 5%;">
+  <div class="container-fluid" ng-controller="searchController">
+    <form id="searchForm" role="form">
       <label for="username">Search for goods</label>
       <div class="input-group">
         <div class="input-group-btn">
           <!-- category -->
           <select id="categorySelect" class="form-control" name="category">
             <option>All</option>
-            <optgroup label="Others">
-              <option>Others</option>
-            </optgroup>
             <optgroup label="Book">
               <option>Books</option>
               <option>Textbook</option>
               <option>Fiction</option>
-              <option>Magizine</option>
+              <option>Magazine</option>
             </optgroup>
             <optgroup label="Life">
-              <option>Kitchenware</option>
+              <option>Clothing & Shoes</option>
               <option>Makeup</option>
               <option>Sports</option>
-              <option>Clothing & Shoes</option>
+              <option>Kitchenware</option>
             </optgroup>
             <optgroup label="Entertainment">
               <option>Electronics</option>
               <option>Musical Instrument</option>
             </optgroup>
+            <optgroup label="Others">
+              <option>Others</option>
+            </optgroup>
           </select>
         </div>
-        <input type="text" class="form-control"/>
+        <input type="text" class="form-control" ng-model="keyword"/>
         <span class="input-group-btn">
-          <button type="submit" class="btn btn-default"/>Search</button>
+          <button type="submit" class="btn btn-default" ng-click="submit_search(get_search_route())"/>Search</button>
         </span>
       </div>
+      <br/>
+      <p>
+        <label for="amount">Price range:</label>
+        <input type="text" id="amount" readonly style="border:0; background-color: #E8E8E8; color:#f6931f; font-weight:bold;">
+      </p>
+      <div id="slider-range"></div>
     </form>
 
     <!-- dynamically load item list -->
