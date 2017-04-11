@@ -209,24 +209,14 @@ app.put('/users/update', function(req, res){
 app.get('/users/self/items',function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	Item.find({uid:uid}).exec(function(err, items){
-		var count = 0;
-		var items_new = [];
-		async.whilst(function(){
-			return count < app.get('recommend_size');
-		},
-			function(next){
-				items[count].populate('cid', function(err, item){
-					items_new.push(item);
-					count += 1;
-					next();
-				})
-			},
-			function(err){
-				if(err)return res.send({feedback: 'Failure'});
-				return res.send({feedback: 'Success', items: items_new});
-			});
-	});
+	model.Item.find({uid:uid}).populate('cid').exec(function(err,items){
+		err_msg= 'Fail to get items of this user.'
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		return res.send({feedback: 'Success', items: items});
+	})
 })
 
 //Get category list
@@ -497,12 +487,12 @@ app.get('/transactions/:tid/cancel', function(req, res){
 
 app.get('/search', function(req, res){//search is not in order
 	var keyword=req.query.keyword;
-	var min_price=req.query.min_price;
-	var max_price=req.query.max_price;
+	var min_price=req.query.minprice;
+	var max_price=req.query.maxprice;
 	var cid=req.query.cid;
 	var tags = req.query.tags;
 	var items=[];
-	var condition = {};
+	var condition = {quantity: {$gt: 0}};
 	if(typeof(keyword) != 'undefined'){
 		keyword = escape_html(keyword);
 		condition.$or = [];
@@ -533,7 +523,7 @@ app.get('/search', function(req, res){//search is not in order
 		if(!('$or' in condition))condition.$or = [];
 		condition.$or.push({'tags': {$in: tags}});
 	}
-	model.Item.find(condition, function(err, items){
+	model.Item.find(condition).populate('cid').exec(function(err, items){
 		if(err)return res.send({feedback: 'Failure'});
 		return res.send({feedback: 'Success', items: items});
 	});
