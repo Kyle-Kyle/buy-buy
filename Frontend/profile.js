@@ -10,75 +10,102 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   $scope.user_info={url:"user_info.html"};
 
   // verify credential
-  $scope.user = $cookies.get("logged_in");
+  $scope.user_name = $cookies.get("logged_in");
 
-  $scope.users = [];
+  // vistor
+  $scope.owner_id = location.search.substring(1);
 
-  // get user info
-  if ($scope.user != undefined) {
+  if ($scope.owner_id == "") {
+    console.log("not a vistor");
 
-    // GET self information
-    $http.get("/users/self")
-    .then(function(response) {
+    // get user info
+    if ($scope.user_name != undefined) {
+      console.log("loged in");
 
-      // feedback: success or fail
-      $scope.user = response.data;
-      console.log($scope.user);
+      // GET self information
+      $http.get("/users/self")
+      .then(function(response) {
 
-    });
+        // feedback: success or fail
+        $scope.user = response.data;
+        console.log($scope.user);
+
+      });
+    }
+  }
+  else {
+    console.log("vistor");
+
+
+    // get user info
+    if ($scope.user_name != undefined) {
+      console.log("loged in");
+
+      // GET owner_id info
+      $http.get('/users/' + $scope.owner_id)
+      .then(function(response) {
+
+        // feedback
+        $scope.user = response.data;
+        console.log($scope.user);
+      })
+    }
+
   }
 
   $scope.items = [];
   $scope.users = [];
 
   // get following info
-  if ($scope.user != undefined) {
+  if ($scope.user_name != undefined) {
+    console.log("WTF");
+    console.log($scope.owner_id);
+    if ($scope.owner_id == "") {
+      $scope.getSell = function() {
+        var post_item = [];
+        // get post item list
+        $http.get('/users/self/items')
+        .then(function(response) {
+          console.log(response);
+          console.log('load user items');
+          post_item = response.data.items;
+          $scope.items = post_item.filter(function(element) {
+            return element.qunatity != 0;
+          })
+          $scope.items.forEach(function(item) {
+            item.post_time = get_formatted_time(item.open_timestamp);
+            item.condition_name = get_condition[item.attributes.condition-1];
+          })
+          console.log($scope.items);
+        });
+      }
 
-    $scope.getSell = function() {
-      var post_item = [];
-      // get post item list
-      $http.get('/users/self/items')
-      .then(function(response) {
-        console.log(response);
-        console.log('load user items');
-        post_item = response.data.items;
-        $scope.items = post_item.filter(function(element) {
-          return element.qunatity != 0;
-        })
-        $scope.items.forEach(function(item) {
-          item.post_time = get_formatted_time(item.open_timestamp);
-          item.condition_name = get_condition[item.attributes.condition-1];
-        })
-        console.log($scope.items);
-        $timeout(set_card_height_responsive, 100);
-      });
-    }
+      $scope.getSold = function() {
+        var sold_item = [];
+        // get post item list
+        $http.get('/users/self/items')
+        .then(function(response) {
+          console.log(response);
+          console.log('load user items');
+          sold_item = response.data.items;
+          $scope.items = sold_item.filter(function(element) {
+            return element.qunatity == 0;
+          })
+          $scope.items.forEach(function(item) {
+            item.post_time = get_formatted_time(item.open_timestamp);
+            item.condition_name = get_condition[item.attributes.condition-1];
+          })
+          console.log($scope.items);
+        });
+      }
 
-    $scope.getSold = function() {
-      var sold_item = [];
-      // get post item list
-      $http.get('/users/self/items')
-      .then(function(response) {
-        console.log(response);
-        console.log('load user items');
-        sold_item = response.data.items;
-        $scope.items = sold_item.filter(function(element) {
-          return element.qunatity == 0;
-        })
-        $scope.items.forEach(function(item) {
-          item.post_time = get_formatted_time(item.open_timestamp);
-          item.condition_name = get_condition[item.attributes.condition-1];
-        })
-        console.log($scope.items);
-        $timeout(set_card_height_responsive, 100);
-      });
     }
 
     $scope.getFollowee = function() {
       var follist = [];
       var followees = [];
       // get followee
-      $http.get('/follow/followees')
+      $http.get('/follow/followees' + $scope.user._id)
       .then(function(response) {
         follist = response.data.followees;
         console.log(response);
@@ -129,42 +156,26 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     window.location = url;
   }
 
+  if ($scope.owner_id != "") {
 
+    if ($scope.user_name != undefined) {
+      $scope.Follow = function() {
+        $http.get('/follow/' + $scope.owner_id)
+        .then(function(response) {
+          console.log(response);
+          $scope.follow_message = "You have followed him";
+        })
+      }
 
-  // update profile information
-  $scope.submit = function() {
-    console.log($scope.feedback);
-    if ($scope.feedback == "Success") {
-      $http.put('/users/update',
-      {
-        "nickname": $scope.profile.nickname,
-        "description": $scope.profile.description,
-        "phone": $scope.profile.phone,
-        "wechat": $scope.profile.wechat,
-        "email": $scope.profile.email,
-        "qq": $scope.profile.qq,
-        "facebook": $scope.profile.facebook
-      })
-      .then(function(response) {
-        console.log(response);
-        if ($scope.feedback == "Success") {
-          console.log("Update success!");
-          window.location = "profile.view.html";
-        }
-        else {
-          console.log("Fail to update!");
-          window.location = "index.html";
-        }
-      })
-    }
-    else {
-      console.log("Doesn't connect server!");
-      window.location = "index.html";
+      $scope.Unfollow = function() {
+        $http.get('/unfollow/' + $scope.owner_id)
+        .then(function(response) {
+          console.log(response);
+          $scope.follow_message = "You have unfollowed him";
+        })
+      }
     }
   }
-
-  // cancel
-  $scope.cancel = "index.html";
 
 
 });
