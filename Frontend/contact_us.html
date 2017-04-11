@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="buy-buy, buy2, second-hand, used, sell" />
+  <meta name="description" content="Second-hand goods online trading platform" />
+
+  <title>buy-buy</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Petit+Formal+Script" />
+
+  <script type="text/javascript" src="widget/bubble/alphabet.js"></script>
+
+  <style>
+    #myCanvas {
+      padding-top:0;
+      margin-bottom:0px;
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+    div.shadow {
+      width: 150px;
+      height: 50px;
+      margin: auto;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.5);
+    }
+    .enter-btn {
+    }
+    .title {
+	font: 400 3.5em/125% 'Petit Formal Script', Helvetica, Sans-serif;
+}
+  </style>
+
+</head>
+<body>
+  <div id="header_back" class="container-fluid" style="padding: 0; width:100%; background-image: url(img/REAL_F4.jpg); background-size: 100% 100%;">
+    <div id="header_fore" style="background-image: url(img/F4.jpg); background-size: 100% 100%;">
+    </div>
+  </div>
+  <div class="container-fluid" style="position: absolute; top: 0; margin: 0 auto; left: 0; right: 0;">
+    <div>
+      <div class="container"  style="margin-top:130px;" >
+        <div class="enter-btn title col-lg-8 col-lg-offset-2 text-center" style="color:WHITE;font-size:70px ;font-weight:500;">
+          Let's be billy!
+        </div>
+        <div class="enter-btn col-lg-4 col-lg-offset-2 text-center title" style="margin-top:100px;color:WHITE;font-size:32px ;font-weight:300;">
+          <i class="glyphicon glyphicon-earphone"> </i>
+          <p  >
+            13265585550
+          </p>
+        </div>
+        <div class="enter-btn col-lg-4  text-center title" style="margin-top:100px;color:WHITE;font-size:32px ;font-weight:300;">
+          <i class="glyphicon glyphicon-envelope"> </i>
+          <p  >
+            <a style="color:WHITE; text-decoration : none"href="mailto:werry715@gmail.com">werry715@gmail.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var mapElement_back = document.getElementById("header_back");
+    var mapElement_fore = document.getElementById("header_fore");
+    mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 9/16) + 'px'
+    mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 9/16) + 'px'
+    window.addEventListener("resize", function(e) {
+      mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 9/16) + 'px'
+      mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 9/16) + 'px'
+    });
+    $(".enter-btn").hover(function() {
+      $('#header_fore')
+      .animate({opacity: 0}, 'fast', function() {
+        $(this)
+        .css('background-image', "url(img/F4.jpg)")
+      });
+      //$('#header_fore').css('opacity', '0');
+      //$("#header").css("background-image", "url(img/desk.jpg)")
+    }, function() {
+      $('#header_fore')
+      .animate({opacity: 1}, 'fast', function() {
+        $(this)
+        .css('background-image', "url(img/F4.jpg)")
+      });
+    });
+  </script>
+</body>
+</html>
