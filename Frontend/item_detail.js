@@ -2,9 +2,11 @@ angular.module('itemApp')
 .controller('loadController', function($scope, $cookies, $http) {
 
   $scope.user = $cookies.get("logged_in");
+  console.log($scope.user);
 
   $scope.condition = "";
   // get item_id
+  $scope.isOwner = false;
   $scope.item = {};
   $scope.item_id = location.search.substring(1);
   console.log($scope.item_id);
@@ -31,7 +33,16 @@ angular.module('itemApp')
         $scope.condition = "Bad";
         break;
     }
-  })
+  }).then(function() {
+    // get owner information
+    $http.get('/users/' + $scope.item.uid)
+    .then(function(response) {
+      console.log(response);
+      $scope.owner = response.data;
+      $scope.isOwner = $scope.owner
+    });
+  });
+
 
   // get comments
   $http.get('/items/' + $scope.item_id + "/comments")
@@ -52,6 +63,22 @@ angular.module('itemApp')
       .then(function(response) {
         console.log(response);
         window.location = "item_detail.html?" + $scope.item_id;
+      })
+    }
+  }
+
+  // create transaction
+  $scope.createTransaction = function() {
+    if ($scope.user == undefined) {
+      $scope.comment_error = "you are not logged in now!";
+    }
+    else {
+
+      $http.post('/transactions/create', {
+        'iid' : $scope.item_id
+      })
+      .then(function(response) {
+        console.log(response);
       })
     }
   }

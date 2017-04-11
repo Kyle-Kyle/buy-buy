@@ -161,9 +161,8 @@
               <a href="#"><div class="user_front">
                   <div class="content">
                       <div class="main">
-                          <h3 class="name">John Marvel</h3>
-                          <p class="text-center">"I'm the new Sinatra, and since I made it here I can make it anywhere, yeah, they love me everywhere"</p>
-                      </div>
+                          <h3 class="name" ng-bind="owner.user.username"></h3>
+                          <p class="text-center" ng-bind="owner.user.profile.description"></p>                      </div>
                       <div class="footer">
                           <i class="fa fa-mail-forward"></i> Auto Rotation
                       </div>
@@ -173,16 +172,16 @@
                   <div class="content">
                       <div class="main">
                         <p class="text-center">
-                          <i class="glyphicon glyphicon-envelope"> </i>  werry715@gmail.com</br>
-                          <i class="glyphicon glyphicon-earphone"> </i>  56276660</br>
+                          <i class="glyphicon glyphicon-envelope"> </i>  {{owner.user.profile.email}}</br>
+                          <i class="glyphicon glyphicon-earphone"> </i>  {{owner.user.profile.phone}}</br>
                         </p>
 
                       </div>
                   </div>
                   <div class="footer">
                       <div class="social-links text-center">
-                        <button type="button" class="btn btn-info btn-sm">Follow</button>
-                        <button type="button" class="btn btn-success btn-sm">Message</button>
+                        <button type="button" class="btn btn-info btn-sm" ng-click="Follow()" ng-show="NotOwner()">Follow</button>
+                        <button type="button" class="btn btn-success btn-sm" ng-click="Message()" ng-show="NotOwner()">Message</button>
                       </div>
                   </div>
               </div> <!-- end back panel --></a>
@@ -192,11 +191,12 @@
         </div> <!-- end card-container -->
           </div>
           <div class="col-md-6 col-xs-12" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
-              <a href="#" style="height:100%">
+              <a href="#" style="height:100%" data-toggle="modal" data-target="#buyModal">
                 <img  class=" hoverable buy-img" src="img/buy.jpg" style="height:100%; width:100%; transition: .5s ease;"/ >
                 <span class="middle-text">Buy Now</span>
               </a>
           </div>
+          <div class="modal fade" id="buyModal" role="dialog" ng-include="'transaction.send.html'"></div>
           <div class="col-md-3 col-xs-6 ">
             <div class="smalldetailcard hoverable">
               <div class="detailcardname">Condition</br>
@@ -207,7 +207,7 @@
           <div class="col-md-3 col-xs-6 ">
             <div class="smalldetailcard hoverable">
               <div class="detailcardname">Category</br>
-                <span class="detailcardcontent">YellowBook</span>
+                <span class="detailcardcontent" ng-bind="item.cid.name"></span>
               </div>
             </div>
           </div>
