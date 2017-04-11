@@ -2,6 +2,10 @@ var recommendController = function($scope, $http) {
 
   $scope.is_recommend = true;
 
+  $scope.changeTo = function(url) {
+    window.location = url;
+  }
+
   $scope.get_recommendations = function() {
     $http.get("/recommends")
     .then(function(response) {
