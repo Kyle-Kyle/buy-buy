@@ -1,5 +1,5 @@
 angular.module('profileApp', ['ngRoute', 'ngCookies'])
-.controller('loadController', function($scope, $http, $cookies) {
+.controller('loadController', function($scope, $http, $cookies, $timeout) {
 
   // for item-list post-adjustment
   $scope.is_profile = true;
@@ -50,6 +50,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
           item.condition_name = get_condition[item.attributes.condition-1];
         })
         console.log($scope.items);
+        $timeout(set_card_height_responsive, 100);
       });
     }
 
@@ -69,6 +70,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
           item.condition_name = get_condition[item.attributes.condition-1];
         })
         console.log($scope.items);
+        $timeout(set_card_height_responsive, 100);
       });
     }
 
