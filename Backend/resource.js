@@ -209,14 +209,24 @@ app.put('/users/update', function(req, res){
 app.get('/users/self/items',function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
-	model.Item.find({uid:uid}, function(err,items){
-		err_msg= 'Fail to get items of this user.'
-		if(err){
-			//may change err_msg
-			return res.send({feedback: 'Failure', err_msg: err_msg});
-		}
-		return res.send({feedback: 'Success', items: items});
-	})
+	Item.find({uid:uid}).exec(function(err, items){
+		var count = 0;
+		var items_new = [];
+		async.whilst(function(){
+			return count < app.get('recommend_size');
+		},
+			function(next){
+				items[count].populate('cid', function(err, item){
+					items_new.push(item);
+					count += 1;
+					next();
+				})
+			},
+			function(err){
+				if(err)return res.send({feedback: 'Failure'});
+				return res.send({feedback: 'Success', items: items_new});
+			});
+	});
 })
 
 //Get category list
