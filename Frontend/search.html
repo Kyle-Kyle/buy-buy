@@ -73,7 +73,11 @@
       <div class="input-group">
         <div class="input-group-btn">
           <!-- category -->
-          <select id="categorySelect" class="form-control" name="category">
+          <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory"></select>
+          <!--select id="categorySelect" class="form-control" name="category">
+            <option ng-repeat="c in categories" ng-model="c._id">{{c.name}}</option>
+          </select-->
+          <!--select id="categorySelect" class="form-control" name="category">
             <option>All</option>
             <optgroup label="Book">
               <option>Books</option>
@@ -94,11 +98,11 @@
             <optgroup label="Others">
               <option>Others</option>
             </optgroup>
-          </select>
+          </select>-->
         </div>
         <input type="text" class="form-control" ng-model="keyword"/>
         <span class="input-group-btn">
-          <button type="submit" class="btn btn-default" ng-click="submit_search(get_search_route())"/>Search</button>
+          <button type="submit" class="btn btn-default" ng-click="submit_search(get_search_route(true))"/>Search</button>
         </span>
       </div>
       <br/>
