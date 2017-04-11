@@ -2,8 +2,6 @@ var searchController = function($scope, $http) {
 
   // search filters
   $scope.keyword = undefined;
-  $scope.minprice = undefined;
-  $scope.maxprice = undefined;
   $scope.cid = undefined;
   $scope.tags = undefined;
 
@@ -20,17 +18,20 @@ var searchController = function($scope, $http) {
   };
 
   $scope.get_search_route = function() {
+    $scope.minprice = $("#slider-range").slider("values", 0);
+    $scope.maxprice = $("#slider-range").slider("values", 1);
     return ("/search" +
-      "?keyword=" + $scope.keyword +
+      "?keyword=" + encodeURIComponent($scope.keyword) +
       ($scope.minprice == undefined ? "" : ("&minprice=" + $scope.minprice)) +
-      ($scope.maxprice == undefined ? "" : ("&maxprice=" + $scope.maxprice)) +
-      ($scope.cid == undefined ? "" : ("&cid=" + $scope.cid)) +
-      ($scope.tags == undefined ? "" : ("&tags=" + $scope.tags)))
+      ($scope.maxprice == max_price ? "" : ("&maxprice=" + $scope.maxprice)) +
+      ($scope.cid == undefined ? "" : ("&cid=" + $scope.cid)))// +
+      //"&tags=" + JSON.stringify(["abc"]))
+      //($scope.tags == undefined ? "" : ("&tags=" + $scope.tags)))
   };
 
-  $scope.submit_search = function(route) {
-    console.log($( "#slider-range" ));
 
+  $scope.submit_search = function(route) {
+    console.log(route);
     $http.get(route)
     .then(function(response) {
       console.log(response);
