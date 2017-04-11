@@ -1,8 +1,7 @@
 var recommendController = function($scope, $http) {
-  var range = function(len) {
-    return Array.apply(null, Array(len)).map(function (_, i) {return i;});
-  }
-  $scope.get_condition = ["Like New", "Very Good", "Good", "Acceptable", "Bad"]
+
+  $scope.is_recommend = true;
+
   $scope.get_recommendations = function() {
     $http.get("/recommends")
     .then(function(response) {
@@ -10,11 +9,9 @@ var recommendController = function($scope, $http) {
       $scope.items = response.data.items;
       $scope.items.forEach(function(item) {
         //console.log($scope.$parent.get_formatted_time(item.open_timestamp))
-        item.post_time = "Posted on " + $scope.$parent.get_formatted_time(item.open_timestamp);
+        item.post_time = "Posted on " + get_formatted_time(item.open_timestamp);
+        item.condition_name = get_condition[item.attributes.condition-1];
       });
-      var rowNum = Math.floor($scope.items.length / 3);
-      $scope.rows = range(rowNum);
-      console.log($scope.items)
     });
   };
 }

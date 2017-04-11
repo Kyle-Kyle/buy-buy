@@ -5,26 +5,31 @@
   <script src="new_card.js"></script>
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900" rel="stylesheet">
-  <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+  <script src="tools.js"></script>
 </head>
 <body>
+  <div class="container" ng-show="no_match" align="center">
+    <h4>No items match your search entry</h4>
+  </div>
   <div class="container" style="width:100%;">
-    <div class="row">
-
-      <div class="col col-md-4 col-sm-6">
+    <div class="col col-md-1 hidden-xs hidden-sm">
+    </div>
+    <div class="col col-md-10 col-xs-12">
+      <h3 style="padding-bottom: 3rem" ng-show="is_recommend">Recommendations</h3>
+      <div ng-repeat="item in items" class="col col-md-3 col-sm-6" >
         <div class="card-container">
           <div class="card">
-            <a href="#"><div class="front">
+            <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
               <div class="cover">
-                <img src="https://www.clipartsgram.com/image/129556292-kyz84k3.jpg"/>
+                <img src="img/item_test_img.jpg"/>
               </div>
               <div class="content">
                 <div class="main">
-                  <h3 class="name">John Marvel</h3>
-                  <h3 class="name">$30</h3>
+                  <h3 class="name">{{item.attributes.title}}</h3>
+                  <h3 class="name">$ {{item.price}}</h3>
                 </div>
                 <div class="footer">
-                  <i class="fa fa-mail-forward"></i> Auto Rotation
+                  {{item.post_time}}
                 </div>
               </div>
             </div> <!-- end front panel -->
@@ -32,55 +37,54 @@
               <div class="content">
                 <div class="main">
                   <h4 class="text-center">Description</h4>
-                  <p class="text-center">Web design, Adobe Photoshop, HTML5, CSS3, Corel and many others...</p>
-
+                  <p class="text-center">{{item.attributes.description}}</p>
                   <div class="stats-container">
                     <div class="stats">
-                      <h4>2</h4>
+                      <h4>{{item.quantity}}</h4>
                       <p>
-                        Quality
+                        Quantity
                       </p>
-
-
                     </div>
                     <div class="stats">
-                      <h4>LikeNew</h4>
+                      <h4>{{item.condition_name}}</h4>
                       <p>
                         Condition
                       </p>
-
-
                     </div>
                     <div class="stats">
-                      <h4>book</h4>
+                      <h4>{{item.cid.name}}</h4>
                       <p>
                         Category
                       </p>
-
-
                     </div>
                   </div>
-
                 </div>
               </div>
+
             </div> <!-- end back panel --></a>
-
           </div> <!-- end card -->
-          <!-- end card -->
         </div> <!-- end card-container -->
-      </div> <!-- end col-sm-3 -->
-
-    </div> <!-- end row -->
-
-    <div class="space-200"></div>
+      </div>
+    </div>
+    <div class="col col-md-1 hidden-xs hidden-sm">
+    </div>
   </div>
-
-
-
-
-
-
-
-
+  <!-- reponsive height for cards -->
+  <script>
+    var card_container = $(".card-container");
+    var card_back = $(".back");
+    var card_front = $(".front");
+    card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    window.addEventListener("resize", function(e) {
+      card_container = $(".card-container");
+      card_back = $(".back");
+      card_front = $(".front");
+      card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+      card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+      card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    });
+  </script>
 </body>
 </html>
