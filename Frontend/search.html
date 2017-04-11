@@ -20,20 +20,33 @@
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- init price slider -->
   <script>
+  var min_price = 0;
+  var max_price = 1000;
   $( function() {
     $( "#slider-range" ).slider({
       range: true,
-      min: 0,
-      max: 1000,
-      values: [ 0, 1000 ],
+      min: min_price,
+      max: max_price,
+      values: [ min_price, max_price ],
       slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+        if (ui.values[ 1 ] == max_price) {
+          $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] + " and above");
+        } else {
+          $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+        }
       }
     });
-    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-  } );
+    if ($( "#slider-range" ).slider( "values", 1 ) == max_price) {
+      $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+        " - $" + $( "#slider-range" ).slider( "values", 1 ) + " and above");
+    } else {
+      $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+        " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+    }
+  });
   </script>
 
   <style>
@@ -60,7 +73,11 @@
       <div class="input-group">
         <div class="input-group-btn">
           <!-- category -->
-          <select id="categorySelect" class="form-control" name="category">
+          <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory"></select>
+          <!--select id="categorySelect" class="form-control" name="category">
+            <option ng-repeat="c in categories" ng-model="c._id">{{c.name}}</option>
+          </select-->
+          <!--select id="categorySelect" class="form-control" name="category">
             <option>All</option>
             <optgroup label="Book">
               <option>Books</option>
@@ -81,11 +98,11 @@
             <optgroup label="Others">
               <option>Others</option>
             </optgroup>
-          </select>
+          </select>-->
         </div>
         <input type="text" class="form-control" ng-model="keyword"/>
         <span class="input-group-btn">
-          <button type="submit" class="btn btn-default" ng-click="submit_search(get_search_route())"/>Search</button>
+          <button type="submit" class="btn btn-default" ng-click="submit_search(get_search_route(true))"/>Search</button>
         </span>
       </div>
       <br/>
