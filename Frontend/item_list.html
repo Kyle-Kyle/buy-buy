@@ -19,9 +19,9 @@
       <div ng-repeat="item in items" class="col col-md-3 col-sm-6" >
         <div class="card-container">
           <div class="card">
-            <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+            <a href="" ng-click="changeTo('item_detail.html?' + item._id)"><div class="front">
               <div class="cover">
-                <img src="img/item_test_img.jpg"/>
+                <img ng-src="/items/{{item._id}}/pictures/0" err-src="https://assets.rbl.ms/4314213/980x.jpg"/>
               </div>
               <div class="content">
                 <div class="main">

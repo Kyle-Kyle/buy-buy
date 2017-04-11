@@ -12,7 +12,6 @@ body {
 }
 /* entire container, keeps perspective */
 .user_card-container {
-	height: 120px;
 	  -webkit-perspective: 800px;
    -moz-perspective: 800px;
      -o-perspective: 800px;
@@ -70,12 +69,10 @@ body {
 /* user_front pane, placed above back */
 .user_front {
 	z-index: 2;
-	height: 180px;
 }
 
 /* back, initially hidden pane */
 .user_back {
-	height: 120px;
 		-webkit-transform: rotateY( 180deg );
    -moz-transform: rotateY( 180deg );
      -o-transform: rotateY( 180deg );
@@ -97,6 +94,7 @@ body {
     color: #444444;
 }
 .user_card-container, .user_front, .user_back {
+	height:145px;
 	font-family: 'Arima Madurai', cursive;
 	width: 100%;
 
