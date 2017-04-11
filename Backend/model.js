@@ -195,6 +195,9 @@ Item_Schema.statics.new_ = function(info, cb){
 		for(var i=0;i<info.tags.length;i++)info.tags[i] = escape_html(info.tags[i]);
 		this.tags = info.tags
 	}
+	for(var key in info.attributes){
+		info.attributes[key] = escape_html(info.attributes[key]);
+	}
 	Item.create(info, function(err, item){
 		err_msg = 'Fail to create item';
 		if(err){
@@ -247,6 +250,9 @@ Item_Schema.methods.update_info = function(info, cb){
 		this.tags = info.tags
 	}
 	if(typeof(info.attributes) !== 'undefined' && info.attributes){
+		for(var key in info.attributes){
+			info.attributes[key] = escape_html(info.attributes[key]);
+		}
 		this.attributes = info.attributes
 	}
 	this.save(function(err, item){

@@ -485,70 +485,48 @@ app.get('/transactions/:tid/cancel', function(req, res){
 	})
 })
 
-app.get('/search', function(req, res){
+app.get('/search', function(req, res){//search is not in order
 	var keyword=req.query.keyword;
-	var min_price=req.query.minprice;
-	var max_price=req.query.maxprice;
+	var min_price=req.query.min_price;
+	var max_price=req.query.max_price;
 	var cid=req.query.cid;
-	var tags=JSON.parse(req.query.tags);
+	var tags = req.query.tags;
 	var items=[];
-	model.Item.find({}, function(err ,all_items){
-		if(err)return res.send({feedback: 'Failure', err_msg: 'Fail to access items.'});
-		all_items.forEach(function(item){
-			var deprecate=0; //1 indicates that this item should not be returned
-			if (min_price && item.price < min_price)
-				deprecate=1;
-			if (max_price && item.price > max_price)
-				deprecate=1;
-			if (cid && item.cid != cid)
-				deprecate=1;
-			if(deprecate!=1){
-				var attributes=item.attributes;
-				if (attributes.title.toUpperCase().includes(keyword.toUpperCase())){
-					items.push(item);
-				}
-				else if(attributes.description.toUpperCase().includes(keyword.toUpperCase())){
-					items.push(item);
-				}
-				else{
-					var tag_no=item.tags.length;
-					for (let j=0;j<tag_no;j++){
-						if(item.tags[j].toUpperCase().includes(keyword.toUpperCase())){
-							items.push(item);
-							break;
-						}
-					}
-				}
-			}
-		})
-		if(tags){
-			var i=0;
-			var n=items.length;
-			var tmp_items=[];
-			var match=0;
-			while(i<n)
-			{
-				match=1;
-
-				for(let j=0;j<tags.length;j++){
-					if(items[i].tags.indexOf(tags[j])<0)
-					{
-						match=0;
-					}
-				}
-
-				if(match){
-					tmp_items=tmp_items.concat(items.splice(i,1));
-					n--;
-				}
-				else{
-					i++;
-				}
-			}
-			items=tmp_items.concat(items);
+	var condition = {};
+	if(typeof(keyword) != 'undefined'){
+		keyword = escape_html(keyword);
+		condition.$or = [];
+		condition.$or.push({'attributes.title': new RegExp(keyword, 'i')});
+		condition.$or.push({'attributes.description': new RegExp(keyword, 'i')});
+		condition.$or.push({'tags': new RegExp(keyword, 'i')});
+	}
+	if(typeof(min_price) != 'undefined'){
+		condition.price = {};
+		condition.price.$gte = min_price;
+	}
+	if(typeof(max_price) != 'undefined'){
+		if(!('price' in condition))condition.price = {};
+		condition.price.$lte = max_price;
+	}
+	if(typeof(cid) != 'undefined' && db.Types.ObjectId.isValid(cid)){
+		condition.cid = cid;
+	}
+	if(typeof(tags) != 'undefined'){
+		try{
+			tags = JSON.parse(tags);
+		}catch(e){
+			return res.send({feedback: 'Failure'});
 		}
-		return res.send({feedback: 'Success',items:items});
-	})
+		for(var i=0; i<tags.length; i++){
+			tags[i] = escape_html(tags[i]);
+		}
+		if(!('$or' in condition))condition.$or = [];
+		condition.$or.push({'tags': {$in: tags}});
+	}
+	model.Item.find(condition, function(err, items){
+		if(err)return res.send({feedback: 'Failure'});
+		return res.send({feedback: 'Success', items: items});
+	});
 })
 
 app.get('/recommends', function(req, res){
