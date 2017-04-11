@@ -29,39 +29,35 @@
 
 </head>
 <body>
-
-  <div ng-app="postApp" ng-controller="loadController">
+  <!-- dynamic loading of page content -->
+  <div ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
+    <div id='msg-window' ng-include="msg_view.url"
+    ng-show="msgShow" ng-init="msgShow=false"></div>
+  </div>
+
+
+  <div ng-controller="loadController">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h3 class="modal-title">Meizu!!</h4>
+          <h3 class="modal-title" ng-bind="item.attributes.title"></h3>
           </div>
-
+          <label>{{item.pictures}}</label>
           <div id="myCarousel" class="carousel slide " data-ride="carousel">
             <!-- Indicators -->
-            <ol class="carousel-indicators">
-              <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-              <li data-target="#myCarousel" data-slide-to="1"></li>
-              <li data-target="#myCarousel" data-slide-to="2"></li>
+            <ol class="carousel-indicators" ng-repeat="x in item.pictures">
+              <li data-target="#myCarousel" data-slide-to="{{x}}" ng-class="x == '0' ? 'active':''"></li>
             </ol>
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
-              <div class="item active"align="center">
-                <img class="img-responsive" style="max-height:500px;"src="https://img.alicdn.com/bao/uploaded/i3/6000000005963/TB2RcJki80kpuFjy1zdXXXuUVXa_!!0-fleamarket.jpg_728x728.jpg" alt="phone">
+              <div align="center" class="item" ng-repeat="x in item.pictures" ng-class="x == '0' ? 'active' : ''">
+                <img class="img-responsive" ng-src="/items/{{item_id}}/pictures/{{x}}"  />
               </div>
-
-              <div class="item"align="center">
-                <img class="img-responsive" style="max-height:500px;"src="https://img.alicdn.com/bao/uploaded/i1/6000000000620/TB2D0ZYiMJkpuFjSszcXXXfsFXa_!!0-fleamarket.jpg_728x728.jpg" alt="phone">
-              </div>
-
-              <div class="item"align="center">
-                <img class="img-responsive" style="max-height:500px;"src="https://img.alicdn.com/bao/uploaded/i4/6000000001795/TB2SrpIi3JlpuFjSspjXXcT.pXa_!!0-fleamarket.jpg_728x728.jpg" alt="phone">
-              </div>
-
             </div>
+
 
             <!-- Left and right controls -->
             <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
@@ -74,6 +70,7 @@
             </a>
           </div>
           <div class="modal-body">
+
             <!-- tab-->
             <div class="container-fluid">
               <ul id="itemTab" class="nav nav-tabs nav-justified">
@@ -88,47 +85,46 @@
                     <tbody>
                       <tr>
                         <td><span class="glyphicon glyphicon-yen"></span> <b>Price</b></td>
-                        <td>$1500</td>
+                        <td ng-bind="item.price"></td>
                       </tr>
                       <tr>
-                        <td><span class="glyphicon glyphicon-tag"></span> <b>Tag</b></td>
-                        <td><div>
-                          <a href="#" style="text-decoration: none;"><span class="label btn btn-info">The MIT Press</span></a>
-                          <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Computer Science</span></a>
-                          <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Machine Learning</span></a>
-                        </div></td>
+                        <td>
+                          <span class="glyphicon glyphicon-tag"></span> <b>Tag</b>
+                        </td>
+                        <td>
+                          <div ng-repeat="x in item.tags" style="float: left">
+                          <span style="text-decoration: none;" class="label btn btn-info" ng-bind="x"></span>
+                          <span>&nbsp;</span>
+                        </div>
+                        </td>
                       </tr>
                       <tr>
                         <td><span class="glyphicon glyphicon-duplicate"></span> <b> Quantity</b></td>
-                        <td>1</td>
+                        <td ng-bind="item.quantity"></td>
                       </tr>
                       <tr>
                         <td><span class="glyphicon glyphicon-wrench"></span> <b>Condition</b></td>
-                        <td>Like new</td>
+                        <td ng-bind="condition"></td>
                       </tr>
                     </tbody>
                   </table>
 
                 </div>
-                <div class="tab-pane fade" id="description">
-                  <textarea class="form-control" disabled="true">FREE!!!</textarea>
+                <div class="tab-pane" id="description">
+                  <div class="well" ng-bind="item.attributes.description"></div>
                 </div>
                 <div class="tab-pane fade" id="comment">
                   <div class="input-group">
-                    <input class="form-control" placeholder="Add a comment" type="text">
-                    <span class="input-group-addon">
-                      <a href="#"><span class="glyphicon glyphicon-comment"></span></a>
-                    </span>
+                    <input class="form-control" placeholder="Add a comment" type="text" ng-model="comments">
+                    <a href="" ng-click="addComment()"class="input-group-addon">
+                      <span class="glyphicon glyphicon-comment" ></span>
+                    </a>
                   </div>
                   <table class="table table-striped">
                     <tbody>
-                      <tr>
-                        <td><a href="#"><img style="max-height:50px;" src="http://bootdey.com/img/Content/user_1.jpg" ><h5 class="user" >Li Wei</h5></a></td>
-                        <td><textarea class="form-control" disabled="true" rows="3" id="comment">TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT</textarea></td>
-                      </tr>
-                      <tr>
-                        <td><a href="#"><img style="max-height:50px;" src="http://bootdey.com/img/Content/user_3.jpg" ><h5 class="user" >Li kaican</h5></a></td>
-                        <td><textarea class="form-control" disabled="true" rows="3" id="comment">TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaTTTTTTTTTTTTTTTTTTT</textarea></td>
+                      <tr ng-repeat="x in comments_array">
+                        <td><a href="#"><img style="max-height:50px;" src="http://bootdey.com/img/Content/user_1.jpg" ></a></td>
+                        <td><textarea class="form-control" disabled="true" rows="3" id="comment" ng-bind="x[1]"></textarea></td>
                       </tr>
                     </tbody>
                   </table>
@@ -144,13 +140,23 @@
 
 
     <!-- load angular functions -->
+    <script src="mainController.js"></script>
     <script>
-    var app = angular.module('postApp', ['ngRoute', 'ngCookies'])
-    app.controller('loadController', function($scope) {
-      $scope.navs = {url: "navs.view.html"};
-    });
+    angular
+    .module('indexApp', ['ngRoute', 'ngCookies'])
+    .controller('mainController', mainController);
     </script>
-    <script src="post_load.js"></script>
+    <script src="login.js"></script>
+    <script src="register.js"></script>
+    <script>
+    angular.module('itemApp', ['ngRoute', 'ngCookies']);
+    </script>
+    <script src="item_detail.js"></script>
+    <script>
+    angular.element(function() {
+      angular.bootstrap(document, ['indexApp', 'itemApp'])
+    })
+    </script>
 
   </body>
   </html>
