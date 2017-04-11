@@ -41,7 +41,7 @@
   </div>
 
 
-  <div ng-controller="postController">
+  <div ng-controller="updateItemController">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -50,7 +50,7 @@
         </div>
 
         <div class="container-fluid">
-          <form name="PostForm" ng-controller = "postController" role="form">
+          <form name="PostForm" ng-controller = "updateItemController" role="form">
             <!-- title -->
             <div class="form-group has-feedback" ng-class = "PostForm.title.$dirty?
             (titleValid?'has-success':'has-error'):''">
@@ -142,8 +142,8 @@
 
       <div class="form-actions">
         <button class="btn btn-primary smooth-trans-btn"
-        ng-disabled="!priceValid || !titleValid || !quantityValid" ng-click="post_item()">
-        Post</button>
+        ng-disabled="!priceValid || !titleValid || !quantityValid)" ng-click="update_item()">
+        Update</button>
         <a href="profile.view.html" class="btn btn-link" onclick="$('#post-modal').modal('toggle')">Cancel</a>
       </div>
     </form>
@@ -166,12 +166,12 @@ angular
 <script src="login.js"></script>
 <script src="register.js"></script>
 <script>
-angular.module('postApp', ['ngRoute', 'ngCookies']);
+angular.module('updateItemApp', ['ngRoute', 'ngCookies']);
 </script>
-<script src="post_load.js"></script>
+<script src="update_item.js"></script>
 <script>
 angular.element(function() {
-  angular.bootstrap(document, ['indexApp', 'postApp'])
+  angular.bootstrap(document, ['indexApp', 'updateItemApp'])
 })
 </script>
 </body>
