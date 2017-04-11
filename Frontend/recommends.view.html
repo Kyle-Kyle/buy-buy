@@ -1,91 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="css/new_card.css">
+  <script src="new_card.js"></script>
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900" rel="stylesheet">
 </head>
 <body>
-  <div class="container-fluid">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Recommendations</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
-            <div class="col-md-4" style="padding-right:0;">
-              <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://s-media-cache-ak0.pinimg.com/564x/a5/62/69/a5626960dd8641d2235cce2f1bf6eb8a.jpg" />
-            </div>
-            <div class="col-md-8">
-              <a href="#">The Great Gatsby</a><br/>
-              <b>$50.00</b><br/>
-              <br/>
-              Category: <a href="#">Novel</a><br/>
-              Condition: Good
-              <div>
-                <a href="https://www.google.com.hk/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=scott+fitzgerald&*" style="text-decoration: none;"><span class="label btn btn-info">Scott Fitzgerald</span></a>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Jazz Age</span>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">American Dream</span>
+
+  <div class="container-fluid" ng-controller="recommendController" ng-init="get_recommendations()">
+    <div class="col col-md-1 hidden-xs hidden-sm">
+    </div>
+    <div class="col col-md-10 col-xs-12">
+      <h3 style="padding-bottom: 3rem">Recommendations</h3>
+      <div ng-repeat="item in items" class="col col-md-3 col-sm-6" >
+        <div class="card-container">
+          <div class="card">
+            <a href="" onclick="window.location.replace('https://google.com')"><div class="front">
+              <div class="cover">
+                <img src="img/item_test_img.jpg"/>
               </div>
-            </div>
-          </td>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
-            <div class="col-md-4" style="padding-right:0;">
-              <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://mitpress.mit.edu/sites/default/files/9780262035613_0.jpg" />
-            </div>
-            <div class="col-md-8">
-              <a href="#">Deep Learning</a><br/>
-              <b>$149.00</b><br/>
-              <br/>
-              Category: <a href="#">Textbook</a><br/>
-              Condition: Like New
-              <div>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">The MIT Press</span>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Computer Science</span>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Machine Learning</span>
+              <div class="content">
+                <div class="main">
+                  <h3 class="name">{{item.attributes.title}}</h3>
+                  <h3 class="name">$ {{item.price}}</h3>
+                </div>
+                <div class="footer">
+                  {{item.post_time}}
+                </div>
               </div>
-            </div>
-          </td>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
-            <div class="col-md-4" style="padding-right:0;">
-              <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://n3.sdlcdn.com/imgs/a/a/1/Chromozome_Yamaha_102017_m_1_2x_new-48538.jpg" />
-            </div>
-            <div class="col-md-8">
-              <a href="#">Yamaha Acoustic Guitar</a><br/>
-              <b>$999.00</b><br/>
-              <br/>
-              Category: <a href="#">Musical Instrument</a><br/>
-              Condition: Acceptable
-              <div>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Yamaha</span>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Dreadnought</span>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Spruce</span>
-                <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Matte</span>
+            </div> <!-- end front panel -->
+            <div class="back">
+              <div class="content">
+                <div class="main">
+                  <h4 class="text-center">Description</h4>
+                  <p class="text-center">{{item.attributes.description}}</p>
+                  <div class="stats-container">
+                    <div class="stats">
+                      <h4>{{item.quantity}}</h4>
+                      <p>
+                        Quantity
+                      </p>
+                    </div>
+                    <div class="stats">
+                      <h4>{{get_condition[item.attributes.condition-1]}}</h4>
+                      <p>
+                        Condition
+                      </p>
+                    </div>
+                    <div class="stats">
+                      <h4>{{item.category}}</h4>
+                      <p>
+                        Category
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </td>
-          <td class="col-md-3" style="padding-left:0; padding-right:0;">
-            <div class="col-md-4" style="padding-right:0;">
-              <img class="img-responsive" alt="Image 1" style="max-height:150px;" src="https://store.storeimages.cdn-apple.com/8749/as-images.apple.com/is/image/AppleInc/aos/published/images/M/P5/MP582/MP582?wid=572&hei=572&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1483642749433" />
-            </div>
-            <div class="col-md-8">
-              <a href="#">Beats Solo3 Wireless</a>
-              <br/>
-              <b>$1999.00</b><br/>
-              <br/>
-              Category: <a href="#">Electronics</a><br/>
-              Condition: Very Good
-              <br/>
-              <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Music</span>
-              <a href="#" style="text-decoration: none;"><span class="label btn btn-info">Wireless</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+            </div> <!-- end back panel --></a>
+          </div> <!-- end card -->
+        </div> <!-- end card-container -->
+      </div>
+    </div>
+    <div class="col col-md-1 hidden-xs hidden-sm">
+    </div>
   </div>
+
+  <!-- reponsive height for cards -->
+  <script>
+    console.log('haha')
+    var card_container = $(".card-container");
+    var card_back = $(".back");
+    var card_front = $(".front");
+    console.log(parseFloat(card_container.css("width").split("px")[0]))
+    card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    console.log(card_front.css("width"))
+    window.addEventListener("resize", function(e) {
+      card_container = $(".card-container");
+      card_back = $(".back");
+      card_front = $(".front");
+      card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+      card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+      card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+    });
+  </script>
+
 </body>
 </html>

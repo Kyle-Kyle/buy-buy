@@ -2,8 +2,8 @@
 body {
 	margin-top: 60px;
 	font-size: 14px;
-	font-family: 'Arima Madurai', cursive;
 	background-color: #E8E8E8;
+
 }
 .btn:hover,
 .btn:focus,
@@ -11,16 +11,17 @@ body {
     outline: 0 !important;
 }
 /* entire container, keeps perspective */
-.card-container {
+.user_card-container {
+	height: 120px;
 	  -webkit-perspective: 800px;
    -moz-perspective: 800px;
      -o-perspective: 800px;
         perspective: 800px;
-        margin-bottom: 200px;
+        margin-bottom: 30px;
 }
 /* flip the pane when hovered */
-.card-container:not(.manual-flip):hover .card,
-.card-container.hover.manual-flip .card{
+.user_card-container:not(.manual-flip):hover .user_card,
+.user_card-container.hover.manual-flip .user_card{
 	-webkit-transform: rotateY( 180deg );
 -moz-transform: rotateY( 180deg );
  -o-transform: rotateY( 180deg );
@@ -28,15 +29,15 @@ body {
 }
 
 
-.card-container.static:hover .card,
-.card-container.static.hover .card {
+.user_card-container.static:hover .user_card,
+.user_card-container.static.hover .user_card {
 	-webkit-transform: none;
 -moz-transform: none;
  -o-transform: none;
     transform: none;
 }
 /* flip speed goes here */
-.card {
+.user_card {
 	 -webkit-transition: -webkit-transform .5s;
    -moz-transition: -moz-transform .5s;
      -o-transition: -o-transform .5s;
@@ -49,7 +50,7 @@ body {
 }
 
 /* hide back of pane during swap */
-.front, .back {
+.user_front, .user_back {
 	-webkit-backface-visibility: hidden;
    -moz-backface-visibility: hidden;
      -o-backface-visibility: hidden;
@@ -57,17 +58,24 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	background-color: #E8E8E8;
+	background-color: WHITE;
+	color:GRAY;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14);
 }
 
-/* front pane, placed above back */
-.front {
+.user_front:hover, .user_back:hover {
+	color:BLACK;
+}
+
+/* user_front pane, placed above back */
+.user_front {
 	z-index: 2;
+	height: 180px;
 }
 
 /* back, initially hidden pane */
-.back {
+.user_back {
+	height: 120px;
 		-webkit-transform: rotateY( 180deg );
    -moz-transform: rotateY( 180deg );
      -o-transform: rotateY( 180deg );
@@ -75,7 +83,7 @@ body {
         z-index: 3;
 }
 
-.back .btn-simple{
+.user_back .btn-simple{
     position: absolute;
     left: 0;
     bottom: 4px;
@@ -83,28 +91,32 @@ body {
 /*        Style       */
 
 
-.card{
+.user_card{
     background: none repeat scroll 0 0 #FFFFFF;
     border-radius: 4px;
     color: #444444;
 }
-.card-container, .front, .back {
+.user_card-container, .user_front, .user_back {
+	font-family: 'Arima Madurai', cursive;
 	width: 100%;
-	height: 500;
+
 	border-radius: 4px;
 	-webkit-box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 -moz-box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 }
-.card .cover{
-    height: 30%;
-    overflow: hidden;
-    border-radius: 4px 4px 0 0;
+.user_card .cover{
+	max-width: 100%;
+	height: 0;
+	padding-bottom: 60%;
+	background-color:#ff0000;
+	overflow: hidden;
+  border-radius: 4px 4px 0 0;
 }
-.card .cover img{
+.user_card .cover img{
     width: 100%;
 }
-.card .user{
+.user_card .user{
     border-radius: 50%;
     display: block;
     height: 120px;
@@ -114,24 +126,24 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 }
 .hoverable{transition:box-shadow .55s;box-shadow:0}
 .hoverable:hover{transition:box-shadow .45s;box-shadow:0 8px 17px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19)}
-.card .user img{
+.user_card .user img{
     background: none repeat scroll 0 0 #E8E8E8;
     border: 4px solid #E8E8E8;
     width: 100%;
 }
 
-.card .content{
+.user_card .content{
     background-color: rgba(0, 0, 0, 0);
     box-shadow: none;
     padding: 10px 20px 0px;
 }
-.card .content .main {
+.user_card .content .main {
     min-height: 0px;
 }
-.card .back .content .main {
+.user_card .user_back .content .main {
     height: auto;
 }
-.card .name {
+.user_card .name {
 		font-family: 'Arima Madurai', cursive;
     font-size: 22px;
     line-height: 28px;
@@ -139,38 +151,38 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
     text-align: center;
     text-transform: capitalize;
 }
-.card h5{
+.user_card h5{
     margin: 5px 0;
     font-weight: 400;
     line-height: 20px;
 }
-.card .profession{
+.user_card .profession{
     color: #999999;
     text-align: center;
     margin-bottom: 20px;
 }
-.card .footer {
+.user_card .footer {
     border-top: 1px solid #EEEEEE;
     color: #999999;
     margin: 10px 0 0;
     padding: 10px 0 0;
     text-align: center;
 }
-.card .footer .social-links{
+.user_card .footer .social-links{
     font-size: 18px;
 		padding-bottom: 5px;
 }
-.card .footer .social-links a{
+.user_card .footer .social-links a{
     margin: 0 7px;
 }
-.card .footer .btn-simple{
+.user_card .footer .btn-simple{
     margin-top: -6px;
 }
-.card .header {
+.user_card .header {
     padding: 15px 20px;
     height: 90px;
 }
-.card .motto{
+.user_card .motto{
 		font-family: 'Arima Madurai', cursive;
     border-bottom: 1px solid #EEEEEE;
     color: #999999;
@@ -180,29 +192,29 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
     text-align: center;
 }
 
-.card .stats-container{
+.user_card .stats-container{
 	width: 100%;
 	margin-top: 50px;
 }
-.card .stats{
+.user_card .stats{
 	display: block;
 	float: left;
 	width: 33.333333%;
 	text-align: center;
 }
 
-.card .stats:first-child{
+.user_card .stats:first-child{
 	border-right: 1px solid #EEEEEE;
 }
-.card .stats:last-child{
+.user_card .stats:last-child{
 	border-left: 1px solid #EEEEEE;
 }
-.card .stats h4{
+.user_card .stats h4{
 		font-family: 'Arima Madurai', cursive;
 	font-weight: 300;
 	margin-bottom: 5px;
 }
-.card .stats p{
+.user_card .stats p{
 	color: #777777;
 }
 /*      Just for presentation        */
@@ -234,7 +246,7 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
     display: block;
 }
 .white-board{
-    background-color: #E8E8E8;
+    background-color: WHITE;
     min-height: 200px;
     padding: 60px 60px 20px;
 }
@@ -243,7 +255,7 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 }
 
  pre.prettyprint{
-    background-color: #E8E8E8;
+    background-color: WHITE;
     border: 1px solid #999;
     margin-top: 20px;
     padding: 20px;
@@ -309,21 +321,24 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 /*       Fix bug for IE      */
 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .front, .back{
+    .user_front, .user_back{
         -ms-backface-visibility: visible;
         backface-visibility: visible;
     }
 
-    .back {
+    .user_back {
+			font-family: 'Arima Madurai', cursive;
         visibility: hidden;
         -ms-transition: all 0.2s cubic-bezier(.92,.01,.83,.67);
     }
-    .front{
+    .user_front{
+			font-family: 'Arima Madurai', cursive;
         z-index: 4;
     }
-    .card-container:not(.manual-flip):hover .back,
-    .card-container.manual-flip.hover .back{
+    .user_card-container:not(.manual-flip):hover .user_back,
+    .user_card-container.manual-flip.hover .user_back{
         z-index: 5;
         visibility: visible;
+
     }
 }
