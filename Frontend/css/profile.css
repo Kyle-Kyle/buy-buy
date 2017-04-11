@@ -84,7 +84,8 @@ body {
   background-color: #fafcfd;
   color: #5b9bd1;
 }
-
+.hoverable{transition:box-shadow .55s;box-shadow:0}
+.hoverable:hover{transition:box-shadow .45s;box-shadow:0 8px 17px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19)}
 .profile-usermenu ul li.active {
   border-bottom: none;
 }
