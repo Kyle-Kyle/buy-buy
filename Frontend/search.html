@@ -15,13 +15,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
+  <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
+  <script src="lib/bootstrap-tagsinput.js"></script>
+  <script src="lib/bootstrap-tagsinput-angular.js"></script>
+  <style>
+  .bootstrap-tagsinput {
+    width: 100%;
+  }
+  </style>
 
   <script src="tools.js"></script>
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="css/search.css">
 
-  <!-- init price slider -->
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Petit+Formal+Script" />
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
   var min_price = 0;
   var max_price = 1000;
@@ -41,89 +50,87 @@
     });
     if ($( "#slider-range" ).slider( "values", 1 ) == max_price) {
       $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-        " - $" + $( "#slider-range" ).slider( "values", 1 ) + " and above");
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) + " and above");
     } else {
       $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-        " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
     }
   });
   </script>
 
   <style>
-    #searchForm {
-      padding-left: 20%;
-      padding-right: 20%;
-      padding-top: 3%;
-      padding-bottom: 5%;
-    }
+  #searchContainer{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url("img/CUHK.jpg");
+    background-size: 100% 100%;
+    padding: 100px 0 50px 0;
+  }
+  .title {
+    font: 400 3.5em/125% 'Petit Formal Script', Helvetica, Sans-serif;
+  }
   </style>
 
 </head>
-<body>
+<body style="margin-top:50px;">
   <!-- dynamic loading of navigator and messenger -->
   <div ng-controller="mainController">
     <div id="navs" ng-include="navs.url"></div>
     <div id='msg-window' ng-include="msg_view.url"
-      ng-show="msgShow" ng-init="msgShow=false"></div>
+    ng-show="msgShow" ng-init="msgShow=false"></div>
   </div>
 
-  <div class="container-fluid" ng-controller="searchController">
-    <form id="searchForm" role="form">
-      <label for="username">Search for goods</label>
-      <div class="input-group">
-        <div class="input-group-btn">
-          <!-- category -->
-          <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory"></select>
-          <!--select id="categorySelect" class="form-control" name="category">
-            <option ng-repeat="c in categories" ng-model="c._id">{{c.name}}</option>
-          </select-->
-          <!--select id="categorySelect" class="form-control" name="category">
-            <option>All</option>
-            <optgroup label="Book">
-              <option>Books</option>
-              <option>Textbook</option>
-              <option>Fiction</option>
-              <option>Magazine</option>
-            </optgroup>
-            <optgroup label="Life">
-              <option>Clothing & Shoes</option>
-              <option>Makeup</option>
-              <option>Sports</option>
-              <option>Kitchenware</option>
-            </optgroup>
-            <optgroup label="Entertainment">
-              <option>Electronics</option>
-              <option>Musical Instrument</option>
-            </optgroup>
-            <optgroup label="Others">
-              <option>Others</option>
-            </optgroup>
-          </select>-->
-        </div>
-        <input type="text" class="form-control" ng-model="keyword"/>
-        <span class="input-group-btn">
-          <button type="submit" class="btn btn-default" ng-click="submit_search(get_search_route(true))"/>Search</button>
-        </span>
+  <div class="container-fluid" ng-controller="searchController" style="padding:0;">
+    <div class="container-fluid" id="searchContainer" >
+      <div class="title col-lg-12 text-center" style="margin-bottom:50px;color:WHITE;font-size:40px ;font-weight:400;">
+        Enjoy your search!
       </div>
-      <br/>
-      <p>
-        <label for="amount">Price range:</label>
-        <input type="text" id="amount" readonly style="border:0; background-color: #E8E8E8; color:#f6931f; font-weight:bold;">
-      </p>
-      <div id="slider-range"></div>
-    </form>
+      <div class="container" >
+        <div class="row">
+          <div class="col-md-12">
 
-    <!-- dynamically load item list -->
-    <div ng-include="'item_list.html'"></div>
-
+              <div class="input-group input-group-lg" id="adv-search">
+                <input type="text" class="form-control" placeholder="Search for items" ng-model="keyword"/>
+                <div class="input-group-btn">
+                  <div class="btn-group btn-group-lg" role="group">
+                    <div class="dropdown dropdown-lg">
+                      <button type="button" class="btn btn-lg dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                      <div class="dropdown-menu dropdown-menu-right" role="menu">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="category">Category</label>
+                            <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory"></select>
+                          </div>
+                          <div class="form-group">
+                            <label for="tag">Tag</label><br/>
+                            <input class="form-control" type="text" data-role="tagsinput" id="tag" name="tag" ng-model="tags">
+                          </div>
+                          <p>
+                            <label for="amount">Price range:</label>
+                            <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                          </p>
+                          <div id="slider-range" style="margin-bottom:15px;"></div>
+                        </form>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-click="submit_search(get_search_route(true))"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-include="'item_list.html'" style="margin-top: 5rem"></div>
   </div>
+
+
+
 
   <!-- load main controller -->
   <script src="mainController.js"></script>
   <script>
-    angular
-      .module('indexApp', ['ngRoute', 'ngCookies'])
-      .controller('mainController', mainController);
+  angular
+  .module('indexApp', ['ngRoute', 'ngCookies'])
+  .controller('mainController', mainController);
   </script>
 
   <!-- load login & register controller -->
@@ -133,13 +140,13 @@
   <!-- load search controller -->
   <script src="searchController.js"></script>
   <script>
-    angular
-      .module('searchApp', [])
-      .controller('searchController', searchController);
+  angular
+  .module('searchApp', [])
+  .controller('searchController', searchController);
   </script>
 
   <script>
-    angular.bootstrap(document, ["indexApp", "searchApp"]);
+  angular.bootstrap(document, ["indexApp", "searchApp"]);
   </script>
 </body>
 </html>

@@ -1,11 +1,13 @@
 angular.module('profileApp', ['ngRoute', 'ngCookies'])
 .controller('loadController', function($scope, $http, $cookies) {
 
+  // for item-list post-adjustment
+  $scope.is_profile = true;
+
   // dynamic loading
   $scope.user_followees={url:"user_list.html"};
   $scope.item_list={url:"item_list.html"};
   $scope.user_info={url:"user_info.html"};
-
 
   // verify credential
   $scope.user = $cookies.get("logged_in");
@@ -14,7 +16,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
 
   // get user info
   if ($scope.user != undefined) {
-    console.log("loged in");
 
     // GET self information
     $http.get("/users/self")
@@ -33,7 +34,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   // get following info
   if ($scope.user != undefined) {
 
-
     $scope.getSell = function() {
       var post_item = [];
       // get post item list
@@ -44,6 +44,10 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         post_item = response.data.items;
         $scope.items = post_item.filter(function(element) {
           return element.qunatity != 0;
+        })
+        $scope.items.forEach(function(item) {
+          item.post_time = get_formatted_time(item.open_timestamp);
+          item.condition_name = get_condition[item.attributes.condition-1];
         })
         console.log($scope.items);
       });
@@ -60,10 +64,13 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         $scope.items = sold_item.filter(function(element) {
           return element.qunatity == 0;
         })
+        $scope.items.forEach(function(item) {
+          item.post_time = get_formatted_time(item.open_timestamp);
+          item.condition_name = get_condition[item.attributes.condition-1];
+        })
         console.log($scope.items);
       });
     }
-
 
     $scope.getFollowee = function() {
       var follist = [];

@@ -39,7 +39,7 @@ var searchController = function($scope, $http) {
         ($scope.minprice == undefined ? "" : ("&minprice=" + $scope.minprice)) +
         ($scope.maxprice == undefined ? "" : ($scope.maxprice == max_price ? "" : ("&maxprice=" + $scope.maxprice))) +
         ($scope.selectedCategory == "" ? "" : ("&cid=" + $scope.selectedCategory)) +
-        "&tags=" + JSON.stringify([""]))
+        ($scope.tags == undefined ? "" : ("&tags=" + JSON.stringify([""]))))
     } else {
       return undefined;
     }
@@ -47,9 +47,9 @@ var searchController = function($scope, $http) {
 
   $scope.submit_search = function(route) {
     if (!route) return;
+    //console.log(route)
     $http.get(route)
     .then(function(response) {
-      console.log(response);
       if (response.data.feedback == "Success") {
         if (response.data.items.length == 0) {
           $scope.no_match = true;
