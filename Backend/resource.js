@@ -3,7 +3,6 @@ var path = require('path');
 var control = require('./control');
 var model = require('./model_ext');
 var check_login = control.check_login;
-var async = require('async');
 
 // Picture resource
 app.get('/items/:iid/pictures/:p', function(req, res){
@@ -532,23 +531,9 @@ app.get('/search', function(req, res){//search is not in order
 app.get('/recommends', function(req, res){
 	Category.findOne().sort('-sold').exec(function(err, category){
 		if(err)return res.send({feedback: 'Failure'});
-		Item.find({cid: category._id}).limit(app.get('recommend_size')).exec(function(err, items){
-			var count = 0;
-			var items_new = [];
-			async.whilst(function(){
-				return count < app.get('recommend_size');
-			},
-			function(next){
-				items[count].populate('cid', function(err, item){
-					items_new.push(item);
-					count += 1;
-					next();
-				})
-			},
-			function(err){
-				if(err)return res.send({feedback: 'Failure'});
-				return res.send({feedback: 'Success', items: items_new});
-			});
+		Item.find({cid: category._id}).limit(app.get('recommend_size')).populate('cid').exec(function(err, items){
+			if(err)return res.send({feedback: 'Failure'});
+			return res.send({feedback: 'Success', items: items});
 		});
 	})
 })
@@ -559,35 +544,21 @@ app.get('/showdbs', function(req,res){
 	var dbs={}
 	model.User.find({}, function(err ,users){
 		dbs.users=users;
-		model.Item.find({}, function(err ,items){
-			count = 0;
-			items_new = [];
-			async.whilst(function(){
-				return count<items.length;
-			},
-				function(next){
-					items[count].populate('comment_id', function(err, item){
-						items_new.push(item);
-						count += 1;
-						next();
-					})
-				},
-				function(err){
-					dbs.items=items;
-					model.Category.find({}, function(err ,categories){
-						dbs.categories=categories;
-						model.Follow.find({}, function(err ,follows){
-							dbs.follows=follows;
-							model.Message.find({}, function(err ,messages){
-								dbs.messages=messages;
-								model.Transaction.find({}, function(err ,transactions){
-									dbs.transactions=transactions;
-									return res.send('<pre>'+JSON.stringify(dbs, null, 4)+'</pre>');
-								})
-							})
+		model.Item.find({}).populate('cid').exec(function(err ,items){
+			dbs.items=items;
+			model.Category.find({}, function(err ,categories){
+				dbs.categories=categories;
+				model.Follow.find({}, function(err ,follows){
+					dbs.follows=follows;
+					model.Message.find({}, function(err ,messages){
+						dbs.messages=messages;
+						model.Transaction.find({}, function(err ,transactions){
+							dbs.transactions=transactions;
+							return res.send('<pre>'+JSON.stringify(dbs, null, 4)+'</pre>');
 						})
 					})
 				})
+			})
 		})
 	})
 })
