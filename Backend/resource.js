@@ -523,7 +523,7 @@ app.get('/search', function(req, res){//search is not in order
 		if(!('$or' in condition))condition.$or = [];
 		condition.$or.push({'tags': {$in: tags}});
 	}
-	model.Item.find(condition, function(err, items){
+	model.Item.find(condition).populate('cid').exec(function(err, items){
 		if(err)return res.send({feedback: 'Failure'});
 		return res.send({feedback: 'Success', items: items});
 	});
