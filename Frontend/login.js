@@ -19,6 +19,8 @@ angular.module('indexApp')
 				$scope.login_err_msg = $scope.login_response.data.err_msg;
 
 				if ($scope.login_feedback == 'Success') {
+					localStorage.setItem("is_manual_login", "true");
+
 					$scope.loginFailed = false;
 
 					// change button style, show successful feedback

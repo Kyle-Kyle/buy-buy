@@ -1,5 +1,4 @@
-var searchController = function($scope, $http) {
-
+var searchController = function($scope, $http, $timeout) {
   // search filters
   $scope.keyword = undefined;
   $scope.selectedCategory = undefined;
@@ -64,6 +63,7 @@ var searchController = function($scope, $http) {
       } else {
         console.log("Search error");
       }
+      $timeout(set_card_height_responsive, 100);
     });
   };
 

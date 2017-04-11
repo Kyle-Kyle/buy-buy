@@ -1,5 +1,5 @@
 angular.module('profileApp', ['ngRoute', 'ngCookies'])
-.controller('loadController', function($scope, $http, $cookies) {
+.controller('loadController', function($scope, $http, $cookies, $timeout) {
 
   // for item-list post-adjustment
   $scope.is_profile = true;
