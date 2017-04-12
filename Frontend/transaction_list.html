@@ -18,7 +18,7 @@
   <div class="col-md-4 col-xs-12">
     <div class="container" style="width:100%;">
           <div class="transactioncard-container">
-                 <div class="transactioncard">
+                 <div class="transactioncard" ng-repeat="tran in tid_list">
                      <div class="transactionfront">
                          <div class="cover">
                              <img src="http://www.dhabc.net/uploadfile/2016/0401/20160401115708557.jpg"/>
@@ -29,7 +29,7 @@
                          <div class="content">
                              <div class="main">
                                 <p class="profession">Request from</p>
-                                 <h3 class="name">Michael</h3>
+                                 <h3 class="name" ng-bind="tran.buyer"></h3>
                              </div>
                          </div>
                      </div> <!-- end front panel -->
@@ -37,17 +37,17 @@
                        <div class="content">
                            <div class="main">
                               <p class="profession">Request from</p>
-                               <h3 class="name">Michael</h3>
+                               <h3 class="name"  ng-bind="tran.buyer"></h3>
                                </br></br></br>
                                <p class="profession">He(She) wants to buy</p>
-                                <h3 class="name">Basketball</h3>
+                                <h3 class="name" ng-bind="tran.item"></h3>
                               </br></br></br>
                            </div>
                        </div>
                          <div class="footer">
                            <div class="social-links text-center">
-                             <button type="button" class="btn btn-success btn-sm">Accept</button>
-                             <button type="button" class="btn btn-danger btn-sm">Decline</button>
+                             <button type="button" class="btn btn-success btn-sm" ng-click="acceptTransaction()">Accept</button>
+                             <button type="button" class="btn btn-danger btn-sm" ng-click="declineTransaction()">Decline</button>
                              <button type="button" class="btn btn-info btn-sm">Message</button>
                            </div>
                          </div>
