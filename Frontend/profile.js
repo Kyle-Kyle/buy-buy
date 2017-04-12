@@ -246,4 +246,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     }
   }
 
+  $scope.getFollowee();
+
 });
