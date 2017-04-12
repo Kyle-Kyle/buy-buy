@@ -2,6 +2,13 @@
 <html>
 <head>
   <link rel="stylesheet" href="css/btn_anim.css">
+  <link href="css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+
+  <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
+  <script src="lib/bootstrap-tagsinput.js"></script>
+  <script src="lib/bootstrap-tagsinput-angular.js"></script>
 </head>
 <body>
   <nav class="navbar navbar-default navbar-fixed-top" >
@@ -39,12 +46,12 @@
         </ul>
 
         <!-- search entry -->
-          <form class="navbar-form navbar-left" ng-hide="is_index" ng-controller="searchController">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search" ng-model="keyword">
-            </div>
-            <button type="submit" class="btn btn-default" ng-click="goto(get_search_route(false));">Submit</button>
-          </form>
+        <form class="navbar-form navbar-left" ng-hide="is_index" ng-controller="searchController">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search" ng-model="keyword">
+          </div>
+          <button type="submit" class="btn btn-default" ng-click="goto(get_search_route(false));">Submit</button>
+        </form>
 
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#" data-toggle="modal" data-target="#login-modal"
