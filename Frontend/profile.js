@@ -104,7 +104,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
       var tran;
       $http.get('/users/self/transactions')
       .then(function(response) {
-        $scope.tid_list = response.data.filter(function(ele) {
+        $scope.tid_list = response.data.reverse().filter(function(ele) {
           return ele.status_code == 1;
         });
         console.log($scope.tid_list);
