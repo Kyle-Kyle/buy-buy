@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <style>
+  .bootstrap-tagsinput {
+    width: 100%;
+  }
+  </style>
+
+  <script src="tools.js"></script>
+</head>
+<body>
+    <div class="modal-dialog" ng-controller="postController">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Post your items</h4>
+        </div>
+
+        <div class="container-fluid">
+          <form name="PostForm" role="form">
+            <!-- title -->
+            <div class="form-group has-feedback" ng-class = "PostForm.title.$dirty?
+              (titleValid?'has-success':'has-error'):''">
+              <label for="title">Title<font color="red">*</font></label>
+              <input type="text" class="form-control" name="title" id="title" ng-model="title" ng-change="validateTitle(PostForm.title.$dirty)" required/>
+              <span class="glyphicon form-control-feedback"
+              ng-class="titleValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="PostForm.title.$dirty"></span>
+              <span class="help-block" ng-show="PostForm.title.$dirty && !titleValid" >Title is required</span>
+            </div>
+
+            <!-- category -->
+            <div class="form-group">
+              <label for="category">Category<font color="red">*</font></label>
+              <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory"></select>
+            </div>
+
+            <!-- quality -->
+            <div class="form-group has-feedback"ng-class = "PostForm.quantity.$dirty?
+              (quantityValid?'has-success':'has-error'):''">
+              <label for="quantity">Quantity<font color="red">*</font></label>
+              <input class="form-control" name="quantity"type="number" id="quantity" ng-model="quantity"ng-init="quantityValid=true;"ng-change="validateQuantity(PostForm.quantity.$dirty)"required/>
+              <span class="glyphicon form-control-feedback"
+              ng-class="quantityValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="PostForm.quantity.$dirty"></span>
+              <span ng-show="PostForm.quantity.$dirty && !quantityValid" class="help-block">{{quantityErrorMsg}}</span>
+            </div>
+            <!-- condition -->
+            <div class="form-group">
+              <label for="condition">Condition<font color="red">*</font></label>
+              <select  class="form-control" name="condition" ng-model="condition" id="condition"required>
+                <option value="0"selected="selected">Like New</option>
+                <option value="1">Very good</option>
+                <option value="2">Good</option>
+                <option value="3">Acceptable</option>
+                <option value="4">Bad</option>
+              </select>
+            </div>
+
+            <!-- price -->
+            <div class="form-group has-feedback"ng-class = "PostForm.price.$dirty?
+              (priceValid?'has-success':'has-error'):''">
+              <label for="price">Price<font color="red">*</font></label>
+              <input class="form-control" name="price" type="number" id="price" ng-model="price" ng-change="validatePrice(PostForm.price.$dirty)"required/>
+              <span class="glyphicon form-control-feedback"
+              ng-class="priceValid?'glyphicon-ok':'glyphicon-remove'"
+              ng-show="PostForm.price.$dirty"></span>
+              <span ng-show="PostForm.price.$dirty" class="help-block">{{priceErrorMsg}}</span>
+            </div>
+
+            <!-- description -->
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" rows="3" maxlength="300" ng-model="description"></textarea>
+              <small id="desciptionHelp" class="form-text text-muted">Maxlength is 300</small>
+            </div>
+
+            <!-- tag -->
+            <div class="form-group">
+              <label for="tag">Tag</label><br/>
+              <input class="form-control" type="text" data-role="tagsinput" id="tag" name="tag" ng-model="tags">
+            </div>
+
+            <!-- picture -->
+            <div class="form-group">
+              <label for="picture">Picture</label>
+              <input type="file" accept="image/*" name="pic" class="file" multiple data-show-upload="false" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary smooth-trans-btn"
+              ng-disabled="!priceValid || !titleValid || !quantityValid" ng-click="post_item()">
+              Post</button>
+              <a href="#" class="btn btn-link" onclick="$('#post-modal').modal('toggle')">Cancel</a>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
+
+      </div>
+  </body>
+</html>

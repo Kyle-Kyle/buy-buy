@@ -1,6 +1,5 @@
-angular.module('postApp')
-.controller('postController', function($scope, $http, $cookies, $interval){
-
+var postController = function($scope, $http, $cookies) {
+  // post modal controller function
   $scope.get_category_list = function() {
     $http.get("/categories")
     .then(function(response) {
@@ -72,11 +71,7 @@ angular.module('postApp')
       console.log("post item");
       // generage data
       var tagarray = $scope.tags.split(",");
-      $scope.attributes = {
-        'title': $scope.title,
-        'description': $scope.description,
-        'condition': $scope.condition
-      };
+      console.log($scope.title);
 
       // post item to server
       $http.post("/items/create", {
@@ -90,11 +85,12 @@ angular.module('postApp')
           "condition": $scope.condition
         })
       })
-      .then(function mySuccess(response) {
+      .then(function(response) {
         console.log(response);
         console.log("post item");
         $scope.response = response;
         if ($scope.response.data.feedback == "Success") {
+          var iid = $scope.response.data.item._id;
           // successfully post
           // if there is a picture
           if ($scope.fd.get('pic')){
@@ -108,9 +104,11 @@ angular.module('postApp')
             .then(function uploadSuccess(fileResponse) {
               console.log(fileResponse);
               if (fileResponse.data.feedback == "Success") {
-                window.location = "item_detail.html";
+                window.location.href = 'item_detail.html?' + iid;
               }
             })
+          } else {
+            window.location.href = 'item_detail.html?' + iid;
           }
         }
       })
@@ -118,4 +116,4 @@ angular.module('postApp')
   }
 
   $scope.get_category_list();
-});
+}
