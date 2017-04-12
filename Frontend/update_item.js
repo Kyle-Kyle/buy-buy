@@ -106,6 +106,20 @@ angular.module('updateItemApp')
     }
   }
 
+  // delete the item
+  $scope.delete = function() {
+    if ($scope.user != undefined) {
+      $http.delete('/items/' + $scope.item_id)
+      .then(function(response) {
+        if (response.data.feedback == "Success") {
+          window.location = "profile.html";
+        }
+        else {
+          window.location = "item_detail.html?" + $scope.item_id;
+        }
+      })
+    }
+  }
   // submit the data
   $scope.update_item = function() {
     if ($scope.user != undefined) {
