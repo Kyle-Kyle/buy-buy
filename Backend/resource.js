@@ -510,7 +510,6 @@ app.get('/search', function(req, res){//search is not in order
 	var items=[];
 	var condition = {quantity: {$gt: 0}};
 	if(typeof(keyword) != 'undefined'){
-		keyword = escape_html(keyword);
 		condition.$or = [];
 		condition.$or.push({'attributes.title': new RegExp(keyword, 'i')});
 		condition.$or.push({'attributes.description': new RegExp(keyword, 'i')});
@@ -532,9 +531,6 @@ app.get('/search', function(req, res){//search is not in order
 			tags = JSON.parse(tags);
 		}catch(e){
 			return res.send({feedback: 'Failure'});
-		}
-		for(var i=0; i<tags.length; i++){
-			tags[i] = escape_html(tags[i]);
 		}
 		if(!('$or' in condition))condition.$or = [];
 		condition.$or.push({'tags': {$in: tags}});
