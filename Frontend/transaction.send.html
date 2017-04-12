@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
 </head>
 <body>
-    <div class="modal-dialog">
+  <div class="modal-dialog">
 
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <label>Transction Request</label>
-        </div>
-        <form class="container-fluid">
-          <div>
-            <div class="form-action" align="center">
-              <button class="btn btn-success" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-click="createTransaction()">submit</button>
-              <button class="btn btn-default" data-dismiss="modal">cancel</button>
-            </div>
-          </div>
-        </form>
-        <div class="modal-footer"></div>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <label>Transction Request</label>
       </div>
+      <form class="container-fluid">
+        <div>
+          <div class="form-action" align="center">
+            <button class="btn btn-success" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-click="createTransaction()">submit</button>
+            <button class="btn btn-default" data-dismiss="modal">cancel</button>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer"></div>
     </div>
+  </div>
 </body>

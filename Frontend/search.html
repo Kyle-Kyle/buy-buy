@@ -4,11 +4,11 @@
 
   <script src="tools.js"></script>
 
+  <!-- price slide -->
   <script>
   var min_price = 0;
   var max_price = 1000;
   angular.element(document).ready(function () {
-    console.log($( "#slider-range" ));
     $( "#slider-range" ).slider({
       range: true,
       min: min_price,
@@ -29,6 +29,14 @@
       $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
       " - $" + $( "#slider-range" ).slider( "values", 1 ) );
     }
+  });
+  </script>
+
+  <script>
+  $("#keyword").keyup(function(event){
+    if(event.keyCode == 13){
+        $("#submit").click();
+      }
   });
   </script>
 
@@ -57,7 +65,7 @@
           <div class="col-md-12">
 
               <div class="input-group input-group-lg" id="adv-search">
-                <input type="text" class="form-control" placeholder="Search for items" ng-model="keyword"/>
+                <input id="keyword" type="text" class="form-control" placeholder="Search for items" ng-model="keyword"/>
                 <div class="input-group-btn">
                   <div class="btn-group btn-group-lg" role="group">
                     <div class="dropdown dropdown-lg">
@@ -80,7 +88,7 @@
                         </form>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" ng-click="submit_search(get_search_route(true))"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    <button id="submit" type="submit" class="btn btn-primary" ng-click="submit_search(get_search_route(true))"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                   </div>
                 </div>
               </div>
