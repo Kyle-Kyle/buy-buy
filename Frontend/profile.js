@@ -259,7 +259,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     }
   }
 
-  $scope.updateProfile = function() {
+  $scope.submit = function() {
     if ($scope.owner_id == "") {
       $http.put('/users/update',
         {

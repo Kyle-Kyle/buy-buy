@@ -44,7 +44,7 @@
                 <textarea class="form-control" rows="5" name="description" ng-model="user.user.profile.description"></textarea>
               </div>
               <br>
-              <button class="btn btn-primary" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-disabled="myForm.name.$pristine && myForm.email.$pristine && myForm.description.$pristine" ng-click="updateProfile()">Submit</button>
+              <button class="btn btn-primary" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-disabled="myForm.name.$pristine && myForm.email.$pristine && myForm.description.$pristine" ng-click="submit()">Submit</button>
               <button class="btn btn-default" data-dismiss="modal">cancel</button>
             </form>
           </div>
