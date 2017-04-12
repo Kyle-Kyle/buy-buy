@@ -126,7 +126,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
             t.buyer = response.data.item.name;
           });
           //get item
-          $http.get('/items/' +  tran.iid);
+          $http.get('/items/' +  tran.iid)
           .then(function(response) {
             if (ite.data.feedback = "Success") {
               t.item = response.data.user.username;
