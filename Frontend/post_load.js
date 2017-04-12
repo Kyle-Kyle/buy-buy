@@ -1,6 +1,14 @@
 angular.module('postApp')
 .controller('postController', function($scope, $http, $cookies, $interval){
 
+  $scope.get_category_list = function() {
+    $http.get("/categories")
+    .then(function(response) {
+      $scope.categories = response.data.categories;
+      $scope.selectedCategory = $scope.categories[0]._id;
+    });
+  };
+
   // get pic file
   $scope.fd = new FormData();
   $scope.uploadFile = function(files) {
@@ -108,4 +116,6 @@ angular.module('postApp')
       })
     }
   }
+
+  $scope.get_category_list();
 });

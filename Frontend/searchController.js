@@ -25,7 +25,6 @@ var searchController = function($scope, $http, $timeout) {
       })
       $scope.selectedCategory = $scope.categories[0]._id;
     });
-
   };
 
   $scope.get_search_route = function(advanced) {
