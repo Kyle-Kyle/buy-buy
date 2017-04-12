@@ -5,9 +5,10 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   $scope.is_profile = true;
 
   // dynamic loading
-  $scope.user_followees={url:"user_list.html"};
+  $scope.user_list={url:"user_list.html"};
   $scope.item_list={url:"item_list.html"};
   $scope.user_info={url:"user_info.html"};
+  $scope.transaction={url:"transaction_list.html"}
 
   // verify credential
   $scope.user_name = $cookies.get("logged_in");
@@ -55,6 +56,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
 
   $scope.items = [];
   $scope.users = [];
+  $scope.followee = [];
 
   // get following info
   if ($scope.user_name != undefined) {
@@ -139,7 +141,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     $scope.getFollowee = function() {
       if ($scope.owner_id == "") {
         var follist = [];
-        var followees = [];
+        $scope.followee = [];
         // get followee
         $http.get('/follow/followees')
         .then(function(response) {
@@ -155,11 +157,11 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
             .then(function(response) {
               console.log(response)
               if (response.data.feedback == "Success") {
-                followees.push(response.data.user);
+                $scope.followee.push(response.data.user);
               }
             })
           }
-          $scope.users = followees;
+          $scope.users = $scope.followee;
           console.log($scope.users);
         });
       }
@@ -171,33 +173,49 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
 
     $scope.getFollower = function() {
       if ($scope.owner_id == "") {
-      var follist = [];
-      var followers = [];
-      // get follower
-      $http.get('/follow/followers')
-      .then(function(response) {
-        follist = response.data.followers;
-        console.log(response);
-      }).then(function(response) {
+        var follist = [];
+        var followers = [];
+        // get follower
+        $http.get('/follow/followers')
+        .then(function(response) {
+          follist = response.data.followers;
+          console.log(response);
+        }).then(function(response) {
 
-        // get the detail of every followers
-        var f;
-        for (f in follist) {
-          $http.get('/users/' + follist[f])
-          .then(function(response) {
-            if (response.data.feedback == "Success") {
-              followers.push(response.data.user);
-            }
-          });
-        }
-      });
-    }
-    else {
-      console.log("not allowed");
-    }
+          // get the detail of every followers
+          var f;
+          for (f in follist) {
+            $http.get('/users/' + follist[f])
+            .then(function(response) {
+              if (response.data.feedback == "Success") {
+                followers.push(response.data.user);
+              }
+            });
+          }
+        });
+      }
+      else {
+        console.log("not allowed");
+      }
       $scope.users = followers;
     }
 
+  }
+
+  $scope.isFollowed = function(u_id) {
+    var result = $scope.followee.filter(function(ele) {
+      return ele._id == u_id;
+    })
+    if (result.length != 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  $scope.goProfile = function(u_id) {
+    window.location = "profile.html?" + u_id;
   }
 
   $scope.changeTo = function(url) {
@@ -205,22 +223,28 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   }
 
 
-      $scope.Follow = function(follow_id) {
-        $http.get('/follow/' + follow_id)
-        .then(function(response) {
-          console.log(response);
-          $scope.followed = true;
-        })
-      }
+  $scope.Follow = function(follow_id) {
+    $http.get('/follow/' + follow_id)
+    .then(function(response) {
+      $scope.getFollowee();
+      $scope.getFollower();
+    })
+  }
 
-      $scope.Unfollow = function(unfollow_id) {
-        console.log("unfollow");
-        $http.get('/unfollow/' + unfollow_id)
-        .then(function(response) {
-          console.log(response);
-          $scope.followed = false;
-        })
-      }
+  $scope.Unfollow = function(unfollow_id) {
+    $http.get('/unfollow/' + unfollow_id)
+    .then(function(response) {
+      $scope.getFollowee();
+      $scope.getFollower();
+    })
+  }
+
+  $scope.updateProfile = function() {
+    console.log($scope.owner_id);
+    if ($scope.owner_id == "") {
+      window.location = "profile.update.html";
+    }
+  }
 
 
 });

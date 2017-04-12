@@ -64,8 +64,8 @@
                     </a>
                   </li>
                   <li>
-                    <a data-toggle="tab"href="#Sold" ng-click="getSold()">
-                      <i class="glyphicon glyphicon-transfer"></i>Sold
+                    <a data-toggle="tab"href="#Transaction" ng-click="getTransaction()">
+                      <i class="glyphicon glyphicon-bell"></i>Transaction list
                     </a>
                   </li>
                   <li>
@@ -80,11 +80,11 @@
           </div>
           <div ng-class="'col col-xs-7 col-sm-8 col-md-9 col-lg-9'">
             <div class="profile-content tab-content">
-              <div class="tab-pane fade in active" id="Following" ng-include="user_followees.url"></div>
-              <div class="tab-pane fade" id="Follower" ng-include="user_followers.url"></div>
+              <div class="tab-pane fade in active" id="Following" ng-include="user_list.url"></div>
+              <div class="tab-pane fade" id="Follower" ng-include="user_list.url"></div>
               <div class="tab-pane fade" id="Selling" ng-include="item_list.url">
               </div>
-              <div class="tab-pane fade" id="Sold" ng-include="item_list.url">
+              <div class="tab-pane fade" id="Transaction" ng-include="transaction.url">
               </div>
             </div>
           </div>
