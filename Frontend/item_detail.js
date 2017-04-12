@@ -18,20 +18,20 @@ angular.module('itemApp')
     console.log($scope.item);
     switch($scope.item.attributes.condition) {
       case "1":
-        $scope.condition = "Like New";
-        break;
+      $scope.condition = "Like New";
+      break;
       case "2":
-        $scope.condition = "Very Good";
-        break;
+      $scope.condition = "Very Good";
+      break;
       case "3":
-        $scope.condition = "Good";
-        break;
+      $scope.condition = "Good";
+      break;
       case "4":
-        $scope.condition = "Acceptable";
-        break;
+      $scope.condition = "Acceptable";
+      break;
       case "5":
-        $scope.condition = "Bad";
-        break;
+      $scope.condition = "Bad";
+      break;
     }
   }).then(function() {
     // get owner information
@@ -39,7 +39,7 @@ angular.module('itemApp')
     .then(function(response) {
       console.log(response);
       $scope.owner = response.data;
-      $scope.isOwner = $scope.owner
+      $scope.isOwner = ($scope.owner.user.username == $scope.user);
     });
   });
 
@@ -69,17 +69,35 @@ angular.module('itemApp')
 
   // create transaction
   $scope.createTransaction = function() {
+    console.log("create transaction");
     if ($scope.user == undefined) {
+      console.log("you are not logged in now");
       $scope.comment_error = "you are not logged in now!";
     }
     else {
+      console.log($scope.isOwner);
+      if ($scope.isOwner == false) {
+        $http.post('/transactions/create', {
+          'iid' : $scope.item_id
+        })
+        .then(function(response) {
+          console.log(response);
+        })
+      }
+      else {
+        console.log("owner!");
+        window.location = "update_item.html?" + $scope.item_id;
+      }
+    }
+  }
 
-      $http.post('/transactions/create', {
-        'iid' : $scope.item_id
-      })
-      .then(function(response) {
-        console.log(response);
-      })
+  // go to profile page
+  $scope.goProfile = function() {
+    if ($scope.isOwner) {
+      wondow.location = "profile.html";
+    }
+    else {
+      window.location = "profile.html?" + $scope.owner_id;
     }
   }
 
