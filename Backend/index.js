@@ -29,4 +29,4 @@ require('./control');
 app.listen(app.get('port'), function(){
     console.log('Buy-Buy is running on port', app.get('port'));
 });
-require('./generate');
+//require('./generate');

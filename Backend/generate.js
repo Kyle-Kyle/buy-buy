@@ -125,7 +125,7 @@ model.User.find({}, function(err, users){
 	})
 });
 */
-
+/*
 // create images
 model.User.find({}, function(err, users){
 	var i = 0;
@@ -168,6 +168,6 @@ model.User.find({}, function(err, users){
 	function(err){
 		console.log('done');
 	});
-})
+})*/
 
 
