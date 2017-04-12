@@ -65,7 +65,8 @@
           <!-- category -->
           <div class="form-group">
             <label for="category">Category<font color="red">*</font></label>
-            <select class="form-control" name="category" ng-model="category" id="category" required>
+            <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory" disabled="disabled"></select>
+            <!--select class="form-control" name="category" ng-model="category" id="category" required>
               <optgroup label="others">
                 <option>others</option>
               </optgroup>
@@ -85,7 +86,7 @@
                 <option>e-elecrronic</option>
                 <option>musician</option>
               </optgroup>
-            </select>
+            </select-->
           </div>
 
           <!-- quality -->
@@ -166,6 +167,15 @@ angular
 </script>
 <script src="login.js"></script>
 <script src="register.js"></script>
+
+<!-- load post controller -->
+<script src="postController.js"></script>
+<script>
+  angular
+    .module("indexApp")
+    .controller("postController", postController);
+</script>
+
 <!-- load search controller -->
 <script src="searchController.js"></script>
 <script>

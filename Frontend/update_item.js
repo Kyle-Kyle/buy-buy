@@ -67,12 +67,12 @@ angular.module('updateItemApp')
   // verify credential
   $scope.user = $cookies.get("logged_in");
 
-  $scope.categories_list = [];
+  $scope.categories = [];
   // get category list
   $http.get("/categories")
   .then(function(response) {
-    $scope.categories_list = response.data.categories;
-    console.log($scope.categories_list);
+    $scope.categories = response.data.categories;
+    console.log($scope.categories);
   })
 
 
@@ -132,13 +132,21 @@ angular.module('updateItemApp')
         'condition': $scope.condition
       };
 
-      var cindex = $scope.categories_list.filter(function(obj) {
-        return obj.name == $scope.category;
+      console.log({
+        'cid': $scope.selectedCategory,
+        'price': $scope.price.toString(),
+        'quantity': $scope.quantity.toString(),
+        'tags': JSON.stringify(tagarray),
+        'attributes': JSON.stringify({
+          "title": $scope.title,
+          "description": $scope.description,
+          "condition": $scope.condition
+        })
       })
-
+      console.log($scope.item_id)
       // post item to server
       $http.put("/items/" + $scope.item_id, {
-        'cid': cindex[0]._id,
+        'cid': $scope.selectedCategory,
         'price': $scope.price.toString(),
         'quantity': $scope.quantity.toString(),
         'tags': JSON.stringify(tagarray),
