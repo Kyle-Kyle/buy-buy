@@ -219,15 +219,11 @@ app.get('/users/logout', function(req, res){
 		return res.send({feedback: 'Success'});
 	})
 })
-app.get('/secret_entrance', function(req, res){
-	model.User.get('58e7896bb482cb0f902a55fc', function(result){
-		req.session.uid = result.user._id;
-		res.send('Login success!\n');
+app.get('/faker', function(req, res){
+	var username = req.query.username;
+	model.User.findOne({username: username}, function(err, user){
+		if(err)return res.send({feedback: 'Failure'});
+		req.session.uid = user._id;
+		return res.send({feedback: 'Success'});
 	})
-});
-app.get('/secret_entrance2', function(req, res){
-	model.User.get('58e5fbe40eb7a21abbbafe0d', function(result){
-		req.session.uid = result.user._id;
-		res.send('Login success!\n');
-	})
-});
+})
