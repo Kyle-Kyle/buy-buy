@@ -44,39 +44,40 @@
                 <div ng-include="user_info.url">
 
                 </div>
-                <!-- END SIDEBAR BUTTONS -->
-                <!-- SIDEBAR MENU -->
-                <div class="profile-usermenu">
-                  <ul class="nav navs-tab">
-                    <li class="active">
-                      <a data-toggle="tab"href="#Following" ng-click="getFollowee()">
-                        <i class="glyphicon glyphicon-eye-open"></i>Following
-                      </a>
-                    </li>
-                    <li>
-                      <a data-toggle="tab"href="#Follower" ng-click="getFollower()">
-                        <i class="glyphicon glyphicon-eye-open"></i>Follower
-                      </a>
-                    </li>
-                    <li>
-                      <a data-toggle="tab" href="#Selling" ng-click="getSell()">
-                        <i class="glyphicon glyphicon-transfer"></i>Selling
-                      </a>
-                    </li>
-                    <li>
-                      <a data-toggle="tab"href="#Transaction" ng-click="getTransaction()">
-                        <i class="glyphicon glyphicon-bell"></i>Transaction list
-                      </a>
-                    </li>
-                    <li>
-                      <a data-toggle="tab"href="#Contact">
-                        <i class="glyphicon glyphicon-flag"></i>Contact Us
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <!-- END MENU -->
+
+              <!-- END SIDEBAR BUTTONS -->
+              <!-- SIDEBAR MENU -->
+              <div class="profile-usermenu">
+                <ul class="nav navs-tab">
+                  <li class="active">
+                    <a data-toggle="tab"href="#Following" ng-click="getFollowee()">
+                      <i class="glyphicon glyphicon-eye-open"></i>Following
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab"href="#Follower" ng-click="getFollower()">
+                      <i class="glyphicon glyphicon-eye-open"></i>Follower
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab" href="#Selling" ng-click="getSell()">
+                      <i class="glyphicon glyphicon-transfer"></i>Selling
+                    </a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab"href="#Transaction" ng-click="getTransaction()">
+                      <i class="glyphicon glyphicon-bell"></i>Transaction list
+                    </a>
+                  </li>
+                  <li>
+                    <a href="contact_us.html">
+                      <i class="glyphicon glyphicon-flag"></i>Contact Us
+                    </a>
+                  </li>
+                </ul>
               </div>
+              <!-- END MENU -->
+
             </div>
             <div ng-class="'col col-xs-7 col-sm-8 col-md-9 col-lg-9'">
               <div class="profile-content tab-content">
@@ -87,6 +88,7 @@
                 <div class="tab-pane fade" id="Transaction" ng-include="transaction.url">
                 </div>
               </div>
+
             </div>
           </div>
         </div>
