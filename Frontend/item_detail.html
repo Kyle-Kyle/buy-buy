@@ -15,10 +15,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
-
   <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
+  <script src="lib/bootstrap-tagsinput.js"></script>
+  <script src="lib/bootstrap-tagsinput-angular.js"></script>
+
   <link rel="stylesheet" href="css/user_card.css">
+  <link rel="stylesheet" href="css/social-share-kit.css" type="text/css">
   <script src="new_card.js"></script>
+  <script type="text/javascript" src="lib/social-share-kit.min.js"></script>
+
   <style>
   @import url('https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900');
   .detailcard{
@@ -48,30 +53,30 @@
     color: BLACK;
   }
   .smalldetailcard .detailcardname {
-      font-family: 'Arima Madurai', cursive;
-      font-size: 22px;
-      font-weight: 500;
-      line-height: 28px;
-      text-align: center;
-      text-transform: capitalize;
+    font-family: 'Arima Madurai', cursive;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 28px;
+    text-align: center;
+    text-transform: capitalize;
   }
   .detailcard .detailcardtitle {
-      font-family: 'Arima Madurai', cursive;
-      font-size: 35px;
-      font-weight: 700;
-      line-height: 35px;
-      text-align: left;
-      text-transform: capitalize;
-      color:WHITE;
+    font-family: 'Arima Madurai', cursive;
+    font-size: 35px;
+    font-weight: 700;
+    line-height: 35px;
+    text-align: left;
+    text-transform: capitalize;
+    color:WHITE;
   }
- .detailcardtitle small{
-      color:WHITE;
-      font-family: 'Arima Madurai', cursive;
-      font-size: 25px;
-      font-weight: 700;
-      line-height: 35px;
-      text-align: center;
-      text-transform: capitalize;
+  .detailcardtitle small{
+    color:WHITE;
+    font-family: 'Arima Madurai', cursive;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 35px;
+    text-align: center;
+    text-transform: capitalize;
   }
   #titlePrice{
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url("img/price.png");
@@ -79,20 +84,20 @@
     margin-bottom: 10px;
   }
   .smalldetailcard .detailcardcontent {
-      font-family: 'Arima Madurai', cursive;
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 20px;
-      text-align: center;
-      text-transform: capitalize;
+    font-family: 'Arima Madurai', cursive;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 20px;
+    text-align: center;
+    text-transform: capitalize;
   }
   .smalldetailcard .detailcardtag {
-      font-family: 'Arima Madurai', cursive;
-      font-size: 10px;
-      font-weight: 150;
-      line-height: 12px;
-      text-align: center;
-      text-transform: capitalize;
+    font-family: 'Arima Madurai', cursive;
+    font-size: 10px;
+    font-weight: 150;
+    line-height: 12px;
+    text-align: center;
+    text-transform: capitalize;
   }
   .middle-text{
     position: absolute;
@@ -105,7 +110,7 @@
   }
   .buy-img:hover{
 
-      opacity: 0.3;
+    opacity: 0.3;
   }
   .hoverable{transition:box-shadow .55s;box-shadow:0}
   .hoverable:hover{transition:box-shadow .45s;box-shadow:0 8px 17px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19)}
@@ -166,19 +171,19 @@
         <div class="row col-md-8 col-xs-12">
           <div class="row col-md-6 col-xs-12" style="padding-left:20px">
             <div class="user_card-container" style="margin:10px;">
-            <div class="user_card">
-              <a href="#" ng-click="goProfile()"><div class="user_front">
+              <div class="user_card">
+                <a href="#" ng-click="goProfile()"><div class="user_front">
                   <div class="content">
-                      <div class="main">
-                          <h3 class="name" ng-bind="owner.user.username"></h3>
-                          <p class="text-center" ng-bind="owner.user.profile.description"></p>                      </div>
+                    <div class="main">
+                      <h3 class="name" ng-bind="owner.user.username"></h3>
+                      <p class="text-center" ng-bind="owner.user.profile.description"></p>                      </div>
                       <div class="footer">
-                          <i class="fa fa-mail-forward"></i> Auto Rotation
+                        <i class="fa fa-mail-forward"></i> Auto Rotation
                       </div>
-                  </div>
-              </div> <!-- end front panel -->
-              <div class="user_back">
-                  <div class="content">
+                    </div>
+                  </div> <!-- end front panel -->
+                  <div class="user_back">
+                    <div class="content">
                       <div class="main">
                         <p class="text-center">
                           <i class="glyphicon glyphicon-envelope"> </i>  {{owner.user.profile.email}}</br>
@@ -186,125 +191,140 @@
                         </p>
 
                       </div>
-                  </div>
-                  <div class="footer">
+                    </div>
+                    <div class="footer">
                       <div class="social-links text-center">
                         <button type="button" class="btn btn-success btn-sm" ng-click="Message()" ng-show="NotOwner()">Message</button>
                       </div>
-                  </div>
-              </div> <!-- end back panel --></a>
+                    </div>
+                  </div> <!-- end back panel --></a>
 
-            </div> <!-- end card -->
-<!-- end card -->
-        </div> <!-- end card-container -->
-          </div>
-          <div class="col-md-6 col-xs-12" ng-show="!isOwner" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
+                </div> <!-- end card -->
+                <!-- end card -->
+              </div> <!-- end card-container -->
+            </div>
+            <div class="col-md-6 col-xs-12" ng-show="!isOwner" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
               <a href="#" style="height:100%" data-toggle="modal" data-target="#buyModal">
                 <img class=" hoverable buy-img" src="img/buy.jpg" style="height:100%; width:100%; transition: .5s ease;"/ >
                 <span class="middle-text">Buy Now</span>
               </a>
-          </div>
-          <div class="col-md-6 col-xs-12" ng-show="isOwner" ng-click="createTransaction()" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
+            </div>
+            <div class="col-md-6 col-xs-12" ng-show="isOwner" ng-click="createTransaction()" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
               <a href="#" style="height:100%" data-toggle="modal" data-target="#buyModal">
                 <img class=" hoverable buy-img" src="http://www.dobson.net/wp-content/uploads/2015/07/Microsoft-Update.jpg" style="height:100%; width:100%; transition: .5s ease;"/ >
                 <span class="middle-text">Update</span>
               </a>
-          </div>
-          <div class="modal fade" ng-show="!isOwner" id="buyModal" role="dialog" ng-include="'transaction.send.html'"></div>
-          <div class="col-md-3 col-xs-6 ">
-            <div class="smalldetailcard hoverable">
-              <div class="detailcardname">Condition</br>
-                <span class="detailcardcontent" ng-bind="condition"></span>
+            </div>
+            <div class="modal fade" ng-show="!isOwner" id="buyModal" role="dialog" ng-include="'transaction.send.html'"></div>
+            <div class="col-md-3 col-xs-6 ">
+              <div class="smalldetailcard hoverable">
+                <div class="detailcardname">Condition</br>
+                  <span class="detailcardcontent" ng-bind="condition"></span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-xs-6 ">
-            <div class="smalldetailcard hoverable">
-              <div class="detailcardname">Category</br>
-                <span class="detailcardcontent" ng-bind="item.cid.name"></span>
+            <div class="col-md-3 col-xs-6 ">
+              <div class="smalldetailcard hoverable">
+                <div class="detailcardname">Category</br>
+                  <span class="detailcardcontent" ng-bind="item.cid.name"></span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-xs-6 ">
-            <div class="smalldetailcard hoverable">
-              <div class="detailcardname">Quantity</br>
-                <span class="detailcardcontent" ng-bind="item.quantity"></span>
+            <div class="col-md-3 col-xs-6 ">
+              <div class="smalldetailcard hoverable">
+                <div class="detailcardname">Quantity</br>
+                  <span class="detailcardcontent" ng-bind="item.quantity"></span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-xs-6 ">
-            <div class="smalldetailcard hoverable">
-              <div class="detailcardname" >Tag</br>
-                <div ng-repeat="x in item.tags" class="detailcardtag">
-                <span ng-bind="x"></span>
-                <span>&nbsp;</span>
+            <div class="col-md-3 col-xs-6 ">
+              <div class="smalldetailcard hoverable">
+                <div class="detailcardname" >Tag</br>
+                  <div ng-repeat="x in item.tags" class="detailcardtag">
+                    <span ng-bind="x"></span>
+                    <span>&nbsp;</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          </div>
-          <div class="col-md-6 col-xs-12">
-            <div class="smalldetailcard hoverable">
-              <div class="detailcardname">Description</br>
-                <span class="detailcardcontent" ng-bind="item.attributes.description" style="word-wrap:break-word;"></span>
+            <div class="col-md-6 col-xs-12">
+              <div class="smalldetailcard hoverable">
+                <div class="detailcardname">Description</br>
+                  <span class="detailcardcontent" ng-bind="item.attributes.description" style="word-wrap:break-word;"></span>
+                </div>
+              </div>
+              <div class="smalldetailcard hoverable">
+                <div class="detailcardname">Share the item!</div>
+                <div class="ssk-group detailcardcontent"  data-text="Look at {{item.attributes.title}}!" >
+                  <a href="" class="ssk ssk-facebook"></a>
+                  <a href="" class="ssk ssk-twitter"></a>
+                  <a href="" class="ssk ssk-google-plus"></a>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-6 col-xs-12">
-            <div class="smalldetailcard hoverable">
-              <div class="input-group">
-                <input class="form-control" placeholder="Add a comment" type="text" ng-model="comments">
-                <a href="" ng-click="addComment()"class="input-group-addon">
-                  <span class="glyphicon glyphicon-comment" ></span>
-                </a>
+            <div class="col-md-6 col-xs-12">
+              <div class="smalldetailcard hoverable">
+                <div class="input-group">
+                  <input class="form-control" placeholder="Add a comment" type="text" ng-model="comments">
+                  <a href="" ng-click="addComment()"class="input-group-addon">
+                    <span class="glyphicon glyphicon-comment" ></span>
+                  </a>
+                </div>
+                <table class="table table-striped" style="margin-bottom:0">
+                  <tbody>
+                    <tr ng-repeat="x in comments_array">
+                      <td width="30%"><a href="#" ><img style="max-height:50px; max-width:50px;" src="http://bootdey.com/img/Content/user_1.jpg" ></a></td>
+                      <td style="padding-left:0"><div style="margin-bottom:0;"class="well detailcardcontent" id="comment" ng-bind="x[1]"></textarea></div></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <table class="table table-striped" style="margin-bottom:0">
-                <tbody>
-                  <tr ng-repeat="x in comments_array">
-                    <td width="30%"><a href="#" ><img style="max-height:50px; max-width:50px;" src="http://bootdey.com/img/Content/user_1.jpg" ></a></td>
-                    <td style="padding-left:0"><div style="margin-bottom:0;"class="well detailcardcontent" id="comment" ng-bind="x[1]"></textarea></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          </div>
 
-          </div>
+
         </div>
-      </div>
-    </div>
 
 
-    </div>
-
-
-    <!-- load main controller -->
-    <script src="mainController.js"></script>
-    <script>
-      angular
+        <!-- load main controller -->
+        <script src="mainController.js"></script>
+        <script>
+        angular
         .module('indexApp', ['ngRoute', 'ngCookies'])
         .controller('mainController', mainController);
-    </script>
+        </script>
 
-    <!-- load login & register controller -->
-    <script src="login.js"></script>
-    <script src="register.js"></script>
+        <!-- load login & register controller -->
+        <script src="login.js"></script>
+        <script src="register.js"></script>
 
-    <!-- load search controller -->
-    <script src="searchController.js"></script>
-    <script>
-      angular
+        <!-- load post controller -->
+        <script src="postController.js"></script>
+        <script>
+          angular
+            .module("indexApp")
+            .controller("postController", postController);
+        </script>
+
+        <!-- load search controller -->
+        <script src="searchController.js"></script>
+        <script>
+        angular
         .module("indexApp")
         .controller("searchController", searchController)
-    </script>
+        </script>
 
-    <script>
-    angular.module('itemApp', ['ngRoute', 'ngCookies']);
-    </script>
-    <script src="item_detail.js"></script>
-    <script>
-    angular.element(function() {
-      angular.bootstrap(document, ['indexApp', 'itemApp'])
-    })
-    </script>
-
-  </body>
-  </html>
+        <script>
+        angular.module('itemApp', ['ngRoute', 'ngCookies']);
+        </script>
+        <script src="item_detail.js"></script>
+        <script>
+        angular.element(function() {
+          angular.bootstrap(document, ['indexApp', 'itemApp'])
+        })
+        </script>
+        <script type="text/javascript">
+        SocialShareKit.init();
+        </script>
+      </body>
+      </html>

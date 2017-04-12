@@ -125,7 +125,6 @@ User.prototype.recv_msg = function(uid, cb){
 }
 User.prototype.comment = function(info, cb){
 	if(typeof(info.content) == 'undefined' || !info.content)return cb({feedback: 'Failure', err_msg: 'Invalid information'});
-	info.content = escape_html(info.content);
 	var user = this;
 	Item.get(info.iid, function(result){
 		if(result.feedback != 'Success')return cb(result);

@@ -1,10 +1,4 @@
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
 </head>
 
 
@@ -44,7 +38,7 @@
                 <textarea class="form-control" rows="5" name="description" ng-model="user.user.profile.description"></textarea>
               </div>
               <br>
-              <button class="btn btn-primary" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-disabled="myForm.name.$pristine && myForm.email.$pristine && myForm.description.$pristine" ng-click="updateProfile()">Submit</button>
+              <button class="btn btn-primary" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-disabled="myForm.name.$pristine && myForm.email.$pristine && myForm.description.$pristine" ng-click="submit()">Submit</button>
               <button class="btn btn-default" data-dismiss="modal">cancel</button>
             </form>
           </div>

@@ -3,6 +3,7 @@ var path = require('path');
 var control = require('./control');
 var model = require('./model_ext');
 var check_login = control.check_login;
+var async = require('async');
 
 // Picture resource
 app.get('/items/:iid/pictures/:p', function(req, res){
@@ -197,6 +198,7 @@ app.put('/users/update', function(req, res){
 			else info[key] = '';
 		}
 		user.update_profile(info, function(result){
+			if(result.feedback != 'Success')res.send(result);
 			var user = result.user.toObject();
 			delete user['password'];
 			delete user['__v'];
@@ -508,7 +510,6 @@ app.get('/search', function(req, res){//search is not in order
 	var items=[];
 	var condition = {quantity: {$gt: 0}};
 	if(typeof(keyword) != 'undefined'){
-		keyword = escape_html(keyword);
 		condition.$or = [];
 		condition.$or.push({'attributes.title': new RegExp(keyword, 'i')});
 		condition.$or.push({'attributes.description': new RegExp(keyword, 'i')});
@@ -530,9 +531,6 @@ app.get('/search', function(req, res){//search is not in order
 			tags = JSON.parse(tags);
 		}catch(e){
 			return res.send({feedback: 'Failure'});
-		}
-		for(var i=0; i<tags.length; i++){
-			tags[i] = escape_html(tags[i]);
 		}
 		if(!('$or' in condition))condition.$or = [];
 		condition.$or.push({'tags': {$in: tags}});
@@ -560,6 +558,30 @@ app.get('/recommends', function(req, res){
 		Item.find({cid: category._id}).limit(app.get('recommend_size')).populate('cid').exec(function(err, items){
 			if(err)return res.send({feedback: 'Failure'});
 			return res.send({feedback: 'Success', items: items});
+		});
+	})
+})
+
+//buyer name, sell name, item name
+app.get('/users/self/transactions', function(req, res){
+	if(!check_login(req, res))return;
+	model.User.findById(req.session.uid, function(err, user){
+		var history = user.history;
+		var i = 0;
+		var trans_new = [];
+		async.whilst(function(){
+			return i < history.length;
+		},
+		function(next){
+			var tid = history[i];
+			model.Transaction.findById(tid).populate('iid', '_id attributes.title').populate('seller_id', '_id username').populate('buyer_id', '_id username').exec(function(err, transaction){
+				trans_new.push(transaction);
+				i += 1;
+				next();
+			})
+		},
+		function(err){
+			res.send(trans_new);
 		});
 	})
 })

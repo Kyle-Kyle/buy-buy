@@ -1,5 +1,5 @@
 angular.module('profileApp', ['ngRoute', 'ngCookies'])
-.controller('loadController', function($scope, $http, $cookies, $timeout) {
+.controller('loadController', function($scope, $http, $cookies, $timeout, $route) {
 
   // for item-list post-adjustment
   $scope.is_profile = true;
@@ -71,7 +71,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         // get post item list
         $http.get('/users/self/items')
         .then(function(response) {
-          console.log(response);
           console.log('load user items');
           post_item = response.data.items;
           $scope.items = post_item.filter(function(element) {
@@ -81,7 +80,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
             item.post_time = get_formatted_time(item.open_timestamp);
             item.condition_name = get_condition[item.attributes.condition-1];
           })
-          console.log($scope.items);
         });
       }
       else {
@@ -96,7 +94,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
             item.post_time = get_formatted_time(item.open_timestamp);
             item.condition_name = get_condition[item.attributes.condition-1];
           })
-          console.log($scope.items);
         })
       }
     }
@@ -105,35 +102,14 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     var t_list = [];
     $scope.getTransaction = function() {
       var tran;
-      for (tran in $scope.user.user.history) {
-        $http.get('/transactions/' + $scope.user.user.history[tran])
-        .then(function(response) {
-          console.log(response);
+      $http.get('/users/self/transactions')
+      .then(function(response) {
+        $scope.tid_list = response.data.filter(function(ele) {
+          return ele.status_code == 1;
+        });
+        console.log($scope.tid_list);
+      })
 
-          var tr = {};
-          tr.buyer_id = response.data.transaction.buyer_id;
-          tr.iid = response.data.transaction.iid;
-          t_list.push(tr);
-        })
-      }
-
-      for (tran in t_list) {
-
-        // get user
-        var t = {};
-          $http.get('/users/' + tran.buyer_id)
-          .then(function(buyer) {
-            t.buyer = response.data.item.name;
-          });
-          //get item
-          $http.get('/items/' +  tran.iid)
-          .then(function(response) {
-            if (ite.data.feedback = "Success") {
-              t.item = response.data.user.username;
-              $scope.tid_list.push(t);
-            }
-          })
-        }
       }
 
 
@@ -224,25 +200,71 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
 
 
   $scope.Follow = function(follow_id) {
+    console.log(follow_id);
     $http.get('/follow/' + follow_id)
     .then(function(response) {
-      $scope.getFollowee();
-      $scope.getFollower();
+      console.log("follow successfully");
+      $route.reload();
     })
   }
 
   $scope.Unfollow = function(unfollow_id) {
     $http.get('/unfollow/' + unfollow_id)
     .then(function(response) {
-      $scope.getFollowee();
-      $scope.getFollower();
+      $route.reload();
     })
   }
 
-  $scope.updateProfile = function() {
-    console.log($scope.owner_id);
+  $scope.acceptTransaction = function(tid) {
+    console.log(tid);
     if ($scope.owner_id == "") {
-      window.location = "profile.update.html";
+
+      // confirm
+      $http.get('/transactions/' + tid + '/confirm')
+      .then(function(response) {
+        console.log(response);
+        $scope.getTransaction();
+        $route.reload();
+      })
+
+    }
+  }
+
+  $scope.submit = function() {
+    if ($scope.owner_id == "") {
+      $http.put('/users/update',
+        {
+            "nickname": "",
+            "description": $scope.user.user.profile.description,
+            "phone": $scope.user.user.profile.phone,
+            "wechat": "",
+            "email": $scope.user.user.profile.email,
+            "qq": "",
+            "facebook": $scope.user.user.profile.facebook
+        })
+      .then(function(response) {
+        console.log(response);
+        if ($scope.feedback == "Success") {
+          console.log("Update success!");
+          $scope.getTransaction();
+        }
+        else {
+          console.log("Fail to update!");
+
+        }
+      })
+    }
+  }
+  $scope.declineTransaction = function(tid) {
+    console.log(tid);
+    if ($scope.owner_id == "") {
+
+      $http.get('/transactions/' + tid + '/reject')
+      .then(function(response) {
+        console.log(response);
+        $scope.getTransaction();
+        $route.reload();
+      })
     }
   }
 
