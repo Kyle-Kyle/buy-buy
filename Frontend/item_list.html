@@ -70,16 +70,16 @@
       var card_container = $(".item-card");
       var card_back = $(".item-card-back");
       var card_front = $(".item-card-front");
-      card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 200) + 'px');
-      card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 200) + 'px');
-      card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 200) + 'px');
+      card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 240) + 'px');
+      card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 240) + 'px');
+      card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 240) + 'px');
       window.addEventListener("resize", function(e) {
         card_container = $(".item-card");
         card_back = $(".item-card-back");
         card_front = $(".item-card-front");
-        card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 200) + 'px');
-        card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 200) + 'px');
-        card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 200) + 'px');
+        card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 240) + 'px');
+        card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 240) + 'px');
+        card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 240) + 'px');
       });
   }
   setTimeout(set_card_height_responsive, 1000);
