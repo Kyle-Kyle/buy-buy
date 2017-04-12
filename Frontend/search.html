@@ -1,40 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="keywords" content="buy-buy, buy2, second-hand, used, sell" />
-  <meta name="description" content="Second-hand goods online trading platform" />
-
-  <title>buy-buy</title>
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/btn_anim.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
-  <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
-  <script src="lib/bootstrap-tagsinput.js"></script>
-  <script src="lib/bootstrap-tagsinput-angular.js"></script>
-  <style>
-  .bootstrap-tagsinput {
-    width: 100%;
-  }
-  </style>
 
   <script src="tools.js"></script>
 
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="css/search.css">
-
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Petit+Formal+Script" />
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
   var min_price = 0;
   var max_price = 1000;
-  $( function() {
+  angular.element(document).ready(function () {
+    console.log($( "#slider-range" ));
     $( "#slider-range" ).slider({
       range: true,
       min: min_price,
@@ -59,6 +33,9 @@
   </script>
 
   <style>
+  .bootstrap-tagsinput {
+    width: 100%;
+  }
   #searchContainer{
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url("img/CUHK.jpg");
     background-size: 100% 100%;
@@ -68,17 +45,9 @@
     font: 400 3.5em/125% 'Petit Formal Script', Helvetica, Sans-serif;
   }
   </style>
-
 </head>
 <body style="margin-top:50px;">
-  <!-- dynamic loading of navigator and messenger -->
-  <div ng-controller="mainController">
-    <div id="navs" ng-include="navs.url"></div>
-    <div id='msg-window' ng-include="msg_view.url"
-    ng-show="msgShow" ng-init="msgShow=false"></div>
-  </div>
-
-  <div class="container-fluid" ng-controller="searchController" style="padding:0;">
+  <div class="container-fluid" style="padding:0;" ng-controller="searchController">
     <div class="container-fluid" id="searchContainer" >
       <div class="title col-lg-12 text-center" style="margin-bottom:50px;color:WHITE;font-size:40px ;font-weight:400;">
         Enjoy your search!
@@ -121,32 +90,5 @@
     </div>
     <div ng-include="'item_list.html'" style="margin-top: 5rem"></div>
   </div>
-
-
-
-
-  <!-- load main controller -->
-  <script src="mainController.js"></script>
-  <script>
-  angular
-  .module('indexApp', ['ngRoute', 'ngCookies'])
-  .controller('mainController', mainController);
-  </script>
-
-  <!-- load login & register controller -->
-  <script src="login.js"></script>
-  <script src="register.js"></script>
-
-  <!-- load search controller -->
-  <script src="searchController.js"></script>
-  <script>
-  angular
-  .module('searchApp', [])
-  .controller('searchController', searchController);
-  </script>
-
-  <script>
-  angular.bootstrap(document, ["indexApp", "searchApp"]);
-  </script>
 </body>
 </html>

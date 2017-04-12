@@ -107,13 +107,20 @@
               ng-model="description"></textarea>
           </div>
 
+          <span class="text-success animate-show-hide" ng-show="register_success">
+            A confirmation message has been sent to your e-mail account,
+            please finish the registration by confirm the e-mail.</span>
+
           <!-- form action buttons -->
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary smooth-trans-btn"
+          <div class="form-actions" style="margin-top: 15px;" ng-hide="register_success">
+            <button type="submit" class="btn btn-primary smooth-trans-btn" style="width: 100px;"
               ng-disabled="regForm.$invalid || regForm.passwordConfirm.$invalid || !unValid" >
                 Register</button>
-            <a href="#" class="btn btn-link" onclick="$('#register-modal').modal('toggle')">Cancel</a>
+            <a href="" class="btn btn-link" onclick="$('#register-modal').modal('toggle')">Cancel</a>
           </div>
+          <div class="form-actions" style="margin-top: 15px;" ng-show="register_success">
+            <button href="" class="btn btn-info" style="width: 100px;"
+              onclick="$('#register-modal').modal('toggle')">OK</button>
         </form>
       </div>
     </div>

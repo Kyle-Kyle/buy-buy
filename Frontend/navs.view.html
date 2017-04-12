@@ -39,12 +39,12 @@
         </ul>
 
         <!-- search entry -->
-        <form class="navbar-form navbar-left" ng-controller="searchController">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search" ng-model="keyword">
-          </div>
-          <button type="submit" class="btn btn-default" ng-click="goto(get_search_route(false));">Submit</button>
-        </form>
+          <form class="navbar-form navbar-left" ng-hide="is_index" ng-controller="searchController">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search" ng-model="keyword">
+            </div>
+            <button type="submit" class="btn btn-default" ng-click="goto(get_search_route(false));">Submit</button>
+          </form>
 
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#" data-toggle="modal" data-target="#login-modal"
