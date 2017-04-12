@@ -5,7 +5,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.login_view = {url: "login.view.html"};
   $scope.register_view = {url: "register.view.html"};
   $scope.msg_view = {url: "messenger.view.html"};
-
+  $scope.search = {url:"search.html"};
   // register messenger and watch messages
   $scope.messenger = {};
   $scope.new_message_num = 0;

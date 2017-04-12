@@ -17,11 +17,13 @@
 
   <script src="tools.js"></script>
 </head>
-<body>
+<body style="margin-top:50px;">
 
   <!-- dynamic loading of page content -->
   <div ng-app="indexApp" ng-controller="mainController">
-    <div id="navs" ng-include="navs.url"></div>
+    <div id="navs" ng-include="navs.url" ></div>
+    <div id="search" ng-include="search.url">
+    </div>
     <div id="recmd" ng-include="recmd.url"></div>
     <div id='msg-window' ng-include="msg_view.url"
       ng-show="msgShow" ng-init="msgShow=false"></div>
