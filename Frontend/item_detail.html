@@ -118,7 +118,6 @@
 
           </div>
           <div class="hoverable" style="margin:10px;">
-            <label>{{item.pictures}}</label>
             <div id="myCarousel" class="carousel slide " data-ride="carousel">
               <!-- Indicators -->
               <ol class="carousel-indicators" ng-repeat="x in item.pictures">
@@ -152,7 +151,7 @@
           <div class="row col-md-6 col-xs-12" style="padding-left:20px">
             <div class="user_card-container" style="margin:10px;">
             <div class="user_card">
-              <a href="#"><div class="user_front">
+              <a href="#" ng-click="goProfile()"><div class="user_front">
                   <div class="content">
                       <div class="main">
                           <h3 class="name" ng-bind="owner.user.username"></h3>
@@ -174,7 +173,6 @@
                   </div>
                   <div class="footer">
                       <div class="social-links text-center">
-                        <button type="button" class="btn btn-info btn-sm" ng-click="Follow()" ng-show="NotOwner()">Follow</button>
                         <button type="button" class="btn btn-success btn-sm" ng-click="Message()" ng-show="NotOwner()">Message</button>
                       </div>
                   </div>
@@ -184,13 +182,19 @@
 <!-- end card -->
         </div> <!-- end card-container -->
           </div>
-          <div class="col-md-6 col-xs-12" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
+          <div class="col-md-6 col-xs-12" ng-show="!isOwner" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
               <a href="#" style="height:100%" data-toggle="modal" data-target="#buyModal">
                 <img class=" hoverable buy-img" src="img/buy.jpg" style="height:100%; width:100%; transition: .5s ease;"/ >
                 <span class="middle-text">Buy Now</span>
               </a>
           </div>
-          <div class="modal fade" id="buyModal" role="dialog" ng-include="'transaction.send.html'"></div>
+          <div class="col-md-6 col-xs-12" ng-show="isOwner" ng-click="createTransaction()" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
+              <a href="#" style="height:100%" data-toggle="modal" data-target="#buyModal">
+                <img class=" hoverable buy-img" src="http://www.dobson.net/wp-content/uploads/2015/07/Microsoft-Update.jpg" style="height:100%; width:100%; transition: .5s ease;"/ >
+                <span class="middle-text">Update</span>
+              </a>
+          </div>
+          <div class="modal fade" ng-show="!isOwner" id="buyModal" role="dialog" ng-include="'transaction.send.html'"></div>
           <div class="col-md-3 col-xs-6 ">
             <div class="smalldetailcard hoverable">
               <div class="detailcardname">Condition</br>

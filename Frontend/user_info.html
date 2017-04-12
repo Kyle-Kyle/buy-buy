@@ -1,55 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="css/new_card.css">
-  <script src="new_card.js"></script>
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900" rel="stylesheet">
+  <link rel="stylesheet" href="css/user_info.css">
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900" rel="stylesheet">
 </head>
-<body>
-  <div class="container" style="width:100%;padding:0;">
-    <div class="card-container">
-       <div class="card">
-           <div class="front">
-               <div class="content">
-                   <div class="main">
-                       <h3 class="name" ng-bind="user.user.username"></h3>
-                       <p class="text-center" ng-bind="user.user.profile.description"></p>
-                       <p>
-                         <i class="glyphicon glyphicon-envelope" class="text-center"> </i>  {{user.user.email}}</br>
-                         <i class="glyphicon glyphicon-earphone" class="text-center"> </i>  {{user.user.profile.phone}}</br>
-                       </p>
-                   </div>
-               </div>
-               <div class="footer">
-                   <div class="social-links text-center">
-                     <button type="button" class="btn btn-info btn-sm" ng-click="Follow()">Follow</button>
-                     <button type="button" class="btn btn-success btn-sm" ng-click="Message()">Message</button>
-                   </div>
-               </div>
-           </div> <!-- end front panel -->
-           <div class="back">
-             <div class="content">
-                 <div class="main">
-                     <h3 class="name" ng-bind="user.user.username"></h3>
-                     <p class="text-center" ng-bind="user.user.profile.description"></p>
-                     <p>
-                       <i class="glyphicon glyphicon-envelope" class="text-center"> </i>  {{user.user.email}}</br>
-                       <i class="glyphicon glyphicon-earphone" class="text-center"> </i>  {{user.user.profile.phone}}</br>
-                     </p>
-                 </div>
-             </div>
-             <div class="footer">
-                 <div class="social-links text-center">
-                   <button type="button" class="btn btn-info btn-sm" ng-click="Follow()">Follow</button>
-                   <button type="button" class="btn btn-success btn-sm" ng-click="Message()">Message</button>
-                 </div>
-             </div>
-
-           </div> <!-- end back panel -->
-       </div> <!-- end card -->
-    <!-- end card -->
+<body >
+  <div class="user_cover">
+    <img src="https://www.clipartsgram.com/image/124089475-california-beaches-tumblr-wallpaper-3.jpg"/>
+  </div>
+  <div class="useruser">
+    <img class="img-circle" src="http://www.cse.cuhk.edu.hk/lyu/_media/wiki/lyu.jpg?w=166&h=&cache=cache"/>
+  </div>
+  <div class="content">
+    <div class="usermain">
+      <h3 class="name" ng-bind="user.user.username"></h3>
+      <p class="text-center"ng-bind="user.user.profile.description"></p>
+      <p class="text-center">
+        <a style="color:BLACK; text-decoration : none"href="mailto:{{user.user.email}}"><i class="glyphicon glyphicon-envelope" > </i> {{user.user.email}}</a>
+        <i class="glyphicon glyphicon-earphone" class="text-center"> </i> {{user.user.profile.phone}}
+      </p>
     </div>
   </div>
-
+  <div class="userfooter" style="margin-bottom:10px;">
+    <div class="social-links text-center">
+      <button type="button" class="btn btn-info btn-sm" ng-click="Follow()">Follow</button>
+      <button type="button" class="btn btn-success btn-sm" ng-click="Message()">Message</button>
+    </div>
+  </div>
 </body>
