@@ -8,6 +8,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   $scope.user_list={url:"user_list.html"};
   $scope.item_list={url:"item_list.html"};
   $scope.user_info={url:"user_info.html"};
+  $scope.transaction={url:"transaction_list.html"}
 
   // verify credential
   $scope.user_name = $cookies.get("logged_in");
