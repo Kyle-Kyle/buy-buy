@@ -6,22 +6,27 @@
   <link href="http://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Arima+Madurai:100,200,300,400,500,700,800,900" rel="stylesheet">
   <script src="tools.js"></script>
+
+  <!-- reponsive height for cards -->
+
+
 </head>
 <body>
   <div class="container" ng-show="no_match" align="center">
     <h4>No items match your search entry</h4>
   </div>
   <div class="container" style="width:100%;">
-    <div class="col col-md-1 hidden-xs hidden-sm">
+    <div class="col col-md-1 hidden-xs hidden-sm" ng-hide="is_profile">
     </div>
-    <div class="col col-md-10 col-xs-12">
+    <div class="col col-xs-12" ng-class="is_profile?'col-md-12':'col-md-10'">
       <h3 style="padding-bottom: 3rem" ng-show="is_recommend">Recommendations</h3>
-      <div ng-repeat="item in items" class="col col-md-3 col-sm-6" >
-        <div class="card-container">
+      <div ng-repeat="item in items" class="col col-sm-6" ng-class="is_profile?'col-md-4':'col-md-3'">
+        <div class="item-card card-container">
           <div class="card">
-            <a href="" ng-click="changeTo('item_detail.html?' + item._id)"><div class="front">
+            <a href="" ng-click="changeTo('item_detail.html?' + item._id)"><div class="item-card-front front">
               <div class="cover">
-                <img ng-src="/items/{{item._id}}/pictures/0" err-src="https://assets.rbl.ms/4314213/980x.jpg"/>
+                <img ng-src="/items/{{item._id}}/pictures/0"
+                  onError="this.onerror=null;this.src='https://assets.rbl.ms/4314213/980x.jpg';" />
               </div>
               <div class="content">
                 <div class="main">
@@ -33,7 +38,7 @@
                 </div>
               </div>
             </div> <!-- end front panel -->
-            <div class="back">
+            <div class="item-card-back back">
               <div class="content">
                 <div class="main">
                   <h4 class="text-center">Description</h4>
@@ -66,25 +71,26 @@
         </div> <!-- end card-container -->
       </div>
     </div>
-    <div class="col col-md-1 hidden-xs hidden-sm">
+    <div class="col col-md-1 hidden-xs hidden-sm" ng-hide="is_profile">
     </div>
   </div>
-  <!-- reponsive height for cards -->
-  <script>
-    var card_container = $(".card-container");
-    var card_back = $(".back");
-    var card_front = $(".front");
-    card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    window.addEventListener("resize", function(e) {
-      card_container = $(".card-container");
-      card_back = $(".back");
-      card_front = $(".front");
+</body>
+<script>
+  var set_card_height_responsive = function() {
+      var card_container = $(".item-card");
+      var card_back = $(".item-card-back");
+      var card_front = $(".item-card-front");
       card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
       card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
       card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
-    });
-  </script>
-</body>
+      window.addEventListener("resize", function(e) {
+        card_container = $(".item-card");
+        card_back = $(".item-card-back");
+        card_front = $(".item-card-front");
+        card_container.css("height", Math.floor(parseFloat(card_container.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+        card_back.css("height", Math.floor(parseFloat(card_back.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+        card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 180) + 'px');
+      });
+  }
+</script>
 </html>

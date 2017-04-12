@@ -3,7 +3,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   $scope.cancel = "profile.view.html";
 
   // verify credential
-  if ($cookies.get("logged_in") == "true") {
+  if ($cookies.get("logged_in") != undefined) {
     console.log("loged in");
     // GET self information
     $http.get("/users/self")
@@ -44,7 +44,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         console.log(response);
         if ($scope.feedback == "Success") {
           console.log("Update success!");
-          window.location = "profile.view.html";
+          window.location = "profile.html";
         }
         else {
           console.log("Fail to update!");

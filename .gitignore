@@ -2,4 +2,5 @@
 local
 Backend/node_modules
 Backend/test_index.js
+Frontend/search.old.html
 test_config.js

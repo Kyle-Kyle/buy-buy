@@ -173,6 +173,10 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
 
       $scope.update_messenger();
       check_msg_promise = $interval($scope.update_messenger, 1000);
+      if (localStorage.getItem("is_manual_login")) {
+        localStorage.removeItem("is_manual_login");
+        $window.location.reload();
+      }
     })
   };
   $scope.sign_out = function() {
