@@ -4,6 +4,7 @@
   "description": "A web applicatino project",
   "main": "index.js",
   "dependencies": {
+    "async": "^2.3.0",
     "body-parser": "^1.17.1",
     "crypto": "0.0.3",
     "escape-html": "^1.0.3",

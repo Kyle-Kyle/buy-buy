@@ -359,9 +359,9 @@ Follow_Schema.methods.delete_ = function(cb){
 
 // Transaction model
 var Transaction_Schema = db.Schema({
-	seller_id: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: user_val}},
-	buyer_id: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: user_val}},
-	iid: {type: db.Schema.ObjectId, required: true, validate: {isAsync: true, validator: item_val}},
+	seller_id: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
+	buyer_id: {type: db.Schema.ObjectId, ref: 'User', required: true, validate: {isAsync: true, validator: user_val}},
+	iid: {type: db.Schema.ObjectId, ref: 'Item', required: true, validate: {isAsync: true, validator: item_val}},
 	status_code: {type: Number, default: 1, enum: [1, 2, 3, 4, 5]},
 	timestamp: {type: Array, required: true}
 });
