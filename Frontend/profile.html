@@ -50,13 +50,13 @@
                 <div class="profile-usermenu">
                   <ul class="nav navs-tab">
                     <li>
-                      <a data-toggle="tab"href="#Following" ng-click="getFollowee()">
+                      <a data-toggle="tab"href="#Following" ng-click="getFollowee()"  ng-show="owner_id=='' && user_name != undefined">
                         <i class="glyphicon glyphicon-eye-open"></i>Following
                       </a>
                     </li>
                     <li>
-                      <a data-toggle="tab"href="#Follower" ng-click="getFollower()">
-                        <i class="glyphicon glyphicon-eye-open"></i>Follower
+                      <a data-toggle="tab"href="#Follower" ng-click="getFollower()" ng-show="owner_id=='' && user_name != undefined">
+                        <i class="glyphicon glyphicon-eye-open" ></i>Follower
                       </a>
                     </li>
                     <li>
@@ -65,7 +65,7 @@
                       </a>
                     </li>
                     <li>
-                      <a data-toggle="tab"href="#Transaction" ng-click="getTransaction()">
+                      <a data-toggle="tab"href="#Transaction" ng-click="getTransaction()" ng-show="owner_id=='' && user_name != undefined">
                         <i class="glyphicon glyphicon-bell"></i>Transaction list
                       </a>
                     </li>
