@@ -20,7 +20,7 @@
                    <div class="transactioncard " >
                        <div class="transactionfront">
                            <div class="cover">
-                               <img src="http://www.dhabc.net/uploadfile/2016/0401/20160401115708557.jpg"/>
+                               <img ng-src="/items/{{tran.iid.attributes._id}}/pictures/0"/>
                            </div>
                            <div class="user">
                                <img class="img-circle" src="http://www.cse.cuhk.edu.hk/lyu/_media/wiki/lyu.jpg?cache=cache&w=328&h=400"/>
@@ -47,7 +47,7 @@
                              <div class="social-links text-center">
                                <button type="button" class="btn btn-success btn-sm" ng-click="acceptTransaction(tran._id)">Accept</button>
                                <button type="button" class="btn btn-danger btn-sm" ng-click="declineTransaction(tran._id)">Decline</button>
-                               <button type="button" class="btn btn-info btn-sm">Message</button>
+                              <a class="btn btn-sm btn-info" href="profile.html?{{tran.buyer_id._id}}" role="button">Profile</a>
                              </div>
                            </div>
                        </div> <!-- end back panel -->
