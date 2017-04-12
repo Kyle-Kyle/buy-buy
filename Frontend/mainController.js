@@ -4,6 +4,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.recmd = {url: "recommends.view.html"};
   $scope.login_view = {url: "login.view.html"};
   $scope.register_view = {url: "register.view.html"};
+  $scope.post_view = {url: "post.view.html"};
   $scope.msg_view = {url: "messenger.view.html"};
   $scope.search = {url:"search.html"};
 
@@ -173,7 +174,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       $scope.signed_in = true;
       $cookies.put("logged_in", client_name);
 
-      $scope.update_messenger();
+      $timeout($scope.update_messenger, 1000);
       check_msg_promise = $interval($scope.update_messenger, 1000);
       if (localStorage.getItem("is_manual_login")) {
         localStorage.removeItem("is_manual_login");

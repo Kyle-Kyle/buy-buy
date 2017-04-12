@@ -7,10 +7,10 @@
 [x] create thumbnail
 [x] send_email
 [x] session
-[ ] restful api
+[x] restful api
 [x] signup
 [x] activation
 [x] login
-[ ] message
-[ ] follow
-[ ] transaction
+[x] message
+[x] follow
+[x] transaction

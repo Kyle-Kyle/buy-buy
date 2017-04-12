@@ -185,7 +185,7 @@ app.get('/users/activate', function(req, res){// redirect
 			model.User.new_({username: username, email: email, password: hash}, function(result){
 				if(result.feedback != 'Success')return res.send({feedback: 'Failure', err_msg: 'Fail to activate'});
 				req.session.uid = result.user._id;
-				return res.send({feedback: 'Success'});// welcome page
+				return res.redirect('/');// welcome page
 			});
 		})
 	}catch(e){
