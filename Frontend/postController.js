@@ -71,11 +71,11 @@ var postController = function($scope, $http, $cookies) {
       console.log("post item");
       // generage data
       var tagarray = $scope.tags.split(",");
-      console.log($scope.title);
+      console.log($scope.selectedCategory);
 
       // post item to server
       $http.post("/items/create", {
-        'cid': '58e8d54d1a9a4056cf810714',
+        'cid': $scope.selectedCategory,
         'price': $scope.price.toString(),
         'quantity': $scope.quantity.toString(),
         'tags': JSON.stringify(tagarray),
