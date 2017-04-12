@@ -63,7 +63,6 @@
       <div class="container" >
         <div class="row">
           <div class="col-md-12">
-
               <div class="input-group input-group-lg" id="adv-search">
                 <input id="keyword" type="text" class="form-control" placeholder="Search for items" ng-model="keyword"/>
                 <div class="input-group-btn">
@@ -96,7 +95,31 @@
         </div>
       </div>
     </div>
-    <div ng-include="'item_list.html'" style="margin-top: 5rem"></div>
+    <div id="search-result" ng-show="show_search" style="margin-top: 5rem">
+      <div ng-include="'item_list.html'"></div>
+      <div class="container" align="center">
+        <nav aria-label="age navigation">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous" ng-click="get_last_page()">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item" ng-repeat="page in page_enum"
+              ng-class="(page+1) == page_selected ? 'active' : ''">
+              <a class="page-link" href="#" ng-click="get_page(page+1)">{{page+1}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next" ng-click="get_next_page()">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
   </div>
 </body>
 </html>

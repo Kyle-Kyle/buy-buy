@@ -50,19 +50,33 @@ var searchController = function($scope, $http, $timeout) {
 
   $scope.submit_search = function(route) {
     if (!route) return;
-    //console.log(route)
+    if ($scope.page_to_get != undefined) {
+      route += "&page=" + $scope.page_to_get;
+    }
+    console.log(route);
     $http.get(route)
     .then(function(response) {
       if (response.data.feedback == "Success") {
         hide_recommends();  // hide recommendations on homepage
+        $scope.show_search = true;
+
+        console.log(response.data.count)
+        if ($scope.page_selected == undefined) {
+          $scope.page_selected = 1;
+        }
+        $scope.page_count = response.data.count / 20 + (response.data.count % 20 == 0 ? 0 : 1);
+        if ($scope.page_count > 10) {
+          $scope.page_count = 10;
+        }
+        $scope.page_enum = Array.apply(null, Array($scope.page_count)).map(function (_, i) {return i;});
+
         if (response.data.items.length == 0) {
           $scope.no_match = true;
         } else {
           $scope.no_match = false;
         }
-        console.log(response.data.items);
+
         $scope.items = response.data.items.slice(0,20);
-        var item_num = 0;
         $scope.items.forEach(function(item) {
           item.post_time = "Posted on " + get_formatted_time(item.open_timestamp);
           item.condition_name = get_condition[Math.round(item.attributes.condition / 10.0 * 4)];
@@ -73,6 +87,29 @@ var searchController = function($scope, $http, $timeout) {
       $timeout(set_card_height_responsive, 100);
     });
   };
+
+  $scope.get_last_page = function() {
+    if ($scope.page_selected > 1) {
+      $scope.get_page($scope.page_selected - 1)
+    }
+  }
+
+  $scope.get_next_page = function() {
+    if ($scope.page_selected < $scope.page_count) {
+      $scope.get_page($scope.page_selected + 1)
+    }
+  }
+
+  $scope.get_page = function(page) {
+    if (page != $scope.page_selected) {
+      $scope.page_to_get = page - 1;
+      $scope.submit_search($scope.get_search_route(true));
+      $scope.page_selected = page;
+      $('html, body').animate({
+          scrollTop: $("#search-result").offset().top - 70
+      }, 1000);
+    }
+  }
 
   // init call
   var nav_search_route = localStorage.getItem('search_route');

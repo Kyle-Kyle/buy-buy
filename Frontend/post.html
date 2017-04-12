@@ -30,6 +30,7 @@
   }
   </style>
 
+  <script src="tools.js"></script>
 </head>
 <body>
 
@@ -181,9 +182,7 @@ angular.module('postApp', ['ngRoute', 'ngCookies']);
 </script>
 <script src="post_load.js"></script>
 <script>
-angular.element(function() {
-  angular.bootstrap(document, ['indexApp', 'postApp'])
-});
+  angular.bootstrap(document, ['indexApp', 'postApp']);
 </script>
 </body>
 </html>
