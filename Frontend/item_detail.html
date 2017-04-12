@@ -49,6 +49,16 @@
   .smalldetailcard:hover{
     color: BLACK;
   }
+  .detailcardname:hover{
+    color: BLACK;
+  }
+  .detailcardcontent:hover{
+    color: BLACK;
+  }
+  #detail_no_email:hover{
+    color:BLACK;
+  }
+
   .detailcard:hover{
     color: BLACK;
   }
@@ -170,38 +180,16 @@
         </div>
         <div class="row col-md-8 col-xs-12">
           <div class="row col-md-6 col-xs-12" style="padding-left:20px">
-            <div class="user_card-container" style="margin:10px;">
-              <div class="user_card">
-                <a href="#" ng-click="goProfile()"><div class="user_front">
-                  <div class="content">
-                    <div class="main">
-                      <h3 class="name" ng-bind="owner.user.username"></h3>
-                      <p class="text-center" ng-bind="owner.user.profile.description"></p>                      </div>
-                      <div class="footer">
-                        <i class="fa fa-mail-forward"></i> Auto Rotation
-                      </div>
-                    </div>
-                  </div> <!-- end front panel -->
-                  <div class="user_back">
-                    <div class="content">
-                      <div class="main">
-                        <p class="text-center">
-                          <i class="glyphicon glyphicon-envelope"> </i>  {{owner.user.profile.email}}</br>
-                          <i class="glyphicon glyphicon-earphone"> </i>  {{owner.user.profile.phone}}</br>
-                        </p>
-
-                      </div>
-                    </div>
-                    <div class="footer">
-                      <div class="social-links text-center">
-                        <button type="button" class="btn btn-success btn-sm" ng-click="Message()" ng-show="NotOwner()">Message</button>
-                      </div>
-                    </div>
-                  </div> <!-- end back panel --></a>
-
-                </div> <!-- end card -->
-                <!-- end card -->
-              </div> <!-- end card-container -->
+            <a style="color:GRAY;text-decoration : none"href="#" ng-click="goProfile()">
+              <div class="smalldetailcard hoverable">
+                <div id="detail_no_email" style="padding:0;margin:0;">
+                  <div class="detailcardname" ng-bind="owner.user.username"></div>
+                  <div class="detailcardcontent" ng-bind="owner.user.profile.description"></div>
+                </div>
+                  <div class="detailcardcontent" style="padding-top:10px;">
+                    <a id="email"style="text-decoration : none" href="mailto:{{fol.email}}"><i class="glyphicon glyphicon-envelope"> </i>  {{owner.user.email}}</a></br>
+                    <i class="glyphicon glyphicon-earphone"> </i>  {{owner.user.profile.phone}}</br></div>
+                    </div></a>
             </div>
             <div class="col-md-6 col-xs-12" ng-show="!isOwner" style="height:145px;margin:10px; padding-left:20px; padding-right:0;">
               <a href="#" style="height:100%" data-toggle="modal" data-target="#buyModal">
