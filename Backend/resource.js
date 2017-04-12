@@ -564,8 +564,7 @@ app.get('/recommends', function(req, res){
 
 //buyer name, sell name, item name
 app.get('/users/self/transactions', function(req, res){
-	//if(!check_login(req, res))return;
-	req.session.uid = '58e5fbe40eb7a21abbbafe0d';
+	if(!check_login(req, res))return;
 	model.User.findById(req.session.uid, function(err, user){
 		var history = user.history;
 		var i = 0;
