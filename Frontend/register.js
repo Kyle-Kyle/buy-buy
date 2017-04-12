@@ -16,8 +16,7 @@ angular.module('indexApp')
       // TODO: finish callback
       console.log(response);
 
-      $scope.reg_msg = 'A confirmation email has sent to ' + $scope.email +
-        '. Please confirm the email to finish your registration.'
+      $scope.register_success = true;
     });
   };
 

@@ -2,6 +2,7 @@ model = require('./model');
 db = require('./db');
 escape_html = require('escape-html');
 app = require('./index');
+mail_tool = require('./tools/send_email');
 
 User = model.User;
 Category = model.Category;
@@ -128,12 +129,22 @@ User.prototype.comment = function(info, cb){
 	var user = this;
 	Item.get(info.iid, function(result){
 		if(result.feedback != 'Success')return cb(result);
-		Comment.findById(result.item.comment_id, function(err, comment){
+		var item=result.item;
+		Comment.findById(item.comment_id, function(err, comment){
 			if(err)return cb({feedback: 'Failure', err_msg: 'Fail to add comment'});
 			comment.comments.set(comment.comments.length, [user._id, info.content, +new Date()]);
 			comment.save(function(err, comment){
 				if(err)return cb({feedback: 'Failure', err_msg: 'Fail to add comment'});
-				return cb({feedback: 'Success', comment: comment});
+				User.get(item.uid, function(result){
+					if(result.feedback != 'Success')return cb(result);
+					var address = app.get('host')? app.get('host') : 'localhost:'+app.get('port');
+					var owner=result.user;
+					var link='http://'+address+'/item_detail.html?'+item._id;
+					mail_tool.send_email(owner.email,'Some one comments one your item.',link,
+						'<a href="'+link+'">Click to see detail!</a>', function(result){
+						})
+					return cb({feedback: 'Success', comment: comment});
+				});
 			});
 		});
 	})

@@ -31,19 +31,22 @@
     <div id='msg-window' ng-include="msg_view.url"
     ng-show="msgShow" ng-init="msgShow=false"></div>
 
-  <div class="container">
-    <div ng-controller="loadController">
-      <div class="container">
-        <div class="row profile">
-          <div ng-class="'col col-sm-4 col-md-3 col-lg-3'">
-            <div class="profile-sidebar card hoverable">
-              <!-- SIDEBAR USERPIC -->
+    <div class="container">
+      <div ng-controller="loadController">
+        <div class="container">
+          <div class="row profile">
+            <div ng-class="'col col-sm-4 col-md-3 col-lg-3'">
+              <div class="profile-sidebar card hoverable">
+                <!-- SIDEBAR USERPIC -->
 
-              <!-- END SIDEBAR USERPIC -->
-              <!-- SIDEBAR USER TITLE -->
-              <div ng-include="user_info.url">
+                <!-- END SIDEBAR USERPIC -->
+                <!-- SIDEBAR USER TITLE -->
+                <div ng-include="user_info.url">
 
-              </div>
+                </div>
+                <!-- END SIDEBAR BUTTONS -->
+
+
               <!-- END SIDEBAR BUTTONS -->
               <!-- SIDEBAR MENU -->
               <div class="profile-usermenu">
@@ -76,48 +79,48 @@
                 </ul>
               </div>
               <!-- END MENU -->
+
             </div>
-          </div>
-          <div ng-class="'col col-xs-7 col-sm-8 col-md-9 col-lg-9'">
-            <div class="profile-content tab-content">
-              <div class="tab-pane fade in active" id="Following" ng-include="user_list.url"></div>
-              <div class="tab-pane fade" id="Follower" ng-include="user_list.url"></div>
-              <div class="tab-pane fade" id="Selling" ng-include="item_list.url">
-              </div>
-              <div class="tab-pane fade" id="Transaction" ng-include="transaction.url">
+            <div ng-class="'col col-xs-7 col-sm-8 col-md-9 col-lg-9'">
+              <div class="profile-content tab-content">
+                <div class="tab-pane fade in active" id="Following" ng-include="user_list.url"></div>
+                <div class="tab-pane fade" id="Follower" ng-include="user_list.url"></div>
+                <div class="tab-pane fade" id="Selling" ng-include="item_list.url">
+                </div>
+                <div class="tab-pane fade" id="Transaction" ng-include="transaction.url">
+                </div>
               </div>
 
             </div>
           </div>
         </div>
       </div>
+
     </div>
 
-  </div>
+    <!-- load angular scripts -->
+    <script src="mainController.js"></script>
+    <script>
+    var app = angular.module('indexApp', ['ngRoute', 'ngCookies']);
+    app.controller('mainController', mainController);
+    </script>
+    <script src="login.js"></script>
+    <script src="register.js"></script>
 
-  <!-- load angular scripts -->
-  <script src="mainController.js"></script>
-  <script>
-  var app = angular.module('indexApp', ['ngRoute', 'ngCookies']);
-  app.controller('mainController', mainController);
-  </script>
-  <script src="login.js"></script>
-  <script src="register.js"></script>
-
-  <!-- load search controller -->
-  <script src="searchController.js"></script>
-  <script>
+    <!-- load search controller -->
+    <script src="searchController.js"></script>
+    <script>
     angular
-      .module("indexApp")
-      .controller("searchController", searchController)
-  </script>
+    .module("indexApp")
+    .controller("searchController", searchController)
+    </script>
 
-  <script src="profile.js"></script>
-  <script>
-  angular.element(function() {
-    angular.bootstrap(document, ['indexApp', 'profileApp'])
-  })
-  </script>
+    <script src="profile.js"></script>
+    <script>
+    angular.element(function() {
+      angular.bootstrap(document, ['indexApp', 'profileApp'])
+    })
+    </script>
 
-</body>
-</html>
+  </body>
+  </html>
