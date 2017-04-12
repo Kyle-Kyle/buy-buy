@@ -5,6 +5,7 @@ module.exports = {
 	msg_buf_size: 50,
 	item_pic_size: 9,
 	recommend_size: 10,
+	search_page_size: 20,
 	encrypt_algo: 'aes-256-ctr',
 	db_domain: '',
 	db_u: '',

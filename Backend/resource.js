@@ -504,6 +504,7 @@ app.get('/search', function(req, res){//search is not in order
 	var max_price=req.query.maxprice;
 	var cid=req.query.cid;
 	var tags = req.query.tags;
+	var page = req.query.page;
 	var items=[];
 	var condition = {quantity: {$gt: 0}};
 	if(typeof(keyword) != 'undefined'){
@@ -536,9 +537,20 @@ app.get('/search', function(req, res){//search is not in order
 		if(!('$or' in condition))condition.$or = [];
 		condition.$or.push({'tags': {$in: tags}});
 	}
+	if(typeof(page) == 'undefined')page = 0;
+	else{
+		try{
+			page = parseInt(page);
+		}catch(e){
+			res.send({feedback: 'Failure'});
+		}
+	}
 	model.Item.find(condition).populate('cid').exec(function(err, items){
 		if(err)return res.send({feedback: 'Failure'});
-		return res.send({feedback: 'Success', items: items});
+		var count = items.length;
+		var page_size = app.get('search_page_size');
+		items = items.slice(page*page_size, (page+1)*page_size);
+		return res.send({feedback: 'Success', count: items.length, items: items});
 	});
 })
 
