@@ -6,6 +6,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.register_view = {url: "register.view.html"};
   $scope.msg_view = {url: "messenger.view.html"};
   $scope.search = {url:"search.html"};
+
   // register messenger and watch messages
   $scope.messenger = {};
   $scope.new_message_num = 0;
@@ -65,6 +66,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   // open a chat window
   var receive_msg_promise;
   $scope.start_chat = function(contact) {
+    console.log(contact);
     if ($scope.msgUID != contact.uid) {
       $scope.close_chat();
 

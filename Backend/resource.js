@@ -204,10 +204,24 @@ app.put('/users/update', function(req, res){
 		});
 	})
 })
-//get items of a user
+//get items of me
 app.get('/users/self/items',function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
+	model.Item.find({uid:uid}).populate('cid').exec(function(err,items){
+		err_msg= 'Fail to get items of this user.'
+		if(err){
+			//may change err_msg
+			return res.send({feedback: 'Failure', err_msg: err_msg});
+		}
+		return res.send({feedback: 'Success', items: items});
+	})
+})
+
+//get items of a user
+app.get('/users/:uid/items',function(req, res){
+	if(!check_login(req, res))return;
+	var uid=req.params.uid;
 	model.Item.find({uid:uid}).populate('cid').exec(function(err,items){
 		err_msg= 'Fail to get items of this user.'
 		if(err){

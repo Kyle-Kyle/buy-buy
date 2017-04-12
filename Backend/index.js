@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var morgan = require('morgan');
 module.exports = app;
 
 // load configurations
@@ -15,6 +16,7 @@ app.use(session({
 	saveUninitialized: false
 }));
 var body_parser = require('body-parser');
+//app.use(morgan('tiny'));
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
 app.disable('x-powered-by');

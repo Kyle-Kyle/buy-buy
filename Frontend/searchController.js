@@ -7,7 +7,7 @@ var searchController = function($scope, $http, $timeout) {
   $scope.goto = function(route) {
     if (route) {
       localStorage.setItem('search_route', route);
-      window.location.replace('search.html');
+      window.location.replace('index.html');
     }
   };
 
@@ -50,11 +50,13 @@ var searchController = function($scope, $http, $timeout) {
     $http.get(route)
     .then(function(response) {
       if (response.data.feedback == "Success") {
+        hide_recommends();  // hide recommendations on homepage
         if (response.data.items.length == 0) {
           $scope.no_match = true;
         } else {
           $scope.no_match = false;
         }
+        console.log(response.data.items);
         $scope.items = response.data.items;
         $scope.items.forEach(function(item) {
           item.post_time = "Posted on " + get_formatted_time(item.open_timestamp);

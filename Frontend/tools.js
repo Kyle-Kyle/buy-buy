@@ -8,4 +8,8 @@ var get_formatted_time = function(timestamp) {
   return date + ' ' + month + ' ' + hour + ':' + (min < 10 ? '0' : '') + min;
 };
 
+var hide_recommends = function() {
+  $("#recmd").hide();
+};
+
 var get_condition = ["Like New", "Very Good", "Good", "Acceptable", "Bad"];

@@ -15,19 +15,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-cookies.min.js"></script>
 
+  <link rel="stylesheet" href="lib/bootstrap-tagsinput.css" />
+  <script src="lib/bootstrap-tagsinput.js"></script>
+  <script src="lib/bootstrap-tagsinput-angular.js"></script>
+
+  <link rel="stylesheet" href="css/search.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Petit+Formal+Script" />
+
+  <!-- load slider lib -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   <script src="tools.js"></script>
 </head>
 <body style="margin-top:50px;">
 
   <!-- dynamic loading of page content -->
-  <div ng-app="indexApp" ng-controller="mainController">
-    <div id="navs" ng-include="navs.url" ></div>
-    <div id="search" ng-include="search.url">
-    </div>
-    <div id="recmd" ng-include="recmd.url"></div>
+  <div ng-controller="mainController">
+    <div id="navs" ng-include="navs.url" ng-init="is_index=true;"></div>
     <div id='msg-window' ng-include="msg_view.url"
       ng-show="msgShow" ng-init="msgShow=false"></div>
   </div>
+  <div>
+    <div id="search" ng-include="'search.html'"></div>
+    <div id="recmd" ng-include="'recommends.view.html'"></div>
+  </div>
+
 
   <!-- load main controller -->
   <script src="mainController.js"></script>
@@ -41,20 +54,24 @@
   <script src="login.js"></script>
   <script src="register.js"></script>
 
-  <!-- load search controller -->
-  <script src="searchController.js"></script>
-  <script>
-    angular
-      .module("indexApp")
-      .controller("searchController", searchController)
-  </script>
-
   <!-- load recommendation controller -->
   <script src="recommendController.js"></script>
   <script>
     angular
       .module('indexApp')
       .controller('recommendController', recommendController);
+  </script>
+
+  <!-- load search controller -->
+  <script src="searchController.js"></script>
+  <script>
+    angular
+      .module("searchApp", ['ngRoute', 'ngCookies'])
+      .controller("searchController", searchController)
+  </script>
+
+  <script>
+    angular.bootstrap(document, ['indexApp', 'searchApp'])
   </script>
 
 </body>

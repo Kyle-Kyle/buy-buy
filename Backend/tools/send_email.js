@@ -36,3 +36,4 @@ function activate_email(email, info, cb){
 	send_email(email, 'Click to activate your account', link, '<a href="'+link+'">Click to enjoy your journey on Buy-Buy!</a>', cb);
 }
 module.exports.activate_email = activate_email;
+module.exports.send_email = send_email;
