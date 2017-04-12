@@ -77,7 +77,6 @@ User.prototype.send_msg = function(info, cb){
 	User.get(info.uid, function(result){
 		if(result.feedback != 'Success')return cb(result);
 		var receiver = result.user;
-		info.content = escape_html(info.content);
 		Message.findOne({uid1: uid1, uid2: uid2}, function(err, message){
 			if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find message'});
 			if(!message){
