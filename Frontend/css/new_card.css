@@ -130,7 +130,7 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 .card .content{
     background-color: rgba(0, 0, 0, 0);
     box-shadow: none;
-    padding: 10px 20px 0px;
+    padding: 0px 20px 0px;
 }
 
 .card .back .content .main {
@@ -140,7 +140,7 @@ box-shadow: 0px 0px 19px 0px rgba(0,0,0,0.16);
 		font-family: 'Arima Madurai', cursive;
     font-size: 22px;
     line-height: 28px;
-    margin: 10px 0 0;
+    margin: 0 0 0;
     text-align: center;
     text-transform: capitalize;
 }

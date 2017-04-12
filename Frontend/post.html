@@ -30,6 +30,7 @@
   }
   </style>
 
+  <script src="tools.js"></script>
 </head>
 <body>
 
@@ -65,7 +66,8 @@
           <!-- category -->
           <div class="form-group">
             <label for="category">Category<font color="red">*</font></label>
-            <select class="form-control" name="category" ng-model="category" id="category" required>
+            <select class="form-control" ng-options="c._id as c.name for c in categories" ng-model="selectedCategory"></select>
+            <!--select class="form-control" name="category" ng-model="category" id="category" required>
               <optgroup label="others">
                 <option>others</option>
               </optgroup>
@@ -85,7 +87,7 @@
                 <option>e-elecrronic</option>
                 <option>musician</option>
               </optgroup>
-            </select>
+            </select-->
           </div>
 
           <!-- quality -->
@@ -181,9 +183,7 @@ angular.module('postApp', ['ngRoute', 'ngCookies']);
 </script>
 <script src="post_load.js"></script>
 <script>
-angular.element(function() {
-  angular.bootstrap(document, ['indexApp', 'postApp'])
-});
+  angular.bootstrap(document, ['indexApp', 'postApp']);
 </script>
 </body>
 </html>

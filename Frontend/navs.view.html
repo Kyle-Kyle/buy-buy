@@ -15,14 +15,14 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">Buy-buy</a>
+        <a class="navbar-brand" href="welcome.html">Buy-buy</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">To buy <span class="sr-only">(current)</span></a></li>
-          <li><a href="post.html">To sell</a></li>
+          <li><a href="index.html">To buy <span class="sr-only">(current)</span></a></li>
+          <li><a href="#" data-toggle="modal" data-target="#post-modal">To sell</a></li>
           <!--li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
               aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -84,6 +84,7 @@
   <!-- Modals -->
   <div id="login-modal" class="modal fade" role="dialog" ng-include="login_view.url"></div>
   <div id="register-modal" class="modal fade" role="dialog" ng-include="register_view.url"></div>
+  <div id="post-modal" class="modal fade" role="dialog" ng-include="post_view.url"></div>
 
 </body>
 </html>
