@@ -64,7 +64,8 @@ var searchController = function($scope, $http, $timeout) {
         if ($scope.page_selected == undefined) {
           $scope.page_selected = 1;
         }
-        $scope.page_count = response.data.count / 20 + (response.data.count % 20 == 0 ? 0 : 1);
+        $scope.page_count = parseInt(response.data.count / 20) + (response.data.count % 20 == 0 ? 0 : 1);
+        console.log("page count = " + $scope.page_count)
         if ($scope.page_count > 10) {
           $scope.page_count = 10;
         }

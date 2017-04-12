@@ -98,7 +98,7 @@
     <div id="search-result" ng-show="show_search" style="margin-top: 5rem">
       <div ng-include="'item_list.html'"></div>
       <div class="container" align="center">
-        <nav aria-label="age navigation">
+        <nav aria-label="age navigation" ng-show="page_count">
           <ul class="pagination">
             <li class="page-item">
               <a class="page-link" href="#" aria-label="Previous" ng-click="get_last_page()">
