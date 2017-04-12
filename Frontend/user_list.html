@@ -24,7 +24,7 @@
                       </div>
                   </div> <!-- end front panel -->
                   <div class="user_back">
-                      <div class="content">
+                      <div class="content"  ng-click="goProfile(fol._id)">
                           <div class="main">
                             <p class="text-center">
                               <i class="glyphicon glyphicon-envelope"> </i>  {{fol.email}}</br>
@@ -35,7 +35,8 @@
                       </div>
                       <div class="footer">
                           <div class="social-links text-center">
-                            <button type="button" class="btn btn-warning btn-sm" ng-click="Unfollow(fol._id)">Unfollow</button>
+                            <button type="button" class="btn btn-info btn-sm" ng-click="Follow(fol._id)" ng-show="!isFollowed(fol._id)">Follow</button>
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="Unfollow(fol._id)" ng-show="isFollowed(fol._id)">Unfollow</button>
                             <button type="button" class="btn btn-success btn-sm" ng-click="sendMessage(fol._id)">Message</button>
                           </div>
                       </div>
