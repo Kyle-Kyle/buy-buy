@@ -60,7 +60,7 @@ var searchController = function($scope, $http, $timeout) {
         $scope.items = response.data.items;
         $scope.items.forEach(function(item) {
           item.post_time = "Posted on " + get_formatted_time(item.open_timestamp);
-          item.condition_name = get_condition[item.attributes.condition-1];
+          item.condition_name = get_condition[Math.round(item.attributes.condition / 10.0 * 4)];
         });
       } else {
         console.log("Search error");
