@@ -101,42 +101,41 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
       }
     }
 
-    $scope.getSold = function() {
-      if ($scope.owner_id == "") {
-        var sold_item = [];
-        // get post item list
-        $http.get('/users/self/items')
+    $scope.tid_list = [];
+    var t_list = [];
+    $scope.getTransaction = function() {
+      var tran;
+      for (tran in $scope.user.user.history) {
+        $http.get('/transactions/' + $scope.user.user.history[tran])
         .then(function(response) {
           console.log(response);
-          console.log('load user items');
-          sold_item = response.data.items;
-          $scope.items = sold_item.filter(function(element) {
-            return element.qunatity == 0;
-          })
-          $scope.items.forEach(function(item) {
-            item.post_time = get_formatted_time(item.open_timestamp);
-            item.condition_name = get_condition[item.attributes.condition-1];
-          })
-          console.log($scope.items);
-        });
 
-      }
-      else {
-        var sold_item = [];
-        $http.get('/users/' + $scope.owner_id + '/items')
-        .then(function(response) {
-          post_item = response.data.items;
-          $scope.items = post_item.filter(function(element) {
-            return element.qunatity != 0;
-          })
-          $scope.items.forEach(function(item) {
-            item.post_time = get_formatted_time(item.open_timestamp);
-            item.condition_name = get_condition[item.attributes.condition-1];
-          })
-          console.log($scope.items);
+          var tr = {};
+          tr.buyer_id = response.data.transaction.buyer_id;
+          tr.iid = response.data.transaction.iid;
+          t_list.push(tr);
         })
       }
-    }
+
+      for (tran in t_list) {
+
+        // get user
+        var t = {};
+          $http.get('/users/' + tran.buyer_id)
+          .then(function(buyer) {
+            t.buyer = response.data.item.name;
+          });
+          //get item
+          $http.get('/items/' + + tran.iid);
+          .then(function(response) {
+            if (ite.data.feedback = "Success") {
+              t.item = response.data.user.username;
+              $scope.tid_list.push(t);
+            }
+          })
+        }
+      }
+
 
 
     $scope.getFollowee = function() {

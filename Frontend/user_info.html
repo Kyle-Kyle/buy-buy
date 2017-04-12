@@ -24,9 +24,12 @@
   </div>
   <div class="userfooter" style="margin-bottom:10px;">
     <div class="social-links text-center">
-      <button type="button" class="btn btn-info btn-sm" ng-click="updateProfile()" ng-show="owner_id==''">Update</button>
+      <a href="#" style="height:100%" data-toggle="modal" data-target="#profileUpdateModal" ng-show="owner_id==''">
+        <button type="button" class="btn btn-info btn-sm">Update</button>
+      </a>
       <button type="button" class="btn btn-info btn-sm" ng-click="Follow(user.user._id)" ng-show="!isFollowed(user.user._id) && {{owner_id!=''}}">Follow</button>
       <button type="button" class="btn btn-success btn-sm" ng-click="start_chat(user_contact)">Message</button>
     </div>
   </div>
+
 </body>
