@@ -43,8 +43,8 @@
 
 </head>
 <body>
-  <div id="header_back" class="container-fluid" style="padding: 0; width:100%; background-image: url(img/REAL_F4.jpg); background-size: 100% 100%;">
-    <div id="header_fore" style="background-image: url(img/F4.jpg); background-size: 100% 100%;">
+  <div id="header_back" class="container-fluid" style="padding: 0; width:100%; background-image: url(img/f5_cropped.jpg); background-size: 100% 100%;">
+    <div id="header_fore" style="background-image: url(img/f5_blurred.jpg); background-size: 100% 100%;">
     </div>
   </div>
   <div class="container-fluid" style="position: absolute; top: 0; margin: 0 auto; left: 0; right: 0;">
@@ -71,17 +71,17 @@
   <script>
     var mapElement_back = document.getElementById("header_back");
     var mapElement_fore = document.getElementById("header_fore");
-    mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 9/16) + 'px'
-    mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 9/16) + 'px'
+    mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 12/23) + 'px'
+    mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 12/23) + 'px'
     window.addEventListener("resize", function(e) {
-      mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 9/16) + 'px'
-      mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 9/16) + 'px'
+      mapElement_back.style.height = Math.floor(mapElement_back.offsetWidth * 12/23) + 'px'
+      mapElement_fore.style.height = Math.floor(mapElement_fore.offsetWidth * 12/23) + 'px'
     });
     $(".enter-btn").hover(function() {
       $('#header_fore')
       .animate({opacity: 0}, 'middle', function() {
         $(this)
-        .css('background-image', "url(img/F4.jpg)")
+        .css('background-image', "url(img/f5_blurred.jpg)")
       });
       //$('#header_fore').css('opacity', '0');
       //$("#header").css("background-image", "url(img/desk.jpg)")
@@ -89,7 +89,7 @@
       $('#header_fore')
       .animate({opacity: 1}, 'middle', function() {
         $(this)
-        .css('background-image', "url(img/F4.jpg)")
+        .css('background-image', "url(img/f5_blurred.jpg)")
       });
     });
   </script>
