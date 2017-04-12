@@ -94,11 +94,12 @@ angular.module('itemApp')
   // go to profile page
   $scope.goProfile = function() {
     if ($scope.isOwner) {
-      wondow.location = "profile.html";
+      window.location = "profile.html";
     }
     else {
-      window.location = "profile.html?" + $scope.owner_id;
+      window.location = "profile.html?" + $scope.owner.user._id;
     }
   }
+
 
 })

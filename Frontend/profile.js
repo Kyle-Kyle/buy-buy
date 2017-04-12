@@ -58,10 +58,12 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
 
   // get following info
   if ($scope.user_name != undefined) {
-    console.log("WTF");
+
     console.log($scope.owner_id);
-    if ($scope.owner_id == "") {
-      $scope.getSell = function() {
+
+    $scope.getSell = function() {
+
+      if ($scope.owner_id == "") {
         var post_item = [];
         // get post item list
         $http.get('/users/self/items')
@@ -79,8 +81,25 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
           console.log($scope.items);
         });
       }
+      else {
+        var post_item = [];
+        $http.get('/users/' + $scope.owner_id + '/items')
+        .then(function(response) {
+          post_item = response.data.items;
+          $scope.items = post_item.filter(function(element) {
+            return element.qunatity != 0;
+          })
+          $scope.items.forEach(function(item) {
+            item.post_time = get_formatted_time(item.open_timestamp);
+            item.condition_name = get_condition[item.attributes.condition-1];
+          })
+          console.log($scope.items);
+        })
+      }
+    }
 
-      $scope.getSold = function() {
+    $scope.getSold = function() {
+      if ($scope.owner_id == "") {
         var sold_item = [];
         // get post item list
         $http.get('/users/self/items')
@@ -97,36 +116,61 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
           })
           console.log($scope.items);
         });
+
+      }
+      else {
+        var sold_item = [];
+        $http.get('/users/' + $scope.owner_id + '/items')
+        .then(function(response) {
+          post_item = response.data.items;
+          $scope.items = post_item.filter(function(element) {
+            return element.qunatity != 0;
+          })
+          $scope.items.forEach(function(item) {
+            item.post_time = get_formatted_time(item.open_timestamp);
+            item.condition_name = get_condition[item.attributes.condition-1];
+          })
+          console.log($scope.items);
+        })
+      }
+    }
+
+
+    $scope.getFollowee = function() {
+      if ($scope.owner_id == "") {
+        var follist = [];
+        var followees = [];
+        // get followee
+        $http.get('/follow/followees')
+        .then(function(response) {
+          follist = response.data.followees;
+          console.log(response);
+        }).then(function(response) {
+
+          // get the detail of every followees
+          var f;
+          for (f in follist) {
+            console.log(f);
+            $http.get('/users/' + follist[f])
+            .then(function(response) {
+              console.log(response)
+              if (response.data.feedback == "Success") {
+                followees.push(response.data.user);
+              }
+            })
+          }
+          $scope.users = followees;
+          console.log($scope.users);
+        });
+      }
+      else {
+        console.log("not allowed");
       }
 
     }
 
-    $scope.getFollowee = function() {
-      var follist = [];
-      var followees = [];
-      // get followee
-      $http.get('/follow/followees' + $scope.user._id)
-      .then(function(response) {
-        follist = response.data.followees;
-        console.log(response);
-      }).then(function(response) {
-
-        // get the detail of every followees
-        var f;
-        for (f in follist) {
-          $https.get('/users/' + f)
-          .then(function(response) {
-            if (response.feedback == "Success") {
-              followees.push(response.user);
-            }
-          })
-        }
-      });
-
-      $scope.users = followees;
-    }
-
     $scope.getFollower = function() {
+      if ($scope.owner_id == "") {
       var follist = [];
       var followers = [];
       // get follower
@@ -139,14 +183,18 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         // get the detail of every followers
         var f;
         for (f in follist) {
-          $https.get('/users/' + f)
+          $http.get('/users/' + follist[f])
           .then(function(response) {
-            if (response.feedback == "Success") {
-              followers.push(response.user);
+            if (response.data.feedback == "Success") {
+              followers.push(response.data.user);
             }
           });
         }
       });
+    }
+    else {
+      console.log("not allowed");
+    }
       $scope.users = followers;
     }
 
@@ -156,26 +204,23 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     window.location = url;
   }
 
-  if ($scope.owner_id != "") {
 
-    if ($scope.user_name != undefined) {
-      $scope.Follow = function() {
-        $http.get('/follow/' + $scope.owner_id)
+      $scope.Follow = function(follow_id) {
+        $http.get('/follow/' + follow_id)
         .then(function(response) {
           console.log(response);
-          $scope.follow_message = "You have followed him";
+          $scope.followed = true;
         })
       }
 
-      $scope.Unfollow = function() {
-        $http.get('/unfollow/' + $scope.owner_id)
+      $scope.Unfollow = function(unfollow_id) {
+        console.log("unfollow");
+        $http.get('/unfollow/' + unfollow_id)
         .then(function(response) {
           console.log(response);
-          $scope.follow_message = "You have unfollowed him";
+          $scope.followed = false;
         })
       }
-    }
-  }
 
 
 });
