@@ -204,14 +204,14 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     $http.get('/follow/' + follow_id)
     .then(function(response) {
       console.log("follow successfully");
-      $route.reload();
+      window.location = location.href;
     })
   }
 
   $scope.Unfollow = function(unfollow_id) {
     $http.get('/unfollow/' + unfollow_id)
     .then(function(response) {
-      $route.reload();
+      window.location = location.href;
     })
   }
 
