@@ -7,52 +7,47 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
 </head>
 
+
 <body>
-  <div class="container">
-    <div ng-app="profileApp" ng-controller="loadController">
-      <div class="jumbotron" style="background-color: #60A">
-        <h1 style="color: white">Buy-buy</h1>
-        <small style="color: white" style="text-align: right">An exciting website.</small>
-        <h2 style="color: white">Profile Update</h2>
+  <div class="modal-dialog">
+    <div>
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <label>Profile update</label>
+          <div>
+            <form name="myForm">
+              <div class="form-group">
+                <h1 ng-bind="user.user.username"></h1>
+                <h3 ng-bind="user.user.email"></h3>
+              </div>
+              <div class="form-group">
+                <label for="profile-phone">Phone</label>
+                <div class="col-10">
+                  <input class="form-control" type="text" name="name" ng-model="user.user.profile.phone">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="profile-facebook">Facebook</label>
+                <div class="col-10">
+                  <input class="form-control" type="text" name="name" ng-model="user.user.profile.facebook">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="useremail" class="col-2 col-form-label">User Email</label>
+                <div class="col-10">
+                  <input class="form-control" type="email" name="email" ng-model="user.user.profile.email">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="userdescription">Discription</label>
+                <textarea class="form-control" rows="5" name="description" ng-model="user.user.profile.description"></textarea>
+              </div>
+              <br>
+              <button class="btn btn-primary" data-dismiss="modal" onclick="$('#buyModal').modal('toggle');" ng-disabled="myForm.name.$pristine && myForm.email.$pristine && myForm.description.$pristine" ng-click="updateProfile()">Submit</button>
+              <button class="btn btn-default" data-dismiss="modal">cancel</button>
+            </form>
+          </div>
+        </div>
       </div>
-      <form name="myForm">
-        <div class="form-group">
-          <h1 ng-bind="username"></h1>
-          <h3 ng-bind="email"></h3>
-          <small id="emailHelp" class="form-text text-muted">Your email address will be in security.</small>
-        </div>
-        <div class="form-group">
-          <label for="profile-phone">Phone</label>
-          <div class="col-10">
-            <input class="form-control" type="text" name="name" ng-model="profile.phone">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="profile-facebook">Facebook</label>
-          <div class="col-10">
-            <input class="form-control" type="text" name="name" ng-model="profile.facebook">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="useremail" class="col-2 col-form-label">User Email</label>
-          <div class="col-10">
-            <input class="form-control" type="email" name="email" ng-model="profile.email">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="userdescription">Discription</label>
-          <textarea class="form-control" rows="5" name="description" ng-model="profile.description"></textarea>
-        </div>
-        <br>
-        <button class="btn btn-primary" ng-disabled="myForm.name.$pristine && myForm.email.$pristine && myForm.description.$pristine" ng-click="submit()">Submit</button>
-        <a href="{{cancel}}">Cancel</a>
-      </form>
-    </div>
-  </div>
-</body>
-<script>
-var app = angular.module('profileApp', ['ngRoute', 'ngCookies'])
-app.controller('loadController', function($scope) {
-});
-</script>
-<script src="profile.update.js"></script>
+    </body>
