@@ -13,7 +13,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
 
   <script src="tools.js"></script>
-
+  <link rel="stylesheet" href="css/social-share-kit.css" type="text/css">
+  <script type="text/javascript" src="lib/social-share-kit.min.js"></script>
   <style>
   .box-shadow2{
     -webkit-box-shadow:0 0 5px;
@@ -48,7 +49,7 @@
                 <!-- SIDEBAR MENU -->
                 <div class="profile-usermenu">
                   <ul class="nav navs-tab">
-                    <li class="active">
+                    <li>
                       <a data-toggle="tab"href="#Following" ng-click="getFollowee()">
                         <i class="glyphicon glyphicon-eye-open"></i>Following
                       </a>
@@ -74,10 +75,15 @@
                       </a>
                     </li>
                   </ul>
+                  <div class="ssk-group detailcardcontent"  style="padding-left:30px;padding-top:10px;"data-text="Join Buy-buy and follow me! I am called {{user.user.username}}!" >
+                    <a href="" class="ssk ssk-facebook"></a>
+                    <a href="" class="ssk ssk-twitter"></a>
+                    <a href="" class="ssk ssk-google-plus"></a>
+                  </div>
                 </div>
                 <!-- END MENU -->
               </div>
-
+              <div class="modal fade" id="profileUpdateModal" role="dialog" ng-include="'profile.update.html'"></div>
             </div>
             <div ng-class="'col col-xs-7 col-sm-8 col-md-9 col-lg-9'">
               <div class="profile-content tab-content">
@@ -118,6 +124,9 @@
     angular.element(function() {
       angular.bootstrap(document, ['indexApp', 'profileApp'])
     })
+    </script>
+    <script type="text/javascript">
+    SocialShareKit.init();
     </script>
 
   </body>
