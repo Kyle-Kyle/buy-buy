@@ -16,6 +16,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   // vistor
   $scope.owner_id = location.search.substring(1);
 
+
   if ($scope.owner_id == "") {
     console.log("not a vistor");
 
@@ -37,7 +38,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   else {
     console.log("vistor");
 
-
     // get user info
     if ($scope.user_name != undefined) {
       console.log("loged in");
@@ -49,6 +49,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         // feedback
         $scope.user = response.data;
         console.log($scope.user);
+        $scope.user_contact = {uid: $scope.user.user._id, name: $scope.user.user.username};
       })
     }
 
@@ -245,6 +246,5 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
       window.location = "profile.update.html";
     }
   }
-
 
 });
