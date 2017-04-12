@@ -71,7 +71,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
         // get post item list
         $http.get('/users/self/items')
         .then(function(response) {
-          console.log(response);
           console.log('load user items');
           post_item = response.data.items;
           $scope.items = post_item.filter(function(element) {
@@ -81,7 +80,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
             item.post_time = get_formatted_time(item.open_timestamp);
             item.condition_name = get_condition[item.attributes.condition-1];
           })
-          console.log($scope.items);
         });
       }
       else {
@@ -96,7 +94,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
             item.post_time = get_formatted_time(item.open_timestamp);
             item.condition_name = get_condition[item.attributes.condition-1];
           })
-          console.log($scope.items);
         })
       }
     }
@@ -106,34 +103,44 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     $scope.getTransaction = function() {
       var tran;
       for (tran in $scope.user.user.history) {
+
         $http.get('/transactions/' + $scope.user.user.history[tran])
         .then(function(response) {
           console.log(response);
-
+          if (response.data.transaction.status_code == 1) {
           var tr = {};
+          tr.tid = $scope.user.user.history[tran];
           tr.buyer_id = response.data.transaction.buyer_id;
           tr.iid = response.data.transaction.iid;
           t_list.push(tr);
+          console.log(tr);
+        }
         })
       }
-
-      for (tran in t_list) {
-
-        // get user
-        var t = {};
-          $http.get('/users/' + tran.buyer_id)
-          .then(function(buyer) {
-            t.buyer = response.data.item.name;
+      $timeout(function() {
+        var tra;
+        for (tra in t_list) {
+          // get user
+          var t = {};
+          $http.get('/users/' + t_list[tra].buyer_id)
+          .then(function(response) {
+            t.buyer = response.data.user.username;
           });
           //get item
-          $http.get('/items/' +  tran.iid)
+          $http.get('/items/' + t_list[tra].iid)
+
           .then(function(response) {
-            if (ite.data.feedback = "Success") {
-              t.item = response.data.user.username;
+            console.log(response);
+            if (response.data.feedback == "Success") {
+              t.item = response.data.item.attributes.title;
+              t.tid = t_list[tra].tid;
               $scope.tid_list.push(t);
             }
           })
         }
+
+      }, 1000)
+
       }
 
 
@@ -239,10 +246,52 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
     })
   }
 
-  $scope.updateProfile = function() {
-    console.log($scope.owner_id);
+  $scope.acceptTransaction = function(tid) {
+    console.log(tid);
     if ($scope.owner_id == "") {
-      window.location = "profile.update.html";
+
+      // confirm
+      $http.get('/transactions/' + tid + '/confirm')
+      .then(function(response) {
+        console.log(response);
+      })
+
+    }
+  }
+
+  $scope.updateProfile = function() {
+    if ($scope.owner_id == "") {
+      $http.put('/users/update',
+        {
+            "nickname": "",
+            "description": $scope.user.user.profile.description,
+            "phone": $scope.user.user.profile.phone,
+            "wechat": "",
+            "email": $scope.user.user.profile.email,
+            "qq": "",
+            "facebook": $scope.user.user.profile.facebook
+        })
+      .then(function(response) {
+        console.log(response);
+        if ($scope.feedback == "Success") {
+          console.log("Update success!");
+          window.location = "profile.html";
+        }
+        else {
+          console.log("Fail to update!");
+
+        }
+      })
+    }
+  }
+  $scope.declineTransaction = function(tid) {
+    console.log(tid);
+    if ($scope.owner_id == "") {
+
+      $http.get('/transactions/' + tid + '/reject')
+      .then(function(response) {
+        console.log(response);
+      })
     }
   }
 
