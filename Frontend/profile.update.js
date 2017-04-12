@@ -59,7 +59,7 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
   }
 
   // cancel
-  $scope.cancel = "index.html";
+  $scope.cancel = "profile.html";
 
 
 });

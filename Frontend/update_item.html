@@ -41,7 +41,7 @@
   </div>
 
 
-  <div ng-controller="updateItemController">
+  <div ng-controller="updateItemController" style="margin-top: 80px;">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -166,6 +166,13 @@ angular
 </script>
 <script src="login.js"></script>
 <script src="register.js"></script>
+<!-- load search controller -->
+<script src="searchController.js"></script>
+<script>
+  angular
+    .module("indexApp")
+    .controller("searchController", searchController)
+</script>
 <script>
 angular.module('updateItemApp', ['ngRoute', 'ngCookies']);
 </script>

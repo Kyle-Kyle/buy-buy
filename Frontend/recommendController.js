@@ -14,7 +14,7 @@ var recommendController = function($scope, $http) {
       $scope.items.forEach(function(item) {
         //console.log($scope.$parent.get_formatted_time(item.open_timestamp))
         item.post_time = "Posted on " + get_formatted_time(item.open_timestamp);
-        item.condition_name = get_condition[item.attributes.condition-1];
+        item.condition_name = get_condition[Math.round(item.attributes.condition / 10.0 * 4)];
       });
     });
   };

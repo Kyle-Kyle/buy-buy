@@ -11,6 +11,10 @@ var searchController = function($scope, $http, $timeout) {
     }
   };
 
+  $scope.changeTo = function(url) {
+    window.location = url;
+  }
+
   $scope.get_category_list = function() {
     $http.get("/categories")
     .then(function(response) {
@@ -57,10 +61,11 @@ var searchController = function($scope, $http, $timeout) {
           $scope.no_match = false;
         }
         console.log(response.data.items);
-        $scope.items = response.data.items;
+        $scope.items = response.data.items.slice(0,20);
+        var item_num = 0;
         $scope.items.forEach(function(item) {
           item.post_time = "Posted on " + get_formatted_time(item.open_timestamp);
-          item.condition_name = get_condition[item.attributes.condition-1];
+          item.condition_name = get_condition[Math.round(item.attributes.condition / 10.0 * 4)];
         });
       } else {
         console.log("Search error");
