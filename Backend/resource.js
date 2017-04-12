@@ -550,7 +550,7 @@ app.get('/search', function(req, res){//search is not in order
 		var count = items.length;
 		var page_size = app.get('search_page_size');
 		items = items.slice(page*page_size, (page+1)*page_size);
-		return res.send({feedback: 'Success', count: items.length, items: items});
+		return res.send({feedback: 'Success', count: count, items: items});
 	});
 })
 
