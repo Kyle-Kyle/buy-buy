@@ -41,7 +41,7 @@ User_Schema.statics.get = function(uid, cb){
 // User model: update profile
 User_Schema.methods.update_profile = function(profile, cb){
 	this.profile = profile;
-	this.profile.description = escape_html(profile.description);
+	this.profile.description = profile.description;
 	this.save(function(err, user){
 		err_msg = 'Fail to update information';
 		if(err){
