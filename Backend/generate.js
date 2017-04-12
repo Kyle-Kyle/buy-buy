@@ -99,7 +99,7 @@ model.User.find({}, function(err, users){
 								attributes['title'] = faker.commerce.productName();
 								break;
 							case 'condition':
-								attributes['condition'] = getRandomInt(1, 10);
+								attributes['condition'] = getRandomInt(0, 4);
 								break;
 							case 'description':
 								attributes['description'] = faker.commerce.productAdjective();

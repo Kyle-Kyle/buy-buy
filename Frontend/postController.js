@@ -44,7 +44,7 @@ var postController = function($scope, $http, $cookies) {
     if($scope.title == undefined)
     {
       $scope.titleValid = false;
-      $scope.priceErrorMsg = 'Title is required';
+      $scope.titleErrorMsg = 'Title is required';
     }
     else {
       $scope.titleValid = true;
