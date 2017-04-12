@@ -111,6 +111,14 @@
     <script src="login.js"></script>
     <script src="register.js"></script>
 
+    <!-- load post controller -->
+    <script src="postController.js"></script>
+    <script>
+      angular
+        .module("indexApp")
+        .controller("postController", postController);
+    </script>
+    
     <!-- load search controller -->
     <script src="searchController.js"></script>
     <script>
