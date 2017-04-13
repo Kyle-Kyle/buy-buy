@@ -20,7 +20,6 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.recent_chat = function() {
     $http.get("/users/contacts")
     .then(function(response) {
-      console.log(response)
       if (response.data.feedback == "Success") {
         response.data.contacts.forEach(function(uid) {
           if (!(uid in $scope.recent)) {
