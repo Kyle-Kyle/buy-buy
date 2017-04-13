@@ -198,7 +198,7 @@ app.put('/users/update', function(req, res){
 			else info[key] = '';
 		}
 		user.update_profile(info, function(result){
-			if(result.feedback != 'Success')res.send(result);
+			if(result.feedback != 'Success')return res.send(result);
 			var user = result.user.toObject();
 			delete user['password'];
 			delete user['__v'];
