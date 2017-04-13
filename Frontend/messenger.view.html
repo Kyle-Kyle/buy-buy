@@ -45,7 +45,7 @@ $("#btn-input").keyup(function(event){
 
         <input id="msg-num" type="hidden" ng-model="messenger.msgNum" ng-init="messenger.msgNum=0"/>
 
-        <div id="msg-panel" class="panel-body msg_container_base" style="min-height:300px">
+        <div id="msg-panel" class="panel-body msg_container_base">
           <div class="row msg_container" ng-repeat="msg in msgList"
           ng-class="msg.to_send ? 'base_sent' : 'base_receive'">
           <div class="col-md-2 col-xs-2 avatar" ng-show="!msg.to_send">
