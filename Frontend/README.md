@@ -10,33 +10,33 @@
 
 ### Home page: `index.html`  
 &nbsp;&nbsp;includes `navs.view.html`, `recommends.view.html`  
-- [ ] UI (part-finished)  
-- [ ] Client-server interface  
-
-### Post-item page: `post.html`  
-- [ ] UI(need to add category)  
-- [ ] Client-server interface  
-
-### Profile page: `profile.html`  
-- [ ] UI  
+- [x] UI  
 - [x] Client-server interface  
 
-### Profile page: `profile_update.html`  
+### Post-item page: `post.html`  
+- [x] UI  
+- [x] Client-server interface  
+
+### Profile page: `profile.html`  
+- [x] UI  
+- [x] Client-server interface  
+
+### Profile update page: `profile_update.html`  
 - [x] UI  
 - [x] Client-server interface  
 
 ### item detail page: `item_detail.html`  
 &nbsp;&nbsp;includes `transaction.view.html`  
-- [ ] UI(need to add category)  
-- [ ] Client-server interface  
+- [x] UI  
+- [x] Client-server interface  
 
 ### item list page: `item_list.html`  
-- [ ] UI  
-- [ ] Client-server interface  
+- [x] UI  
+- [x] Client-server interface  
 
 ### Search page: `search.html`  
-- [ ] UI  
-- [ ] Client-server interface  
+- [x] UI  
+- [ ] Client-server interface (need to enable tags search)  
 
 ### Navs view: `navs.view.html`  
 &nbsp;&nbsp;includes `login.view.html`, `register.view.html`  
@@ -45,7 +45,7 @@
 
 ### Recommendation view: `recommends.view.html`  
 - [x] UI  
-- [ ] Client-server interface  
+- [x] Client-server interface  
 
 ### Sign-up view: `register.view.html`  
 &nbsp;&nbsp;includes `country_code.html`  
@@ -62,4 +62,4 @@
 
 ### Transaction view: `transaction.view.html`  
 - [x] UI  
-- [ ] Client-server interface  
+- [x] Client-server interface  
