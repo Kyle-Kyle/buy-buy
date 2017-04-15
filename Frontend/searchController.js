@@ -84,7 +84,7 @@ var searchController = function($scope, $http, $timeout) {
       } else {
         console.log("Search error");
       }
-      $timeout(set_card_height_responsive, 100);
+      //$timeout(set_card_height_responsive, 100);
     });
   };
 

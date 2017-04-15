@@ -38,8 +38,10 @@ angular.module('itemApp')
     $http.get('/users/' + $scope.item.uid)
     .then(function(response) {
       console.log(response);
-      $scope.owner = response.data;
-      $scope.isOwner = ($scope.owner.user.username == $scope.user);
+      if (response.data.feedback == "Success") {
+        $scope.owner = response.data;
+        $scope.isOwner = ($scope.owner.user.username == $scope.user);
+      }
     });
   });
 
