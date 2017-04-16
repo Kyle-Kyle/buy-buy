@@ -65,7 +65,7 @@
     </div>
   </div>
 </body>
-<script>
+<!--script>
   var set_card_height_responsive = function() {
       var card_container = $(".item-card");
       var card_back = $(".item-card-back");
@@ -82,6 +82,8 @@
         card_front.css("height", Math.floor(parseFloat(card_front.css("width").split("px")[0]) * 0.6 + 240) + 'px');
       });
   }
-  setTimeout(set_card_height_responsive, 1500);
-</script>
+  angular.element(document).ready(function () {
+    setTimeout(set_card_height_responsive, 1500);
+  });
+</script-->
 </html>

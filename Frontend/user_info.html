@@ -27,8 +27,10 @@
       <a href="#" style="height:100%" data-toggle="modal" data-target="#profileUpdateModal" ng-show="owner_id==''">
         <button type="button" class="btn btn-info btn-sm">Update</button>
       </a>
-      <button type="button" class="btn btn-info btn-sm" ng-click="Follow(user.user._id)" ng-show="!isFollowed(user.user._id) && {{owner_id!=''}}">Follow</button>
-      <button type="button" class="btn btn-success btn-sm" ng-click="start_chat(user_contact)" ng-show="!owner_id==''">Message</button>
+      <button type="button" class="btn btn-info btn-sm"
+      ng-click="Follow(user.user._id)" ng-show="!isFollowed(user.user._id) && {{owner_id!=''}}">Follow</button>
+      <button type="button" class="btn btn-success btn-sm"
+      ng-click="start_chat({uid:user.user._id, name:user.user.username})" ng-show="!owner_id==''">Message</button>
     </div>
   </div>
 

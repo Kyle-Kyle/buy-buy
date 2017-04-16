@@ -48,7 +48,6 @@ angular.module('profileApp', ['ngRoute', 'ngCookies'])
 
         // feedback
         $scope.user = response.data;
-        console.log($scope.user);
         $scope.user_contact = {uid: $scope.user.user._id, name: $scope.user.user.username};
       })
     }

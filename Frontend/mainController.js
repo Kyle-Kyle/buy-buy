@@ -8,26 +8,25 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.msg_view = {url: "messenger.view.html"};
   $scope.search = {url:"search.html"};
 
-  // register messenger and watch messages
+  // init messenger and watch for new messages
   $scope.messenger = {};
-  $scope.new_message_num = 0;
+  $scope.has_new_messages = false;
+  $scope.recent = {};
   $scope.$watch('messenger.msgNum', function() {
     $scope.scroll_down();
   });
 
+  // get recent contact list
   $scope.recent_chat = function() {
     $http.get("/users/contacts")
     .then(function(response) {
       if (response.data.feedback == "Success") {
         response.data.contacts.forEach(function(uid) {
-          if ($scope.recent == undefined) {
-            $scope.recent = {};
-          }
           if (!(uid in $scope.recent)) {
             $http.get("/users/" + uid)
             .then(function(name_response) {
-              //console.log("Found recent contact: " + name_response.data.user.username);
               $scope.recent[uid] = {'uid': uid, 'name': name_response.data.user.username, 'new': false};
+              console.log($scope.recent)
             });
           }
         });
@@ -36,6 +35,21 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
         console.log("Error: cannot get recent contacts")
       }
     });
+  }
+
+  $scope.get_recent_chat_num = function() {
+    return Object.keys($scope.recent).length;
+  }
+
+  // notify if any user has sent a new message to you
+  $scope.update_main_notification = function() {
+    for (user in $scope.recent) {
+      if ($scope.recent[user].new == true) {
+        $scope.has_new_messages = true;
+        return;
+      }
+    }
+    $scope.has_new_messages = false;
   }
 
   // check message buffer for new messages
@@ -54,7 +68,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
           if (uid in $scope.recent) {
             if (uid != $scope.msgUID) {
               $scope.recent[uid].new = true;
-              $scope.new_message_num += 1;
+              $scope.update_main_notification();
             }
           } else {
             console.log("Error: new messages from anonymous ID: " + uid);
@@ -67,17 +81,21 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   // open a chat window
   var receive_msg_promise;
   $scope.start_chat = function(contact) {
-    console.log(contact);
     if ($scope.msgUID != contact.uid) {
       $scope.close_chat();
 
       $scope.msgShow = true;
       $scope.msgUID = contact.uid;
 
-      if ($scope.recent[contact.uid].new == true) {
-        $scope.new_message_num -= 1;
+      // check if the user is in your recent contact list
+      if (contact.uid in $scope.recent) {
+        if ($scope.recent[contact.uid].new == true) {
+          $scope.recent[contact.uid].new = false;
+          $scope.update_main_notification();
+        }
+      } else {
+        $scope.recent[contact.uid] = {'uid': contact.uid, 'name': contact.name, 'new': false};
       }
-      $scope.recent[contact.uid].new = false;
 
       $scope.chatName = contact.name;
       $scope.lastViewTime = 0;
@@ -94,13 +112,15 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     $scope.msgShow = false;
     $scope.msgUID = undefined;
     $scope.chatName = undefined;
-    $interval.cancel(receive_msg_promise);
+    if (receive_msg_promise) {
+      $interval.cancel(receive_msg_promise);
+    }
   };
 
   $scope.rcv_msg = function() {
-    $http.get("/messages/" + $scope.msgUID)  // TODO change to uid
+    $http.get("/messages/" + $scope.msgUID)
     .then(function(response) {
-      //console.log(response);
+      // push new messages to messenger window
       response.data.message.messages.forEach(function(msg) {
         var timestamp = msg[2];
         if (timestamp > $scope.lastViewTime) {
@@ -108,11 +128,13 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
           $scope.msgList.push({
             "to_send": sender_id == $scope.uid,
             "content": msg[1],
-            "time": get_formatted_time(timestamp),    // TODO: change time
+            "time": get_formatted_time(timestamp),
           });
           $scope.lastViewTime = timestamp;
         }
       });
+
+      // auto-scroll to the newest message
       var objDiv = document.getElementById("msg-panel");
       if (objDiv.scrollTop + 400 > objDiv.scrollHeight) {
         $timeout($scope.scroll_down, 50);
@@ -123,20 +145,9 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.send_msg = function(msgContent) {
     if (msgContent != "") {
       // update UI
-      //console.log($("#btn-input").val());
       $("#btn-input").val("");
-
-      //$scope.msgList.push({
-      //  "to_send": true,
-      //  "content": msgContent,
-      //  "time": get_formatted_time(new Date()),    // TODO: change time
-      //});
-
-      //console.log($scope.msgNum);
       $scope.messenger.msgNum += 1;
-      //console.log($scope.msgNum);
 
-      console.log($scope.msgUID);
       $http.post("/messages/" + $scope.msgUID, {
         content: msgContent,
       })
@@ -161,24 +172,26 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
 
   $scope.update_messenger = function() {
     $scope.recent_chat();
-    $timeout($scope.check_msg, 50);
+    $timeout($scope.check_msg, 100);
   }
 
   var check_msg_promise;
   $scope.sign_in = function(client_name) {
     $http.get("/users/self")
     .then(function(response) {
-      $scope.uid = response.data.user._id;
+      if (response.data.feedback == "Success") {
+        $scope.uid = response.data.user._id;
 
-      $scope.client_name = client_name;
-      $scope.signed_in = true;
-      $cookies.put("logged_in", client_name);
+        $scope.client_name = client_name;
+        $scope.signed_in = true;
+        $cookies.put("logged_in", client_name);
 
-      $timeout($scope.update_messenger, 1000);
-      check_msg_promise = $interval($scope.update_messenger, 1000);
-      if (localStorage.getItem("is_manual_login")) {
-        localStorage.removeItem("is_manual_login");
-        $window.location.reload();
+        //$timeout($scope.update_messenger, 1000);
+        check_msg_promise = $interval($scope.update_messenger, 1000);
+        if (localStorage.getItem("is_manual_login")) {
+          localStorage.removeItem("is_manual_login");
+          $window.location.reload();
+        }
       }
     })
   };
