@@ -513,7 +513,6 @@ app.get('/search', function(req, res){//search is not in order
 		condition.$or = [];
 		condition.$or.push({'attributes.title': new RegExp(keyword, 'i')});
 		condition.$or.push({'attributes.description': new RegExp(keyword, 'i')});
-		condition.$or.push({'tags': new RegExp(keyword, 'i')});
 	}
 	if(typeof(min_price) != 'undefined'){
 		condition.price = {};
@@ -529,11 +528,14 @@ app.get('/search', function(req, res){//search is not in order
 	if(typeof(tags) != 'undefined'){
 		try{
 			tags = JSON.parse(tags);
+			var search_cmp = function(a, b){
+				var aa = (tags.indexOf(a))?1:0;
+				var bb = (tags.indexOf(b))?1:0;
+				return aa-bb;
+			}
 		}catch(e){
 			return res.send({feedback: 'Failure'});
 		}
-		if(!('$or' in condition))condition.$or = [];
-		condition.$or.push({'tags': {$in: tags}});
 	}
 	if(typeof(page) == 'undefined')page = 0;
 	else{
@@ -547,6 +549,20 @@ app.get('/search', function(req, res){//search is not in order
 		if(err)return res.send({feedback: 'Failure'});
 		var count = items.length;
 		var page_size = app.get('search_page_size');
+		if(typeof(keyword) != 'undefined'){
+			var items1 = [];
+			var items2 = [];
+			var keyword_reg = new RegExp(keyword, 'i');
+			items.forEach(function(item){
+				if(item.attributes.title.match(keyword_reg))return items1.push(item);
+				else return items2.push(item);
+			})
+			items1 = items1.sort(search_cmp);
+			items2 = items2.sort(search_cmp);
+			items = items1.concat(items2);
+		}else{
+			items = items.sort(search_cmp);
+		}
 		items = items.slice(page*page_size, (page+1)*page_size);
 		return res.send({feedback: 'Success', count: count, items: items});
 	});
@@ -588,7 +604,7 @@ app.get('/users/self/transactions', function(req, res){
 
 //debug test, for testing only, should be removed when the website goes online
 //for convenience, no error handling here
-app.get('/showdbs', function(req,res){
+/*app.get('/showdbs', function(req,res){
 	var dbs={}
 	model.User.find({}, function(err ,users){
 		dbs.users=users;
@@ -609,4 +625,4 @@ app.get('/showdbs', function(req,res){
 			})
 		})
 	})
-})
+})*/
