@@ -17,6 +17,7 @@ app.get('/items/:iid/pictures/:p', function(req, res){
 		res.sendFile(path.join(__dirname, '..', 'uploads', item._id.toString(), p+'.jpg'));
 	});
 });
+//get the thumbnail of an item picture
 app.get('/items/:iid/thumbnails/:p', function(req, res){
 	var iid = req.params.iid;
 	var p = req.params.p;
@@ -32,9 +33,11 @@ app.get('/items/:iid/thumbnails/:p', function(req, res){
 // Comment resource
 app.get('/items/:iid/comments', function(req, res){
 	var iid = req.params.iid;
+	//first check whether the item exists
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item = result.item;
+		//replace the comment_id with the corresponding comment
 		item.populate('comment_id', function(err, item){
 			if(err)return res.send({feedback: 'Failure'});
 			res.send({feedback: 'Success', comments: item.comment_id.comments});
@@ -50,6 +53,7 @@ app.post('/items/:iid/comments', function(req, res){
 	model.User.get(uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user = result.user;
+		//post a comment
 		user.comment({iid: iid, content: content}, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 			return res.send({feedback: 'Success', comments: result.comment.comments});
@@ -60,6 +64,7 @@ app.post('/items/:iid/comments', function(req, res){
 app.post('/items/create', function(req, res){
 	if(!check_login(req, res))return;
 	var info = req.body;
+	//get item info from the body of request
 	try{
 		info.tags = JSON.parse(info.tags);
 		info.attributes = JSON.parse(info.attributes);
@@ -80,9 +85,11 @@ app.post('/items/create', function(req, res){
 //get item details
 app.get('/items/:iid', function(req, res){
 	var iid = req.params.iid;
+	//check whether the item exists
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item = result.item;
+		//replace the comment_id with the according comment
 		item.populate('comment_id').populate('cid', function(err, item){
 			if(err)return res.send({feedback: 'Failure'});
 			var item = item.toObject();
@@ -104,6 +111,7 @@ app.put('/items/:iid', function(req, res){
 	if(!check_login(req, res))return;
 	var iid=req.params.iid;
 	var info=req.body;
+	//get item info from request body
 	try{
 		info.tags = JSON.parse(info.tags);
 		info.attributes = JSON.parse(info.attributes);
@@ -112,9 +120,11 @@ app.put('/items/:iid', function(req, res){
 	}catch(err){
 		return res.send({feedback: 'Failure'});
 	}
+	//check whether the item exists
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item=result.item;
+		//check owner of the item
 		if(item.uid != req.session.uid)return res.send({feedback: 'Failure'});
 		item.update_info(info, function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
@@ -126,9 +136,11 @@ app.put('/items/:iid', function(req, res){
 app.delete('/items/:iid', function(req, res){
 	if(!check_login(req, res))return;
 	var iid=req.params.iid;
+	//check whether the item exists
 	model.Item.get(iid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var item=result.item;
+		//check owner of the item
 		if(item.uid != req.session.uid) return res.send({feedback: 'Failure'});
 		item.delete_(function(result){
 			if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
@@ -161,7 +173,7 @@ app.get('/users/contacts', function(req, res){
 })
 
 
-//get user info
+//get another user's info
 app.get('/users/:uid', function(req, res, next){
 	var uid = req.params.uid;
 	if(!db.Types.ObjectId.isValid(uid) || uid == 'new_messages')return next();
@@ -187,9 +199,11 @@ app.get('/users/self', function(req, res){
 app.put('/users/update', function(req, res){
 	if(!check_login(req, res))return;
 	var uid = req.session.uid;
+	//check user existence
 	model.User.get(uid, function(result){
 		if(result.feedback != 'Success')return res.send(result);
 		var user = result.user;
+		//get profile attributes
 		var keys = Object.keys(user.profile.toObject());
 		var info = {};
 		for(var i=0; i<keys.length; i++){
@@ -197,6 +211,7 @@ app.put('/users/update', function(req, res){
 			if(req.body[key])info[key] = req.body[key];
 			else info[key] = '';
 		}
+		//update
 		user.update_profile(info, function(result){
 			if(result.feedback != 'Success')return res.send(result);
 			var user = result.user.toObject();
@@ -210,6 +225,7 @@ app.put('/users/update', function(req, res){
 app.get('/users/self/items',function(req, res){
 	if(!check_login(req, res))return;
 	var uid=req.session.uid;
+	//replace cid by the corresponding category
 	model.Item.find({uid:uid}).populate('cid').exec(function(err,items){
 		err_msg= 'Fail to get items of this user.'
 		if(err){
@@ -253,6 +269,7 @@ app.get('/categories',function(req,res){
 //Get items under a category
 app.get('/categories/:cid/items',function(req,res){
 	var cid=req.params.cid;
+	//check existence of the category
 	model.Category.get(cid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var category=result.category;
@@ -271,6 +288,7 @@ app.post('/messages/:uid', function(req, res){
 	info.content = req.body.content;
 	info.uid = req.params.uid;
 	var uid2=req.session.uid;
+	//check existence of the receiver
 	model.User.get(uid2, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
@@ -316,6 +334,7 @@ app.get('/follow/:uid',function(req, res, next){
 	if(!check_login(req, res))return;
 	var followee_uid=req.params.uid;
 	var follower_uid=req.session.uid;
+	//check followee existence
 	model.User.get(follower_uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
@@ -330,6 +349,7 @@ app.get('/unfollow/:uid',function(req, res){
 	if(!check_login(req, res))return;
 	var followee_uid=req.params.uid;
 	var follower_uid=req.session.uid;
+	//check follower existence
 	model.User.get(follower_uid, function(result){
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure'});
 		var user=result.user;
@@ -376,6 +396,7 @@ app.get('/follow/followers', function(req, res){
 })
 
 //Transaction resource
+//get transaction detail by tid
 app.get('/transactions/:tid', function(req, res, next){
 	var tid = req.params.tid;
 	if(!db.Types.ObjectId.isValid(tid))return next();
@@ -384,6 +405,7 @@ app.get('/transactions/:tid', function(req, res, next){
 	model.Transaction.get(tid, function(result){
 		if(result.feedback != 'Success')return res.send(result);
 		var transaction = result.transaction;
+		//check transaction owner
 		if(transaction.seller_id != uid && transaction.buyer_id != uid)return res.send({feedback: 'Failure', err_msg: 'Invalid user'});
 		return res.send({feedback: 'Success', transaction: transaction});
 	})
@@ -397,6 +419,7 @@ app.post('/transactions/create', function(req, res){
 	model.Item.get(iid, function(result){//check whether quantity is 0 or not
 		if(result.feedback != 'Success')return res.send({feedback: 'Failure',err_msg:'Cannot find this item.'});
 		var item=result.item;
+		//check quantity
 		if (item.quantity <= 0) return res.send({feedback: 'Failure',err_msg:'No inventory.'});
 		model.User.get(uid, function(result){
 			var user=result.user;
@@ -500,6 +523,7 @@ app.get('/transactions/:tid/cancel', function(req, res){
 	})
 })
 
+//search by keyword, price range, category and tags
 app.get('/search', function(req, res){//search is not in order
 	var keyword=req.query.keyword;
 	var min_price=req.query.minprice;
@@ -545,6 +569,7 @@ app.get('/search', function(req, res){//search is not in order
 			res.send({feedback: 'Failure'});
 		}
 	}
+	//replace cid by category
 	model.Item.find(condition).populate('cid').exec(function(err, items){
 		if(err)return res.send({feedback: 'Failure'});
 		var count = items.length;
@@ -563,11 +588,13 @@ app.get('/search', function(req, res){//search is not in order
 		}else{
 			items = items.sort(search_cmp);
 		}
+		//slice the result into pages
 		items = items.slice(page*page_size, (page+1)*page_size);
 		return res.send({feedback: 'Success', count: count, items: items});
 	});
 })
 
+//recommend based on the popularity of category
 app.get('/recommends', function(req, res){
 	Category.findOne().sort('-sold').exec(function(err, category){
 		if(err)return res.send({feedback: 'Failure'});
