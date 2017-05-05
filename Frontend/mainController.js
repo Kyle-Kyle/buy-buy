@@ -26,11 +26,9 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
             $http.get("/users/" + uid)
             .then(function(name_response) {
               $scope.recent[uid] = {'uid': uid, 'name': name_response.data.user.username, 'new': false};
-              console.log($scope.recent)
             });
           }
         });
-        //console.log($scope.recent);
       } else {
         console.log("Error: cannot get recent contacts")
       }
@@ -56,7 +54,6 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
   $scope.check_msg = function() {
     $http.get("/users/new_messages")
     .then(function(response) {
-      //console.log(response);
       if (response.data.feedback == "Failure") {
         console.log("Error when checking for new messages")
       }
@@ -101,7 +98,6 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
       $scope.lastViewTime = 0;
       $scope.msgList = [];
 
-      console.log("chat start")
       $scope.rcv_msg();
       $timeout($scope.scroll_down, 50);
       receive_msg_promise = $interval($scope.rcv_msg, 1000);
@@ -117,6 +113,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     }
   };
 
+  // receive message from message buffer
   $scope.rcv_msg = function() {
     $http.get("/messages/" + $scope.msgUID)
     .then(function(response) {
@@ -142,6 +139,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     });
   };
 
+  // send message to buffer
   $scope.send_msg = function(msgContent) {
     if (msgContent != "") {
       // update UI
@@ -163,6 +161,7 @@ var mainController = function($scope, $http, $interval, $timeout, $cookies, $win
     }
   };
 
+  // auto-scroll to the newest message
   $scope.scroll_down = function() {
     $timeout(function() {
       var objDiv = document.getElementById("msg-panel");

@@ -1,4 +1,4 @@
-# Front end :blush:
+# Front end - All Done! :blush:
 ## Notice
 1. Please load `mainController.js`, `searchController.js`, `login.js`, `register.js` on every individual pages and add the `mainController` to ngApp in the first place  
 2. Please include `tools.js` in the head  
@@ -36,7 +36,7 @@
 
 ### Search page: `search.html`  
 - [x] UI  
-- [ ] Client-server interface (need to enable tags search)  
+- [x] Client-server interface  
 
 ### Navs view: `navs.view.html`  
 &nbsp;&nbsp;includes `login.view.html`, `register.view.html`  
