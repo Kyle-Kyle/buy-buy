@@ -22,6 +22,7 @@ Transaction = model.Transaction;
 Comment = model.Comment;
 
 // User model extension
+// update the message buffer of a user
 User.prototype.update_buffer = function(uid, cb){
 	var user = this;
 	if(this.msg_buf.indexOf(uid) > -1)return cb({feedback: 'Success'});
@@ -33,6 +34,7 @@ User.prototype.update_buffer = function(uid, cb){
 		return cb({feedback: 'Success'});
 	});
 }
+//clear message buffer of a user
 User.prototype.clear_buffer = function(uid, cb){
 	var user = this;
 	if(this.msg_buf.indexOf(uid) < 0)return cb({feedback: 'Success'});
@@ -43,34 +45,40 @@ User.prototype.clear_buffer = function(uid, cb){
 		return cb({feedback: 'Success'});
 	})
 }
+//create an item
 User.prototype.create_item = function(info, cb){
 	info.uid = this._id;
 	Item.new_(info, function(result){
 		cb(result);
 	})
 }
+//create a follow relationship
 User.prototype.follow = function(uid, cb){
 	var user = this;
 	if(user._id.toString() == uid)return cb({feedback: 'Failure', err_msg: 'Self follow is prohibited'});
 	Follow.findOne({follower_id: user._id, followee_id: uid}, function(err, follow){
 		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find follow instance'});
+		//check whether already followed
 		if(follow)return cb({feedback: 'Failure', err_msg: 'Follow instance exists'});
 		Follow.new_({follower_id: user._id, followee_id: uid}, function(result){
 			return cb(result);
 		});
 	})
 }
+//remove a follow relationship
 User.prototype.unfollow = function(uid, cb){
 	var user = this;
 	if(user._id.toString() == uid)return cb({feedback: 'Failure', err_msg: 'Self unfollow is prohibited'});
 	Follow.findOne({follower_id: user._id, followee_id: uid}, function(err, follow){
 		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find follow instance'});
+		//check whether already unfollowed
 		if(!follow)return cb({feedback: 'Failure', err_msg: 'Follow instance doesn\'t exist'});
 		follow.delete_(function(result){
 			cb(result);
 		});
 	})
 }
+//send message to a user
 User.prototype.send_msg = function(info, cb){
 	if(typeof(info.content) == 'undefined' || !info.content)return cb({feedback: 'Success', err_msg: 'Invalid information'});
 	if(typeof(info.uid) == 'undefined' || !info.uid)return cb({feedback: 'Success', err_msg: 'Invalid information'});
@@ -113,6 +121,7 @@ User.prototype.send_msg = function(info, cb){
 		})
 	})
 }
+//retrieve messages sent to me
 User.prototype.recv_msg = function(uid, cb){
 	if(typeof(uid) == 'undefined' || !uid)return cb({feedback: 'Failure', err_msg: 'Invalid information'});
 	if(uid == this._id.toString())return cb({feedback: 'Failure', err_msg: 'Self message receiving is prohibited'});
@@ -132,6 +141,7 @@ User.prototype.recv_msg = function(uid, cb){
 		});
 	});
 }
+//add comment for an item
 User.prototype.comment = function(info, cb){
 	if(typeof(info.content) == 'undefined' || !info.content)return cb({feedback: 'Failure', err_msg: 'Invalid information'});
 	var user = this;
@@ -157,6 +167,7 @@ User.prototype.comment = function(info, cb){
 		});
 	})
 }
+//create a buying request, the owner will be notified
 User.prototype.buy_request = function(iid, cb){
 	var buyer = this;
 	Item.get(iid, function(result){
@@ -178,6 +189,7 @@ User.prototype.buy_request = function(iid, cb){
 	})
 }
 
+//the owner confirms to sell this item
 User.prototype.sell_confirm = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
@@ -191,6 +203,7 @@ User.prototype.sell_confirm = function(tid, cb){
 		});
 	})
 }
+//the buyer confirms that he/she has received the item 
 User.prototype.receive_confirm = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
@@ -203,6 +216,7 @@ User.prototype.receive_confirm = function(tid, cb){
 		});
 	});
 }
+//the seller rejects this transaction
 User.prototype.seller_reject = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
@@ -215,6 +229,7 @@ User.prototype.seller_reject = function(tid, cb){
 		});
 	});
 }
+//the buyer cancels this transaction
 User.prototype.buyer_cancel = function(tid, cb){
 	var user = this;
 	Transaction.get(tid, function(result){
@@ -236,6 +251,7 @@ Category.prototype.update_sold = function(cb){
 		return cb({feedback: 'Success', category: category});
 	})
 }
+//get the item list of this category
 Category.prototype.get_items = function(cb){
 	Item.find({cid: this._id}, function(err, items){
 		if(err)return cb({feedback: 'Failure', err_msg: 'Fail to find items under this category'});

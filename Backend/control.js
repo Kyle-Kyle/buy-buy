@@ -31,6 +31,7 @@ function check_login(req, res){
 }
 module.exports.check_login = check_login
 
+//temp picture remove
 function rm_tmp_pic(req){
 	var files = req.files;
 	for(var i=0; i<files.length; i++){
@@ -40,6 +41,7 @@ function rm_tmp_pic(req){
 	}
 }
 
+//temp picture move
 function mv_tmp_pic(item, item_path, i, files, req, res){// leave dirty file
 	if(i>=files.length)return;
 
@@ -219,6 +221,7 @@ app.get('/users/logout', function(req, res){
 		return res.send({feedback: 'Success'});
 	})
 })
+//fake login for testing purpose
 app.get('/faker', function(req, res){
 	var username = req.query.username;
 	model.User.findOne({username: username}, function(err, user){
