@@ -1,3 +1,12 @@
+/***********
+ * Module for extending basic models
+ *
+ * module name: model_ext
+ * programmer: Kyle-Kyle, pchen5
+ * version: 0.0
+ *
+ * This module provides more advanced funcitons for each model so that it will be much more convinient to manipulate data.
+***********/
 model = require('./model');
 db = require('./db');
 escape_html = require('escape-html');

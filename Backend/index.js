@@ -1,3 +1,13 @@
+/***********
+ * Module for starting application
+ *
+ * module name: index
+ * programmer: Kyle-Kyle
+ * version: 0.0
+ *
+ * This module is the entry of the application. It's of the highest level and users other modules.
+ * This module reads config file and set up all configurations and then start the application.
+***********/
 var express = require('express');
 var app = express();
 var morgan = require('morgan');

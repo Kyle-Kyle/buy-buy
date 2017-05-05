@@ -1,3 +1,13 @@
+/***********
+ * Module for database connection
+ *
+ * module name: db
+ * programmer: Kyle-Kyle
+ * version: 0.0
+ * 
+ * This module sets up database connection and return a database handler if success
+***********/
+
 // connection
 var db = require('mongoose');
 var app = require('./index');

@@ -1,3 +1,13 @@
+/***********
+ * Module for generating test data
+ *
+ * module name: generate
+ * programmer: Kyle-Kyle
+ * version: 0.0
+ *
+ * This module generate random data for testing.
+ * The fake data can help programmers easily find possible errors.
+***********/
 var faker = require('faker');
 var async = require('async');
 var request = require('request');

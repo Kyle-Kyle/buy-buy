@@ -1,3 +1,13 @@
+/***********
+ * Module to create models for database
+ *
+ * module name: model
+ * programmer: Kyle-Kyle, pchen5
+ * version: 0.0
+ *
+ * This module defines models for database and provide some simple functions in OO way for use ease.
+ * Models can filter bad input or invalid data from malicious or careless users.
+***********/
 db = require('./db');
 escape_html = require('escape-html');
 

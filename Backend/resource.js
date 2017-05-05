@@ -1,3 +1,14 @@
+/***********
+ * Module for providing restful api
+ *
+ * module name: resource
+ * programmer: Kyle-Kyle, pchen5
+ * version: 0.0
+ *
+ * This module provides implements of restful api for users
+ * calling each function will return a JSON feedback which contains key information that users ask for
+***********/
+
 var app = require('./index');
 var path = require('path');
 var control = require('./control');
